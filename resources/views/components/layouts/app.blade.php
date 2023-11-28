@@ -106,12 +106,12 @@
             height: auto;
             overflow: auto;
         }
- 
-        .menu-link.active {
-        color: orange;
-        font-size:0.975rem;
-        /* width:97% You can adjust the text color for the active state */
-    }
+
+   .menu-link.active {
+    background-color: white;
+      color: rgb(2, 17, 79); */
+    /* width:97% You can adjust the text color for the active state */
+}
     </style>
 </head>
 
@@ -126,7 +126,7 @@
                 <img src="{{asset('/images/logonobg.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
                 <div style="margin-top:30px;">
                 <a class="menu-link {{ Request::is('/') ? 'active' : '' }}" href="/"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
- 
+
                 <a class="menu-link {{ Request::is('customers') ? 'active' : '' }}" href="/customers"><i class="fas fa-mobile-alt"></i><span class="icon-text"> Customers</span></a><br>
 
                 <a class="menu-link {{ Request::is('vendor-page') ? 'active' : '' }}" href="/vendor-page"><i class="fas fa-university"></i><span class="icon-text"> Vendors</span></a><br>
@@ -210,7 +210,7 @@
                 <div>@livewire('log-out')</div>
             </div>
         </div>
- 
+
             <div class="row-content">
                 <div class="overflow-auto">
                     {{$slot}}
