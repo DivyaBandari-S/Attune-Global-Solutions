@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{asset('/images/Small.png')}}">
-    <title>Attune Global Solutions</title>
+    <title>Consultant Management System</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -28,7 +28,7 @@
 
 
         .menu-link {
-            font-size: 0.825rem;
+            font-size: 12px;
             color: white;
             text-decoration: none;
             display: flex;
@@ -40,7 +40,9 @@
 
         .menu-link:hover,
         .menu-link.active {
-            color: orange;
+            color: rgb(2, 17, 79);
+            background-color: white;
+            padding: 2px;
         }
 
 
@@ -107,11 +109,13 @@
             overflow: auto;
         }
 
-   .menu-link.active {
-    background-color: white;
-      color: rgb(2, 17, 79); */
-    /* width:97% You can adjust the text color for the active state */
-}
+        .menu-link.active {
+        color: rgb(2, 17, 79);
+        font-size:12px;
+        background-color: white;
+        padding: 2px;
+        /* width:97% You can adjust the text color for the active state */
+    }
     </style>
 </head>
 
@@ -123,8 +127,8 @@
         @if(Auth::guard('hr')->check())
         <div class="container-fluid">
             <div class="col-md-2">
-                <img src="{{asset('/images/logonobg.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
-                <div style="margin-top:30px;">
+                <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 70px; margin: 8px auto;" alt="">
+                <div style="margin-top:15px;">
                 <a class="menu-link {{ Request::is('/') ? 'active' : '' }}" href="/"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
 
                 <a class="menu-link {{ Request::is('customers') ? 'active' : '' }}" href="/customers"><i class="fas fa-mobile-alt"></i><span class="icon-text"> Customers</span></a><br>
@@ -135,11 +139,9 @@
 
                 <a class="menu-link {{ Request::is('contractor-page') ? 'active' : '' }}" href="contractor-page"><i class="fas fa-user-tie"></i><span class="icon-text"> Contractors</span></a><br>
 
-                <a class="menu-link {{ Request::is('sales-purchase-orders') ? 'active' : '' }}" href="#"><i class="fas fa-file-invoice-dollar"></i><span class="icon-text"> Sales / Purchase Orders</span></a><br>
+                <a class="menu-link {{ Request::is('sales-purchase-orders') ? 'active' : '' }}" href="/salesOrPurchase"><i class="fas fa-file-invoice-dollar"></i><span class="icon-text"> Sales / Purchase Orders</span></a><br>
 
-                <a class="menu-link {{ Request::is('bills') ? 'active' : '' }}" href="#"><i class="fas fa-file-invoice"></i><span class="icon-text"> Bills</span></a><br>
-
-                <a class="menu-link {{ Request::is('invoice') ? 'active' : '' }}" href="#"><i class="fas fa-receipt"></i><span class="icon-text"> Invoice</span></a><br>
+                <a class="menu-link {{ Request::is('bills') ? 'active' : '' }}" href="/billsOrInvoices"><i class="fas fa-file-invoice"></i><span class="icon-text"> Bills / Invoices</span></a><br>
 
                 <a class="menu-link {{ Request::is('time-sheet-display') ? 'active' : '' }}" href="/time-sheet-display"><i class="fas fa-clipboard-list"></i><span class="icon-text"> Time Sheets</span></a><br>
 
@@ -204,10 +206,10 @@
 
         <div class="col-md-10">
              <div class="row-header" style="z-index: 1000;">
-             <div style="display:flex;align-items: center;margin-left:10px; ">@livewire('page-title')</div>
-            <div style="display: flex; align-items: center; color: white; margin-left: 62%;  padding: 5px; gap: 15px;">
+             <div style="display:flex;align-items: center;margin-left:10px;width:200px ">@livewire('page-title')</div>
+            <div style="display: flex; align-items: center; color: white; margin-left: 55%;  padding: 5px; gap: 15px;">
             <div style="flex-grow: 1; white-space: nowrap;">@livewire('user-login-info')</div>
-            <div>@livewire('log-out')</div>
+                <div>@livewire('log-out')</div>
             </div>
         </div>
 
