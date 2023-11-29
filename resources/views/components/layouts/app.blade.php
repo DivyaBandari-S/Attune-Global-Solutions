@@ -207,7 +207,7 @@
              <div style="display:flex;align-items: center;margin-left:10px; ">@livewire('page-title')</div>
             <div style="display: flex; align-items: center; color: white; margin-left: 62%;  padding: 5px; gap: 15px;">
             <div style="flex-grow: 1; white-space: nowrap;">@livewire('user-login-info')</div>
-                <div>@livewire('log-out')</div>
+            <div>@livewire('log-out')</div>
             </div>
         </div>
 
