@@ -200,7 +200,7 @@
     </style>
 
        <div style="margin-top:40px;display:flex;justify-content:flex-end; ">
-          <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;"><a href="{{route('emp-register')}}" style="outline:none;text-decoration:none;color:#fff;">ADD Contractors</a></button>
+          <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;"><a href="{{route('emp-register')}}" style="outline:none;text-decoration:none;color:#fff;">ADD Employees</a></button>
           <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;margin-left:10px;"><a href="{{route('contractor-page')}}" style="outline:none;text-decoration:none;color:#fff;">Contractor List</a></button>
        </div>
      <div>
@@ -212,7 +212,7 @@
    
 
     <div class="row" style="margin-top: 10px; width: 100%;paddng:0;">
-       <div class="col-md-3" style=" background-color: #f2f2f2;; border-radius: 5px;    margin-right: 10px; padding: 5px;">
+    <div class="col-md-3" style=" background-color: #f2f2f2;; border-radius: 5px; color:rgb(2, 17, 79);  text-align:center; margin-right: 10px; padding: 15px;"><h6>Our Employees</h6>
        </div>
        <div class="col-md-8 info" style=" background-color: #f2f2f2; border-radius: 5px; padding: 15px 20px; display: flex; flex-direction: column;">
        <div >

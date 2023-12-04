@@ -204,13 +204,12 @@
 
         <div class="col-md-10">
              <div class="row-header" style="z-index: 1000;">
-             <div style="display:flex;align-items: center;margin-left:10px; ">@livewire('page-title')</div>
+             <div style="display:flex;align-items: center; ">@livewire('page-title')</div>
             <div style="display: flex; align-items: center; color: white; margin-left: 62%;  padding: 5px; gap: 15px;">
             <div style="flex-grow: 1; white-space: nowrap;">@livewire('user-login-info')</div>
                 <div>@livewire('log-out')</div>
             </div>
         </div>
- 
             <div class="row-content">
                 <div class="overflow-auto">
                     {{$slot}}

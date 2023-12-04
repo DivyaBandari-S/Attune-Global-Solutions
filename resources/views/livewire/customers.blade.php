@@ -124,7 +124,7 @@
             text-align: center;
             width: 20%;
         }
-
+ 
         .table thead th {
             vertical-align: bottom;
             border-bottom: 2px solid #dee2e6;

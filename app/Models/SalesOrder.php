@@ -27,4 +27,8 @@ class SalesOrder extends Model
     {
         return $this->belongsTo(CustomerDetails::class, 'customer_id', 'customer_id');
     }
+    public function employee()
+    {
+        return $this->belongsTo(EmpDetails::class, 'emp_id', 'emp_id');
+    }
 }

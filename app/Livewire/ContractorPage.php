@@ -58,6 +58,10 @@ class ContractorPage extends Component
         $companyId = Auth::user()->company_id;
         $this->contractors = EmpDetails::where('employee_type', '=', 'contract')->where('company_id', $companyId)->orderByDesc('created_at')->get();
         $this->allContractors = $this->filteredPeoples ?: $this->contractors;
+        $this->allContractors = $this->allContractors->join('sales_orders', 'emp_details.emp_id', '=', 'sales_orders.emp_id')
+        ->select('emp_details.*', 'sales_orders.*', )
+        ->orderByDesc('emp_details.created_at')
+        ->get();
         return view('livewire.contractor-page');
     }
 }

@@ -285,11 +285,21 @@ a:hover{
                                                 <input type="text" class="form-control" wire:model="company_name" style="margin-bottom:10px;;">
                                                 @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
-                                            <div class="form-group" >
-                                                <label for="company_id">Company Id :</label>
-                                                <input type="text" class="form-control" wire:model="company_id"  style="margin-bottom:10px;;">
-                                                @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
+                                            @php
+                                                $companyId = auth()->user()->company_id;
+                                                $isHr = (auth()->user()->role === 'hr'); // Adjust the role check based on your user model
+                                            @endphp
+
+                                            <div class="form-group">
+                                    <label for="company_id">Company ID</label>
+                                    @if($isHr)
+                                        <input wire:model="company_id" type="text" id="company_id" name="company_id" readonly value="{{ $companyId }}">
+                                    @else
+                                        <input wire:model="company_id" type="text" id="company_id" name="company_id" value="{{ $companyId }}">
+                                    @endif
+
+                                    @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
 
                                             <div class="form-group" >
                                                 <label for="manager_id">Manager Id :</label>
