@@ -27,7 +27,7 @@ class TimeSheetDisplay extends Component
             $this->hours[$entry->day]['regular'] = $entry->hours;
             // Add other fields as needed
         }
-
+    
         $this->timeSheetEntries = $existingEntries; // Set the variable
     }
 
@@ -35,7 +35,7 @@ class TimeSheetDisplay extends Component
     {
         return view('livewire.time-sheet-display');
     }
-
+   
     public function store()
     {
         $emp_id = Auth::user()->emp_id;

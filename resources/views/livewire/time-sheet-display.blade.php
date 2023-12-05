@@ -231,6 +231,11 @@
                        min="0" 
                        max="24" 
                        class="form-control" 
+                <input type="number" 
+                       value="{{ array_sum(array_column($hours, 'regular')) }}" 
+                       min="0" 
+                       max="24" 
+                       class="form-control" 
                        disabled
                 >
             </td>
@@ -294,6 +299,13 @@ button {
     display: inline-block;
    
 }
+
+    .day-date {
+        padding: 6px; /* Adjust this value to reduce the gap */
+        font-size: 10px; /* Adjust the font size if needed */
+    }
+
+
  
 /* Hover effect */
  
