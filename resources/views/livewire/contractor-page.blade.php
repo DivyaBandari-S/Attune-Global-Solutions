@@ -435,7 +435,10 @@
         </tr>
     </thead>
     <tbody>
-  @forelse($showSOLists as $index => $salesOrder)
+    @php
+    $serialNumber = 1;
+   @endphp
+  @forelse($showSOLists as  $salesOrder)
     @php
         $endDate = \Carbon\Carbon::parse($salesOrder->end_date);
         $currentDate = now();
@@ -443,7 +446,7 @@
 
     @if ($endDate->greaterThanOrEqualTo($currentDate))
         <tr>
-            <td>{{ $index + 1 }}</td>
+            <td>{{ $serialNumber++ }}</td>
             <td>{{ $salesOrder->cus->customer_id }}</td>
             <td>{{ $salesOrder->cus->customer_company_name }}</td>
             <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('d-m-Y') }}</td>

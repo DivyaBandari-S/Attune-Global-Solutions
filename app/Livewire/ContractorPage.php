@@ -26,8 +26,8 @@ class ContractorPage extends Component
     public $showNotes = false;
     public $showTimeSheets = false;
     public $workingProjects = [];
-    public $activeButton = 'SO';
     public $showSOLists = []; 
+    public $activeButton = false;
     public $empId;
 
     public function updateAndShowSoList($empId)
