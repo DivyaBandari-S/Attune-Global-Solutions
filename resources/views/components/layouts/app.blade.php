@@ -249,7 +249,6 @@
                 <div class="col-md-3 p-0" style="text-align: right;">@livewire('log-out')</div>
             </div>
         </div>
- 
             <div class="row-content">
                 <div class="overflow-auto">
                     {{$slot}}
