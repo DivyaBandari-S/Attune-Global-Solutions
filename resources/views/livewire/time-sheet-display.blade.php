@@ -17,10 +17,12 @@
     <!DOCTYPE html>
     <html lang="en">
  
+ 
     <head>
       <meta charset="UTF-8">
       <title>Employee Information</title>
     </head>
+ 
  
     <body>
       <div class="container" style="margin-top:40px;">
@@ -43,6 +45,7 @@
               <option value="12">December</option>
               <!-- Add options for all months -->
  
+ 
             </select>
           </div>
           <div class="col">
@@ -57,6 +60,7 @@
          </div>
         </div>
  
+ 
         <h2>Employee Time Sheet</h2>
         <table class="table">
           <thead>
@@ -66,6 +70,7 @@
               <th>Company</th>
               <th>Week</th>
               <th>Month</th>
+ 
  
               <th>Time Sheet by Employee</th>
               <th>Time Sheet Approved by Manager</th>
@@ -83,6 +88,7 @@
               <td>Week 1</td>
               <td>January</td>
  
+ 
               <td>Submitted</td>
               <td>Approved</td>
               <td>Yes</td>
@@ -96,6 +102,7 @@
               <td>Week 2</td>
               <td>January</td>
  
+ 
               <td>Pending</td>
               <td>Not Approved</td>
               <td>No</td>
@@ -106,9 +113,12 @@
         </table>
       </div>
  
+ 
     </body>
  
+ 
     </html>
+ 
  
   </div>
 @endif
@@ -291,4 +301,5 @@ button {
   </style>
  
 </div>
+ 
  
