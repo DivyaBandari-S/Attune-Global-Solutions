@@ -282,7 +282,7 @@
                                 <div class="col-md-6">
                                     <div class="align-data">
                                        <strong style="white-space: nowrap;">Address</strong>
-                                        <span style="line-height:1.6;"><strong>:</strong> {{ optional($selectedPerson)->address }}</span>
+                                        <span style="line-height:1.6;"><strong>:</strong> {{ optional($selectedPerson)->address }}, {{ optional($selectedPerson)->city }}</span>
                                     </div>
                                     <div class="align-data">
                                         <strong>Company Email</strong>
@@ -338,7 +338,7 @@
                                 <div class="col-md-6">
                                     <div class="align-data">
                                        <strong style="white-space: nowrap;">Address</strong>
-                                        <span style="line-height:1.6;"><strong>:</strong> {{ optional($selectedPerson)->address }}</span>
+                                        <span style="line-height:1.6;"><strong>:</strong> {{ optional($selectedPerson)->address }}, {{ optional($selectedPerson)->city }}</span>
                                     </div>
                                     <div class="align-data">
                                         <strong>Company Email</strong>
@@ -383,14 +383,14 @@
 
             <div class="scroll-container" >
             @foreach($allContractors as $customer)
-            <div wire:click="selectContractor('{{ $customer->customer_id }}', '{{ $customer->emp_id }}')" class="container" style="width:95%; background-color: {{ $selectedContractor && $selectedContractor->customer_id == $customer->customer_id ? '#ccc' : 'white' }}; border-radius: 5px; padding:10px auto; cursor: pointer;">
+              <div wire:click="selectContractor('{{ $customer->customer_id }}', '{{ $customer->emp_id }}')" class="container" style="width:95%; background-color: {{ $selectedContractor && $selectedContractor->customer_id == $customer->customer_id ? '#ccc' : 'white' }}; border-radius: 5px; padding:10px auto; cursor: pointer;">
 
-        <div class="employee-data">
-            <span style="font-size: 0.795rem; display: block; white-space: nowrap; text-overflow: ellipsis; max-width: 150px; line-height: 1.2; overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span>
-            <span style="color: #778899; font-size: 0.625rem;">(#{{ $customer->emp_id }})</span>
-        </div>
-    </div>
-@endforeach
+                    <div class="employee-data">
+                        <span style="font-size: 0.795rem; display: block; white-space: nowrap; text-overflow: ellipsis; max-width: 150px; line-height: 1.2; overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span>
+                        <span style="color: #778899; font-size: 0.625rem;">(#{{ $customer->emp_id }})</span>
+                    </div>
+                </div>
+            @endforeach
 
                 @endif
             </div>

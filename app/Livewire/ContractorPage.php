@@ -27,7 +27,7 @@ class ContractorPage extends Component
     public $showTimeSheets = false;
     public $workingProjects = [];
     public $showSOLists = []; 
-    public $activeButton = false;
+    public $activeButton = 'SO';
     public $empId;
 
     public function updateAndShowSoList($empId)
@@ -103,23 +103,11 @@ class ContractorPage extends Component
             ->get();
     
         $this->allContractors = $this->filteredPeoples ?: $this->contractors;
-    
+        
         // Fetch data using relationships
-        $this->allContractors = SalesOrder::
-        join('customer_details', 'sales_orders.customer_id', '=', 'customer_details.customer_id')
-        ->join('emp_details', 'sales_orders.emp_id', '=', 'emp_details.emp_id')
-        ->where('customer_details.company_id', $companyId)
-        ->where('emp_details.employee_type', '=', 'contract')
-        ->select('sales_orders.*', 'emp_details.*')
-        ->orderByDesc('sales_orders.created_at')
-        ->distinct('sales_orders.emp_id')
-        ->get();
-    
-    // Filter the collection to include only unique emp_id values
-    $this->allContractors = $this->allContractors->unique('emp_id');
-    
-    
-    
+        
+  
+
         // Now $this->allContractors contains only one emp_id for each unique customer_id
     
         return view('livewire.contractor-page', ['companyId' => $companyId]);

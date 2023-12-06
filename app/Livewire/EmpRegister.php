@@ -60,11 +60,13 @@ class EmpRegister extends Component
     public $savedImage;
     public $isHr;
     public $contractor_company_id;
+    public $showContractorField = false;
 
-    public function updatedEmployeeType()
+    public function updated($propertyName)
     {
-        // Reset contractor_company_id when employee_type changes
-        $this->reset(['contractor_company_id']);
+        if ($propertyName === 'employee_type') {
+            $this->showContractorField = ($this->employee_type == 'contract');
+        }
     }
     public function register(){
         $this->validate([
