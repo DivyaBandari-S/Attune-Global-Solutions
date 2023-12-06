@@ -42,17 +42,18 @@ class Customers extends Component
         $this->showSoList($customerId);
     }
     public $invoices;
-    public function showInvoices($customerId){
+    public function showInvoices($customerId)
+    {
         $companyId = auth()->user()->company_id;
 
         $this->activeButton = 'Invoices';
-        $this->invoices = Invoice::with('customer','company')->where('company_id',$companyId)->where('customer_id',$customerId)->orderBy('created_at','desc')->get();
+        $this->invoices = Invoice::with('customer', 'company')->where('company_id', $companyId)->where('customer_id', $customerId)->orderBy('created_at', 'desc')->get();
     }
     public function showSoList($customerId)
     {
         $companyId = auth()->user()->company_id;
 
-        $this->showSOLists = SalesOrder::with('cus','com','emp')->where('company_id',$companyId)->where('customer_id', $customerId)->orderBy('created_at','desc')->get();
+        $this->showSOLists = SalesOrder::with('cus', 'com', 'emp')->where('company_id', $companyId)->where('customer_id', $customerId)->orderBy('created_at', 'desc')->get();
         $this->soList = true;
     }
     public function closeSOList()
@@ -60,6 +61,21 @@ class Customers extends Component
         $this->soList = false;
     }
     public $job_title, $startDate, $endDate, $consultant_name, $customerName, $paymentTerms;
+    public function resetFieldsForSo()
+    {
+        $this->rate = null;
+        $this->rateType = null;
+        $this->job_title = null;
+        $this->endClientTimesheetRequired = null;
+        $this->timeSheetType = null;
+        $this->timeSheetBegins = null;
+        $this->invoiceType = null;
+        $this->paymentTerms = null;
+        $this->consultant_name = null;
+        $this->customerName = null;
+        $this->startDate = null;
+        $this->endDate = null;
+    }
     public function saveSalesOrder()
     {
         $this->validate([
@@ -94,6 +110,7 @@ class Customers extends Component
             'payment_terms' => $this->paymentTerms,
         ]);
         session()->flash('sales-order', 'Sales order submitted successfully.');
+        $this->resetFieldsForSo();
         $this->so = false;
     }
     public function selectCustomer($customerId)
@@ -126,12 +143,24 @@ class Customers extends Component
 
     public function open()
     {
+        $this->so = false;
         $this->show = true;
     }
 
     public function close()
     {
         $this->show = false;
+    }
+    public function resetFieldsForCus()
+    {
+        $this->customer_profile = null;
+        $this->customer_name = null;
+        $this->email = null;
+        $this->phone = null;
+        $this->address = null;
+        $this->notes = null;
+        $this->customer_company_name = null;
+        // Add other fields you want to reset here
     }
     public function addCustomers()
     {
@@ -159,10 +188,44 @@ class Customers extends Component
             'notes' => $this->notes,
         ]);
         session()->flash('success', 'Customer added successfully.');
+        $this->resetFieldsForCus();
+        $this->resetFieldsForSo();
         $this->show = false;
     }
+
+    public function addcCustomers()
+    {
+
+        $this->validate([
+            'customer_profile' => 'required',
+            'customer_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'notes' => 'required',
+            'customer_company_name' => 'required'
+        ]);
+        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
+        $companyId = auth()->user()->company_id;
+
+        CustomerDetails::create([
+            'customer_company_logo' => $customerProfilePath,
+            'company_id' => $companyId,
+            'customer_name' => $this->customer_name,
+            'customer_company_name' => $this->customer_company_name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'notes' => $this->notes,
+        ]);
+        session()->flash('success', 'Customer added successfully.');
+        $this->customer = false;
+        $this->so = true;
+    }
+
     public $edit = false;
     public $activeButton = 'EmailActivities';
+
 
     public $selectedCustomerId;
     public function editCustomers($customerId)
@@ -244,8 +307,32 @@ class Customers extends Component
     public $vendors, $employees;
     public function selectedConsultantId()
     {
+        if ($this->consultant_name === 'addConsultant') {
+            $this->redirect('/emp-register');
+        }
+
         $selectedConsultantId = $this->employees->firstWhere('emp_id', $this->consultant_name);
         $this->job_title = $selectedConsultantId ? $selectedConsultantId->job_title : null;
+    }
+
+    public function callCustomer()
+    {
+        if ($this->customerName === 'AddCustomer') {
+            $this->so = false;
+            $this->customer = true;
+        }
+    }
+    public $customer = false;
+    public function cCustomer()
+    {
+        $this->so = true;
+        $this->customer = false;
+        $this->resetFieldsForSo();
+
+    }
+    public function sCustomer()
+    {
+        $this->customer = true;
     }
     public function render()
     {

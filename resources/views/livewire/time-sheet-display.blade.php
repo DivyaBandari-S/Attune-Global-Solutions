@@ -187,10 +187,10 @@
 <!-- Your Blade view - time-sheet-display.blade.php -->
  
 <div>
-<table class="table" style="margin-left:20px;font-size:10px">
+<table class="table" style="font-size:10px;margin-left:30px">
     <thead>
-    <tr style="font-size:10px;">
-            <th>Leave</th>
+    <tr style="font-size:12px;">
+            <th  >Leave</th>
             @php
                 $today = now()->startOfWeek(); // Get the start of the current week
             @endphp
@@ -208,14 +208,16 @@
     <tbody>
         <!-- Regular -->
         <tr>
-            <td style="font-size:12px">Regular</td>
+            <td style="font-size:12px;">Regular</td>
             @foreach($currentWeekDates  as $day)
                 @php
                     $isEntered = (
                         (isset($hours[$day]['regular']) && $hours[$day]['regular'] !== null && $hours[$day]['regular'] !== 0) ||
                         (isset($hours[$day]['casual']) && $hours[$day]['casual'] !== null && $hours[$day]['casual'] !== 0) ||
-                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)
-                    );
+                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)||
+                        (isset($hours[$day]['holiday']) && $hours[$day]['holiday'] !== null && $hours[$day]['holiday'] !== 0) ||
+                        (isset($hours[$day]['vacation']) && $hours[$day]['vacation'] !== null && $hours[$day]['vacation'] !== 0)
+                        );
                 @endphp
                 <td>
                     <input wire:model="hours.{{ $day }}.regular"
@@ -246,14 +248,16 @@
  
         <!-- Casual -->
         <tr>
-            <td style="font-size:12px">Casual</td>
+            <td style="font-size:12px;">Casual</td>
             @foreach($currentWeekDates  as $day)
                 @php
                     $isEntered = (
                         (isset($hours[$day]['regular']) && $hours[$day]['regular'] !== null && $hours[$day]['regular'] !== 0) ||
                         (isset($hours[$day]['casual']) && $hours[$day]['casual'] !== null && $hours[$day]['casual'] !== 0) ||
-                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)
-                    );
+                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)||
+                        (isset($hours[$day]['holiday']) && $hours[$day]['holiday'] !== null && $hours[$day]['holiday'] !== 0) ||
+                        (isset($hours[$day]['vacation']) && $hours[$day]['vacation'] !== null && $hours[$day]['vacation'] !== 0)
+                        );
                 @endphp
                 <td>
                     <input wire:model="hours.{{ $day }}.casual"
@@ -284,14 +288,16 @@
  
         <!-- Sick -->
         <tr>
-            <td style="font-size:12px">Sick</td>
+            <td style="font-size:12px;">Sick</td>
             @foreach($currentWeekDates  as $day)
                 @php
                     $isEntered = (
                         (isset($hours[$day]['regular']) && $hours[$day]['regular'] !== null && $hours[$day]['regular'] !== 0) ||
                         (isset($hours[$day]['casual']) && $hours[$day]['casual'] !== null && $hours[$day]['casual'] !== 0) ||
-                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)
-                    );
+                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)||
+                        (isset($hours[$day]['holiday']) && $hours[$day]['holiday'] !== null && $hours[$day]['holiday'] !== 0) ||
+                        (isset($hours[$day]['vacation']) && $hours[$day]['vacation'] !== null && $hours[$day]['vacation'] !== 0)
+                        );
                 @endphp
                 <td>
                     <input wire:model="hours.{{ $day }}.sick"
@@ -319,7 +325,95 @@
                 >
             </td>
         </tr>
-     
+        <tr>
+            <td style="font-size:12px;">Holiday</td>
+            @foreach($currentWeekDates  as $day)
+                @php
+                    $isEntered = (
+                        (isset($hours[$day]['regular']) && $hours[$day]['regular'] !== null && $hours[$day]['regular'] !== 0) ||
+                        (isset($hours[$day]['casual']) && $hours[$day]['casual'] !== null && $hours[$day]['casual'] !== 0) ||
+                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)||
+                        (isset($hours[$day]['holiday']) && $hours[$day]['holiday'] !== null && $hours[$day]['holiday'] !== 0) ||
+                        (isset($hours[$day]['vacation']) && $hours[$day]['vacation'] !== null && $hours[$day]['vacation'] !== 0)
+                        );
+                @endphp
+                <td>
+                    <input wire:model="hours.{{ $day }}.holiday"
+                           type="number"
+                           name="holiday[{{ $day }}][holiday]"
+                           min="0"
+                           max="24"
+                           class="form-control"
+                           style="width: 50px; font-size:10px"
+                           value="8"
+                           placeholder="0"
+                           @if($isEntered) readonly @endif
+                    >
+                </td>
+            @endforeach
+            <!-- Total hours for Sick -->
+            <td>
+                <input type="number"
+                       value="{{ array_sum(array_column($hours, 'holiday')) }}"
+                       min="0"
+                       max="24"
+                       class="form-control"
+                       disabled
+                       style="width:60px; font-size:10px;"
+                >
+            </td>
+        </tr>
+        <tr>
+            <td style="font-size:12px;">Vacation</td>
+            @foreach($currentWeekDates  as $day)
+                @php
+                    $isEntered = (
+                        (isset($hours[$day]['regular']) && $hours[$day]['regular'] !== null && $hours[$day]['regular'] !== 0) ||
+                        (isset($hours[$day]['casual']) && $hours[$day]['casual'] !== null && $hours[$day]['casual'] !== 0) ||
+                        (isset($hours[$day]['sick']) && $hours[$day]['sick'] !== null && $hours[$day]['sick'] !== 0)||
+                        (isset($hours[$day]['holiday']) && $hours[$day]['holiday'] !== null && $hours[$day]['holiday'] !== 0) ||
+                        (isset($hours[$day]['vacation']) && $hours[$day]['vacation'] !== null && $hours[$day]['vacation'] !== 0)
+                        );
+                @endphp
+                <td>
+                    <input wire:model="hours.{{ $day }}.vacation"
+                           type="number"
+                           name="vacation[{{ $day }}][vacation]"
+                           min="0"
+                           max="24"
+                           class="form-control"
+                           style="width: 50px; font-size:10px"
+                           value="8"
+                           placeholder="0"
+                           @if($isEntered) readonly @endif
+                    >
+                </td>
+            @endforeach
+            <!-- Total hours for Sick -->
+            <td>
+                <input type="number"
+                       value="{{ array_sum(array_column($hours, 'vacation')) }}"
+                       min="0"
+                       max="24"
+                       class="form-control"
+                       disabled
+                       style="width:60px; font-size:10px;"
+                >
+            </td>
+        </tr>
+        <tr>
+    <!-- Other cells... -->
+<td>
+                    </td>
+    <!-- Total Hours cell -->
+    <td colspan="7" style="text-align: end;">
+    <span style="font-size: 12px;margin-left:250px">Total hours: </span>
+    <input type="number" value="{{ $this->getTotalHours() }}" style="font-size: 12px;  width: 50px;" disabled>
+</td>
+ 
+</tr>
+ 
+ 
         <!-- Similar logic for Casual and Sick sections -->
         <!-- ... -->
     </tbody>

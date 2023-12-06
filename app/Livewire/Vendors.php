@@ -44,15 +44,16 @@ class Vendors extends Component
     {
         $companyId = auth()->user()->company_id;
 
-        $this->showPOLists = PurchaseOrder::with('ven','com','emp')->where('company_id',$companyId)->where('vendor_id', $vendorId)->orderBy('created_at','desc')->get();
+        $this->showPOLists = PurchaseOrder::with('ven', 'com', 'emp')->where('company_id', $companyId)->where('vendor_id', $vendorId)->orderBy('created_at', 'desc')->get();
         $this->poList = true;
     }
     public $bills;
-    public function showBills($vendorId){
+    public function showBills($vendorId)
+    {
         $companyId = auth()->user()->company_id;
 
         $this->activeButton = 'Bills';
-        $this->bills =Bill::with('vendor','company')->where('company_id',$companyId)->where('vendor_id',$vendorId)->orderBy('created_at','desc')->get();
+        $this->bills = Bill::with('vendor', 'company')->where('company_id', $companyId)->where('vendor_id', $vendorId)->orderBy('created_at', 'desc')->get();
     }
     public function closePOList()
     {
@@ -74,6 +75,24 @@ class Vendors extends Component
         $this->employeeSkillsPairs = array_values($this->employeeSkillsPairs);
     }
     public $job_title, $startDate, $endDate, $consultantName, $vendorName, $paymentTerms;
+
+    public function resetFieldsForPo()
+    {
+        $this->rate = null;
+        $this->rateType = null;
+        $this->job_title = null;
+        $this->endClientTimesheetRequired = null;
+        $this->timeSheetType = null;
+        $this->timeSheetBegins = null;
+        $this->invoiceType = null;
+        $this->paymentTerms = null;
+        $this->consultantName = null;
+        $this->vendorName = null;
+        $this->startDate = null;
+        $this->endDate = null;
+        // Add other fields you want to reset here
+    }
+
     public function savePurchaseOrder()
     {
         $this->validate([
@@ -108,10 +127,30 @@ class Vendors extends Component
             'payment_terms' => $this->paymentTerms,
         ]);
         session()->flash('purchase-order', 'Purchase order submitted successfully.');
+        $this->resetFieldsForPo();
+        $this->resetVendorFields();
+
         $this->po = false;
+    }
+    public $vendor = false;
+    public function callVendor()
+    {
+        if ($this->vendorName === 'addVendor') {
+            $this->po = false;
+            $this->vendor = true;
+        }
+    }
+    public function cVendor()
+    {
+        $this->resetFieldsForPo();
+        $this->po = true;
+        $this->vendor = false;
     }
     public function selectedConsultantId()
     {
+        if ($this->consultantName === 'addConsultant') {
+            $this->redirect('/emp-register');
+        }
         $selectedConsultantId = $this->employees->firstWhere('emp_id', $this->consultantName);
         $this->job_title = $selectedConsultantId ? $selectedConsultantId->job_title : null;
     }
@@ -145,12 +184,24 @@ class Vendors extends Component
 
     public function open()
     {
+        $this->po = false;
+
         $this->show = true;
     }
 
     public function close()
     {
         $this->show = false;
+    }
+    public function resetVendorFields()
+    {
+        $this->vendor_profile = null;
+        $this->vendor_name = null;
+        $this->email = null;
+        $this->phone = null;
+        $this->address = null;
+        $this->vendor_company_name = null;
+        // Add other fields you want to reset here
     }
     public function addVendors()
     {
@@ -175,7 +226,38 @@ class Vendors extends Component
             'address' => $this->address,
         ]);
         session()->flash('vendor', 'Vendor added successfully.');
+        $this->resetVendorFields();
+        $this->resetFieldsForPo();
+
         $this->show = false;
+    }
+
+
+    public function addvVendors()
+    {
+        $this->validate([
+            'vendor_profile' => 'required',
+            'vendor_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'vendor_company_name' => 'required'
+        ]);
+        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
+        $companyId = auth()->user()->company_id;
+
+        VendorDetails::create([
+            'vendor_image' => $vendorProfilePath,
+            'company_id' => $companyId,
+            'contact_person' => $this->vendor_name,
+            'vendor_name' => $this->vendor_company_name,
+            'email' => $this->email,
+            'phone_number' => $this->phone,
+            'address' => $this->address,
+        ]);
+        session()->flash('vendor', 'Vendor added successfully.');
+        $this->vendor = false;
+        $this->po = true;
     }
     public $edit = false;
 
@@ -244,7 +326,7 @@ class Vendors extends Component
         $this->po = false;
     }
     public $vendors;
-    public $customers,$employees;
+    public $customers, $employees;
     public function render()
     {
         $companyId = auth()->user()->company_id;
