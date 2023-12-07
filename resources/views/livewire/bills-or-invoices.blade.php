@@ -11,7 +11,8 @@
             height: 100%;
             z-index: 1040;
         }
-        .modal-content{
+
+        .modal-content {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
@@ -129,9 +130,9 @@
 
     <body>
         <div style="text-align: start">
-            <button onclick="openSalesOrderModal()" style="margin-right: 10px;" class="button">ADD Bill</button>
-            <button onclick="openPurchaseOrderModal()" style="margin-right: 10px;" class="button">ADD Invoice</button>
-    </div>
+            <button wire:click="openBill" style="margin-right: 10px;" class="button">ADD Bill</button>
+            <button wire:click="openInvoice" style="margin-right: 10px;" class="button">ADD Invoice</button>
+        </div>
         @if(session()->has('add-bill'))
         <div id="successAlert" style="text-align: center;" class="alert alert-success">
             {{ session('add-bill') }}
@@ -148,12 +149,13 @@
             }, 5000);
         </script>
 
-        <div id="salesOrderrModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
+        @if($invoice=="true")
+        <div id="salesOrderrModal" class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                         <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>Add Invoice</b></h5>
-                        <button onclick="closeSalesOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <button wire:click="closeInvoice" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                             <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                         </button>
                     </div>
@@ -182,7 +184,8 @@
 
                             <div>
                                 <label for="due_date" style="font-size: 12px;">Due Date:</label>
-                                <input type="text" id="dueDate" wire:model="due_date">
+                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date"x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
+
                                 @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
@@ -231,16 +234,20 @@
                 </div>
             </div>
         </div>
+        <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+        @endif
 
 
 
-        <div id="purchaseOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
+
+        @if($bill=="true")
+        <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
 
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                         <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>Add Bill</b></h5>
-                        <button onclick="closePurchaseOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <button wire:click="closeBill" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                             <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                         </button>
                     </div>
@@ -272,7 +279,8 @@
 
                             <div>
                                 <label for="due_date" style="font-size: 12px;">Due Date:</label>
-                                <input type="text" id="dueDatee" wire:model="due_date">
+                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date"x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
+
                                 @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
@@ -321,6 +329,9 @@
                 </div>
             </div>
         </div>
+        <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
+        @endif
 
 
 
@@ -546,43 +557,9 @@
 </div>
 
 <script>
-    function openSalesOrderModal() {
-        // Display the modal and backdrop
-        document.getElementById('salesOrderrModal').style.display = 'block';
-        document.getElementById('modalBackdrop').style.display = 'block';
-
-        // Initialize flatpickr for date selection
-        flatpickr("#dueDate", {
-            dateFormat: "M d Y", // Dec 14 2023
-            altFormat: "F d Y", // December 14 2023
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
         });
-    }
-
-    function closeSalesOrderModal() {
-        // Close the modal and backdrop
-        document.getElementById('salesOrderrModal').style.display = 'none';
-        document.getElementById('modalBackdrop').style.display = 'none';
-    }
-
-
-
-
-
-    function openPurchaseOrderModal() {
-        // Display the modal and backdrop
-        document.getElementById('purchaseOrderModal').style.display = 'block';
-        document.getElementById('modalBackdrop').style.display = 'block';
-
-        // Initialize flatpickr for date selection
-        flatpickr("#dueDatee", {
-            dateFormat: "M d Y", // Dec 14 2023
-            altFormat: "F d Y", // December 14 2023
-        });
-    }
-
-    function closePurchaseOrderModal() {
-        // Close the modal and backdrop
-        document.getElementById('purchaseOrderModal').style.display = 'none';
-        document.getElementById('modalBackdrop').style.display = 'none';
     }
 </script>

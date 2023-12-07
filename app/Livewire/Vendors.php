@@ -136,8 +136,8 @@ class Vendors extends Component
     public function callVendor()
     {
         if ($this->vendorName === 'addVendor') {
-            $this->po = false;
             $this->vendor = true;
+            $this->po=false;
         }
     }
     public function cVendor()
@@ -267,7 +267,7 @@ class Vendors extends Component
         $this->edit = true;
         $this->selected_vendor = VendorDetails::find($vendorId);
       
-        
+
         $this->company_id = $this->selected_vendor->company_id;
         $this->vendor_name = $this->selected_vendor->contact_person;
         $this->vendor_company_name = $this->selected_vendor->vendor_name;

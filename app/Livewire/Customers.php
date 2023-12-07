@@ -326,8 +326,9 @@ class Customers extends Component
     public function callCustomer()
     {
         if ($this->customerName === 'AddCustomer') {
-            $this->so = false;
+          
             $this->customer = true;
+            $this->so=false;
         }
     }
     public $customer = false;

@@ -238,6 +238,10 @@ class BillsOrInvoices extends Component
     {
         $this->invoice = false;
     }
+    public function openInvoice()
+    {
+        $this->invoice = true;
+    }
     public $vendors, $customers;
     public function render()
     {

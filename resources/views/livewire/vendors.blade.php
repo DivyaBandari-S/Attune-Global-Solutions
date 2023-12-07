@@ -2,9 +2,10 @@
 
     <!-- Add this to your HTML file -->
     <style>
-        .modal-content{
+        .modal-content {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
+
         .modal-backdrop {
             display: none;
             background: rgba(0, 0, 0, 0.5);
@@ -218,8 +219,7 @@
 
     <div style="text-align: start">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Vendors</button>
-        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" onclick="openSalesOrderModal()" class="btn btn-primary">ADD PO</button>
-
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addPO" class="btn btn-primary">ADD PO</button>
     </div>
     @if(session()->has('vendor'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
@@ -471,23 +471,21 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="updateVendors">
+
+
+
                         <div>
-                            <label for="customer_profile" style="font-size: 12px;">Vendor Company Logo:</label>
-                            <input type="file" wire:model="vendor_profile">
-                            @error('vendor_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            <label for="customer_company_name" style="font-size: 12px;">Vendor Name:</label>
+                            <input type="text" wire:model="vendor_company_name">
+                            @error('vendor_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Vendor Name:</label>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
                             <input type="text" wire:model="vendor_name">
                             @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
 
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Vendor Company Name:</label>
-                            <input type="text" wire:model="vendor_company_name">
-                            @error('vendor_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
                             <input type="email" wire:model="email">
@@ -521,13 +519,14 @@
 
 
 
-    <div id="salesOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
+    @if($po=="true")
+    <div id="salesOrderModal" class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
 
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                     <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Purchase Order</b></h5>
-                    <button onclick="closeSalesOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                    <button wire:click="cancelPO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                         <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                     </button>
                 </div>
@@ -568,17 +567,15 @@
                             <div class="row mb-2">
                                 <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" class="form-control">
-                                </div> <br>
+                                    <input style="font-size: 12px;" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control" />
+                                </div>
                                 @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" class="form-control">
-
-                                </div> <br>
+                                    <input style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control" />
+                                </div>
                                 @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
                             </div>
 
 
@@ -692,6 +689,7 @@
     </div>
     <div id="modalBackdrop" class="modal-backdrop fade show"></div>
 
+    @endif
     <!-- Everyone tab content -->
 
     <div class="row">
@@ -855,22 +853,11 @@
     <!-- End of Everyone tab content -->
 </div>
 
+
 <script>
-    function openSalesOrderModal() {
-        // Display the modal and backdrop
-        document.getElementById('salesOrderModal').style.display = 'block';
-        document.getElementById('modalBackdrop').style.display = 'block';
-
-        // Initialize flatpickr for date selection
-        flatpickr("#startDate, #endDate", {
-            dateFormat: "M d Y", // Dec 14 2023
-            altFormat: "F d Y", // December 14 2023
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
         });
-    }
-
-    function closeSalesOrderModal() {
-        // Close the modal and backdrop
-        document.getElementById('salesOrderModal').style.display = 'none';
-        document.getElementById('modalBackdrop').style.display = 'none';
     }
 </script>

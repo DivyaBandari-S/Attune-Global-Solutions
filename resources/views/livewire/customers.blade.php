@@ -219,7 +219,7 @@
 
     <div style="text-align: start;">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
-        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" onclick="openSalesOrderModal()" class="btn btn-primary">ADD SO</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO"  class="btn btn-primary">ADD SO</button>
     </div>
     @if(session()->has('success'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
@@ -534,12 +534,13 @@
 
 
 
-    <div id="salesOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
+    @if($so=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                     <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                    <button onclick="closeSalesOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                    <button wire:click="cancelSO"  type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                         <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                     </button>
                 </div>
@@ -583,13 +584,13 @@
                             <div class="row mb-2">
                                 <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" class="form-control">
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate"x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
                                 </div> <br>
                                 @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" class="form-control">
+                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
 
                                 </div> <br>
                                 @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -711,6 +712,7 @@
     </div>
 
     <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+    @endif
 
 
 
@@ -878,21 +880,9 @@
 
 
 <script>
-    function openSalesOrderModal() {
-        // Display the modal and backdrop
-        document.getElementById('salesOrderModal').style.display = 'block';
-        document.getElementById('modalBackdrop').style.display = 'block';
-
-        // Initialize flatpickr for date selection
-        flatpickr("#startDate, #endDate", {
-            dateFormat: "M d Y", // Dec 14 2023
-            altFormat: "F d Y", // December 14 2023
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
         });
-    }
-
-    function closeSalesOrderModal() {
-        // Close the modal and backdrop
-        document.getElementById('salesOrderModal').style.display = 'none';
-        document.getElementById('modalBackdrop').style.display = 'none';
     }
 </script>

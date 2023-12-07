@@ -25,7 +25,7 @@ class SalesOrPurchaseOrders extends Component
     }
     public $activeButton = "SO";
 
-    public function cancelPO()
+    public function closePO()
     {
         $this->po = false;
     }
@@ -75,7 +75,7 @@ class SalesOrPurchaseOrders extends Component
 
         $this->so = true;
     }
-    public function cancelSO()
+    public function closeSO()
     {
         $this->so = false;
     }
@@ -270,6 +270,7 @@ class SalesOrPurchaseOrders extends Component
         if ($this->vendorName === 'addVendor') {
            
             $this->showVendor = true;
+            $this->po=false;
         }
     }
     public function render()
