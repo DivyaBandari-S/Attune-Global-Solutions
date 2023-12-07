@@ -44,7 +44,7 @@
 
 
         .menu-link:hover{
-           
+
            border-radius: 4px;
             background-color:#fff3;
         }
@@ -102,7 +102,7 @@
             /* margin-left: 17%; */
             /* display: flex; */
             /* justify-content: center;
-            align-items: center; */ 
+            align-items: center; */
         }
 
 
@@ -138,8 +138,8 @@
             /* background: #fff; */
             border: 1px solid #e0dddd;
             border-radius:0px;
-            height: auto; 
-            width: fit-content; 
+            height: auto;
+            width: fit-content;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             top: 3.1em;
             z-index: 1000;
@@ -156,7 +156,7 @@
         .hideHamburger {
             display: none !important;
         }
-       
+
     }
     </style>
 </head>
@@ -239,7 +239,7 @@
 
         <div class="col-md-10 p-0 fullContaint">
              <div class="row-header" style="z-index: 1000;">
-             
+
             <div class="m-0 row" style="color: white; padding: 5px;">
                 <div class="col-md-3 p-0 fs-4 m-auto">
                     <i class="fas fa-bars hideHamburger" style="float: left; color: #fff; font-size: 20px; margin: 0px 10px; cursor: pointer;" onclick="myMenu()"></i>

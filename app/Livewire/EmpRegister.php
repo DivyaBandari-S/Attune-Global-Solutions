@@ -58,8 +58,14 @@ class EmpRegister extends Component
     public $is_starred;
     public $skill_set;
     public $savedImage;
+    public $isHr;
+    public $contractor_company_id;
 
-    
+    public function updatedEmployeeType()
+    {
+        // Reset contractor_company_id when employee_type changes
+        $this->reset(['contractor_company_id']);
+    }
     public function register(){
         $this->validate([
             'first_name' => 'required|string|max:255',
@@ -84,12 +90,16 @@ class EmpRegister extends Component
             'company_id' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            'contractor_company_id' => $this->employee_type == 'contract' ? 'required|string|max:255' : '', // Add this line
         ]);
 
        $imagePath = $this->image->store('employee_image', 'public');
        $this->savedImage = $imagePath;
+       $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
+     
+       
          EmpDetails::create([
-           
+
             'emp_id' => $this->emp_id,
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
@@ -137,8 +147,8 @@ class EmpRegister extends Component
             'company_id' => $this->company_id,
             'is_starred' => $this->is_starred,
             'skill_set' => $this->skill_set,
+            'contractor_company_id' => $contractorCompanyId,
            ]);
-
 
         session()->flash('emp_success', 'Employee registered successfully!');
 

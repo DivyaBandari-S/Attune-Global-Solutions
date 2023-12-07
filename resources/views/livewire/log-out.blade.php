@@ -8,7 +8,7 @@
             color: red;
         }
     </style>
-    <a wire:click="logouted" style="text-decoration: none;">
+    <a wire:click="logouted" style="text-decoration: none; display:flex;">
         <button class="btn btn-link">
             Logout
             <i class="fas fa-sign-out-alt"></i> <!-- Font Awesome Logout Icon -->

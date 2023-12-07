@@ -1,6 +1,44 @@
 <div style="padding:10px 15px; background:#fff; ">
     <!-- Add this to your HTML file -->
     <style>
+        tr:hover {
+            background-color: #f5f5f5;
+            font-size: 8px;
+
+        }
+                .table {
+            width: 100%;
+            margin:10px auto;
+            padding:0;
+            font-size: 12px;
+            font-family: 'Roboto', sans-serif;
+            color: #212529;
+            border-collapse: collapse;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: top;
+            font-size:0.725rem;
+            border-right: 1px solid #dee2e6; 
+            text-align: center;
+      
+        }
+ 
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            background-color: rgb(2, 17, 79);
+            color: white;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
         .customer-image {
             border-radius: 50%;
             height: 50px;
@@ -126,7 +164,7 @@
             background-color: #0056b3;
         }
         .button-btn{
-            background-color: rgb(2, 17, 79);
+            background-color:grey;
             color: white;
             border-radius: 5px;
             border: none;
@@ -154,8 +192,9 @@
         /* Style for the container with scrolling */
       .scroll-container {
           overflow-y: auto;
+          padding:5px;
           min-height: 250px;
-          max-height: 400px;
+          max-height: 350px;
           margin-top:-10px;
           scrollbar-width: thin; /* For Firefox */
           scrollbar-color: #ccc transparent; /* For Firefox */
@@ -197,12 +236,10 @@
 }
 
     </style>
-
        <div style="margin-top:40px;display:flex;justify-content:flex-end; ">
-          <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;"><a href="{{route('emp-register')}}" style="outline:none;text-decoration:none;color:#fff;">ADD Employees</a></button>
+          <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;"><a href="{{route('emp-register')}}" style="outline:none;text-decoration:none;color:#fff;">ADD Contractors</a></button>
           <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;margin-left:10px;"><a href="{{route('employee-list-page')}}" style="outline:none;text-decoration:none;color:#fff;">Employees List</a></button>
        </div>
-
      <div>
      @if(session()->has('success'))
     <div style="text-align: center;" class="alert alert-success">
@@ -211,7 +248,7 @@
     @endif
    
     <div class="row" style="margin-top: 10px; width: 100%;paddng:0;">
-       <div class="col-md-3" style=" background-color: #f2f2f2;; border-radius: 5px;    margin-right: 10px; padding: 5px;">
+       <div class="col-md-3" style=" background-color: #f2f2f2;; border-radius: 5px; color:rgb(2, 17, 79);  text-align:center; margin-right: 10px; padding: 15px;"><h6>Contractors List</h6>
        </div>
        <div class="col-md-8 info" style=" background-color: #f2f2f2; border-radius: 5px; padding: 15px 20px; display: flex; flex-direction: column;">
        <div >
@@ -239,6 +276,7 @@
                                         <strong>Phone </strong> 
                                         <span> <strong>:</strong> {{ optional($selectedPerson)->mobile_number }}</span>
                                      </div>
+                                     
                                 </div>
 
                                 <div class="col-md-6">
@@ -254,6 +292,7 @@
                                        <strong>Company Name</strong>
                                         <span><strong>:</strong> {{ optional($selectedPerson)->company_name }}</span>
                                     </div>
+                                   
                                   </div>
                           </div>
                      </div>
@@ -282,17 +321,18 @@
                               
                                 <div class="col-md-6" >
                                     <div class="align-data">
-                                        <strong>Employee Name </strong> 
+                                        <strong>Contractor Name </strong> 
                                         <span><strong>:</strong> {{ optional($selectedPerson)->first_name }} {{ optional($selectedPerson)->last_name }}</span>
                                     </div>
                                      <div class="align-data">
-                                        <strong>Employee ID </strong> 
+                                        <strong>Contractor ID </strong> 
                                         <span> <strong>:</strong> (#{{ optional($selectedPerson)->emp_id }})</span>
                                      </div>
                                      <div class="align-data">
                                         <strong>Phone </strong> 
                                         <span> <strong>:</strong> {{ optional($selectedPerson)->mobile_number }}</span>
                                      </div>
+                                    
                                 </div>
 
                                 <div class="col-md-6">
@@ -309,6 +349,7 @@
                                        <strong>Company Name</strong>
                                         <span><strong>:</strong> {{ optional($selectedPerson)->company_name }}</span>
                                     </div>
+                                   
                                   </div>
                           </div>
                      </div>
@@ -341,15 +382,15 @@
             </div>
 
             <div class="scroll-container" >
-              @foreach($allContractors as $customer)
-                    <div wire:click="selectContractor('{{ $customer->emp_id }}')" class="container" style="background-color: {{ $selectedContractor && $selectedContractor->emp_id == $customer->emp_id ? '#ccc' : 'white' }}; border-radius: 5px; padding:10px auto;">
-                        <div class="employee-data">
-                        <span style="font-size: 0.795rem;  display: block;white-space: nowrap;text-overflow: ellipsis;  max-width: 150px;  line-height: 1.2;overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span> 
+            @foreach($allContractors as $customer)
+            <div wire:click="selectContractor('{{ $customer->customer_id }}', '{{ $customer->emp_id }}')" class="container" style="width:95%; background-color: {{ $selectedContractor && $selectedContractor->customer_id == $customer->customer_id ? '#ccc' : 'white' }}; border-radius: 5px; padding:10px auto; cursor: pointer;">
 
-                            <span style="color: #778899; font-size: 0.625rem;">(#{{ $customer->emp_id }})</span>
-                        </div>
-                    </div>
-                @endforeach
+        <div class="employee-data">
+            <span style="font-size: 0.795rem; display: block; white-space: nowrap; text-overflow: ellipsis; max-width: 150px; line-height: 1.2; overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span>
+            <span style="color: #778899; font-size: 0.625rem;">(#{{ $customer->emp_id }})</span>
+        </div>
+    </div>
+@endforeach
 
                 @endif
             </div>
@@ -358,14 +399,80 @@
         <!-- Details of the selected person -->
       
             <div class="col-md-8" style=" background-color: #f2f2f2; border-radius: 5px; padding: 10px 15px;">
-            <div style="text-align: start; diplay:flex;">
-                <button class="button-btn">Invoices & Payments</button>
-                <button class="button-btn">Email Activities</button>
-                <button class="button-btn">Notes</button>
-                <button class="button-btn">Time Sheets</button>
+            @php
+            $selectContractor = $this->selectedContractor ??  $this->contractors->first();
+            @endphp
+                <div style="text-align: start; diplay:flex;">
+                <button class="button-btn" wire:click="updateAndShowSoList('{{ optional($selectContractor)->emp_id }}')" style="{{ $activeButton === 'SO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
+        Working Project
+    </button>
+
+
+
+                    <button class="button-btn" wire:click="showContent('showEmailActivities')" @if($showEmailActivities) style="background-color:  rgb(2, 17, 79);" @endif>Email Activities</button>
+                    <button class="button-btn" wire:click="showContent('showNotes')" @if($showNotes) style="background-color:  rgb(2, 17, 79);" @endif>Notes</button>
+                    <button class="button-btn" wire:click="showContent('showTimeSheets')" @if($showTimeSheets) style="background-color:  rgb(2, 17, 79);" @endif>Time Sheets</button>
+                </div>
+
+                @if($activeButton=="SO")
+
+<!-- resources/views/livewire/purchase-order-table.blade.php -->
+
+<div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Serial No</th>
+            <th>Company ID's</th>
+            <th>Company Names</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Time Sheet Type</th>
+            <th>Time Sheet Begins</th>
+            <th>Invoice Type</th>
+            <th>Payment Terms</th>
+            <th>SO To </th>
+        </tr>
+    </thead>
+    <tbody>
+    @php
+    $serialNumber = 1;
+   @endphp
+  @forelse($showSOLists as  $salesOrder)
+    @php
+        $endDate = \Carbon\Carbon::parse($salesOrder->end_date);
+        $currentDate = now();
+    @endphp
+
+    @if ($endDate->greaterThanOrEqualTo($currentDate))
+        <tr>
+            <td>{{ $serialNumber++ }}</td>
+            <td>{{ $salesOrder->cus->customer_id }}</td>
+            <td>{{ $salesOrder->cus->customer_company_name }}</td>
+            <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('d-m-Y') }}</td>
+            <td>{{ $endDate->format('d-m-Y') }}</td>
+            <td>{{ $salesOrder->time_sheet_type }}</td>
+            <td>{{ $salesOrder->time_sheet_begins }}</td>
+            <td>{{ $salesOrder->invoice_type }}</td>
+            <td>{{ $salesOrder->payment_terms }}</td>
+            <td>{{ $salesOrder->com->company_name }}</td>
+        </tr>
+    @endif
+
+@empty
+    <tr>
+        <td colspan="12" style="text-align: center;">Contractors Not Found</td>
+    </tr>
+@endforelse
+
+    </tbody>
+</table>
+
+</div>
+@endif
+                 
             </div>
-            </div>
-     </div>
+         </div>
     </div>
 
 </div>

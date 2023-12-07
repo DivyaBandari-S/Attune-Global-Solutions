@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 use App\Models\CompanyDetails;
+use App\Models\SalesOrder;
 use App\Models\EmpDetails;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -19,12 +20,58 @@ class EmployeeListPage extends Component
     public $searchTerm;
     public $allCustomers;
     public $companies;
+    public $workingProjects = [];
+    public $activeButton = false;
+    public $showSOLists = []; 
+    public $empId;
 
-    public function selectCustomer($customerId)
+    public function updateAndShowSoList($empId)
     {
-        $this->selectedCustomer = EmpDetails::where('emp_id', $customerId)->first();
-      
+        $this->activeButton = 'SO';
+        $this->showSoList($empId);
     }
+    public function showSoList($empId)
+    {
+        if (!$empId) {
+            return;
+        }
+
+        $companyId = auth()->user()->company_id;
+
+        $this->showSOLists = SalesOrder::join('customer_details', 'sales_orders.customer_id', '=', 'customer_details.customer_id')
+        ->join('emp_details', 'sales_orders.emp_id', '=', 'emp_details.emp_id')
+        ->where('customer_details.company_id', $companyId)
+        ->where('sales_orders.emp_id', $empId) // Filter by emp_id
+        ->select('sales_orders.*', 'emp_details.*', 'customer_details.customer_company_name') // Select the column directly without alias
+        ->orderByDesc('sales_orders.created_at')
+        ->get();
+    }
+
+    public function selectCustomer($customerId, $empId)
+{
+    // Check if emp_id from EmpDetails matches emp_id in sales_orders
+    $empDetails = EmpDetails::where('emp_id', $empId)->first();
+
+    if ($empDetails) {
+        // Set the selected customer
+        $this->selectedCustomer = $empDetails;
+
+        // Check if the emp_id is working on projects (exists in SalesOrder)
+        $workingOnProjects = SalesOrder::where('emp_id', $empId)->exists();
+
+        if ($workingOnProjects) {
+            // If working on projects, call showSoList
+            $this->showSoList($empId);
+        } else {
+            $this->showSOLists = [];
+        }
+    } else {
+        // Handle the case where no matching emp_id is found
+        // You can add any specific logic or error handling here
+    }
+}
+
+    
 
     public function filter()
     {
@@ -44,14 +91,6 @@ class EmployeeListPage extends Component
         $this->peopleFound = count($this->filteredPeoples) > 0;
     }
    
-    public function editCustomers()
-    {
-        $this->edit = true;
-    }
-    public function closeEdit()
-    {
-        $this->edit = false;
-    }
     public function render()
     {
         $companyId = Auth::user()->company_id;

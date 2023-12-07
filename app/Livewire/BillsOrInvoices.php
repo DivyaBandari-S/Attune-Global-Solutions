@@ -33,8 +33,120 @@ class BillsOrInvoices extends Component
 
     public function showInvoice()
     {
-        $this->invoice=true;
+        $this->invoice = true;
     }
+    public $customer_company_name, $customer_profile;
+    public $vendor_profile, $email, $phone, $vendor_company_name, $address;
+    public $showVendor = false;
+    public $show = false;
+    public $po = false;
+    public function openBill()
+    {
+        $this->bill = true;
+    }
+    public function closeBill()
+    {
+        $this->bill = false;
+    }
+    public function callCustomer()
+    {
+        if ($this->customer_name === 'addCustomer') {
+            $this->invoice = false;
+            $this->show = true;
+        }
+    }
+    public function callVendor()
+    {
+        if ($this->vendor_name === 'addVendor') {
+            $this->bill = false;
+            $this->showVendor = true;
+        }
+    }
+    public function openCustomer()
+    {
+        $this->show = true;
+        $this->invoice = false;
+    }
+    public function closeCustomer()
+    {
+
+        $this->invoice = true;
+        $this->show = false;
+        $this->resetInvoiceFields();
+    }
+    public function closeVendor()
+    {
+
+        $this->bill = true;
+
+        $this->showVendor = false;
+        $this->resetBillFields();
+    }
+    public function openVendor()
+    {
+        $this->bill = false;
+        $this->showVendor = true;
+    }
+    public function addVendors()
+    {
+        $this->validate([
+            'vendor_profile' => 'required',
+            'vendor_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'vendor_company_name' => 'required'
+        ]);
+        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
+        $companyId = auth()->user()->company_id;
+
+        VendorDetails::create([
+            'vendor_image' => $vendorProfilePath,
+            'company_id' => $companyId,
+            'contact_person' => $this->vendor_name,
+            'vendor_name' => $this->vendor_company_name,
+            'email' => $this->email,
+            'phone_number' => $this->phone,
+            'address' => $this->address,
+        ]);
+        session()->flash('vendor', 'Vendor added successfully.');
+        $this->resetBillFields();
+        $this->showVendor = false;
+        $this->bill = true;
+    }
+
+    public function addCustomers()
+    {
+
+        $this->validate([
+            'customer_profile' => 'required',
+            'customer_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'notes' => 'required',
+            'customer_company_name' => 'required'
+        ]);
+        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
+        $companyId = auth()->user()->company_id;
+
+        CustomerDetails::create([
+            'customer_company_logo' => $customerProfilePath,
+            'company_id' => $companyId,
+            'customer_name' => $this->customer_name,
+            'customer_company_name' => $this->customer_company_name,
+            'email' => $this->email,
+            'phone' => $this->phone,
+            'address' => $this->address,
+            'notes' => $this->notes,
+        ]);
+        session()->flash('success', 'Customer added successfully.');
+
+        $this->resetInvoiceFields();
+        $this->show = false;
+        $this->invoice = true;
+    }
+
     public function addBill()
     {
         $this->validate([
@@ -63,9 +175,34 @@ class BillsOrInvoices extends Component
             'notes' => $this->notes,
             'company_id' => $companyId,
         ]);
-        $this->bill=false;
+        $this->bill = false;
 
         session()->flash('add-bill', 'Bill added successfully.');
+    }
+    public function resetBillFields()
+    {
+        $this->vendor_name = null;
+        $this->amount = null;
+        $this->due_date = null;
+        $this->payment_terms = null;
+        $this->description = null;
+        $this->status = null;
+        $this->currency = null;
+        $this->notes = null;
+        // Add other fields you want to reset here
+    }
+
+    public function resetInvoiceFields()
+    {
+        $this->customer_name = null;
+        $this->amount = null;
+        $this->due_date = null;
+        $this->payment_terms = null;
+        $this->description = null;
+        $this->status = null;
+        $this->currency = null;
+        $this->notes = null;
+        // Add other fields you want to reset here
     }
 
     public function addInvoice()
@@ -94,7 +231,7 @@ class BillsOrInvoices extends Component
             'notes' => $this->notes,
             'company_id' => $companyId,
         ]);
-        $this->invoice=false;
+        $this->invoice = false;
         session()->flash('add-invoice', 'Invoice added successfully.');
     }
     public function close()

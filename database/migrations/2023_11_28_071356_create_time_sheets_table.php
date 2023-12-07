@@ -11,18 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('time_sheet_entries', function (Blueprint $table) {
+        Schema::create('time_sheets', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->date('day');
-            $table->integer('regular');
-            $table->integer('casual');
-            $table->integer('sick');
-            $table->integer('holiday');
-            $table->integer('vacation');
-            $table->unique(['emp_id', 'day']);
+            $table->string('day');
+            $table->integer('hours')->default(0);
             $table->foreign('emp_id')->references('emp_id')->on('emp_details')->onDelete('cascade');
-
             $table->timestamps();
         });
     }
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('time_sheet_entries');
+        Schema::dropIfExists('time_sheets');
     }
 };

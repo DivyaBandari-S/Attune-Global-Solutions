@@ -1,4 +1,4 @@
-<div style="padding:20px">
+<div style="padding:10px">
     <!-- Add this to your HTML file -->
     <style>
         /* Add your custom CSS styles here */
@@ -9,6 +9,7 @@
         }
 
         th,
+
         td {
             border: 1px solid #ddd;
             padding: 8px;
@@ -196,7 +197,7 @@
         }
     </style>
 
-    <div style="text-align: start; margin-bottom:16px;">
+    <div style="text-align: start;">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO" class="btn btn-primary">ADD SO</button>
     </div>
@@ -383,6 +384,73 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
 
+
+    @if($customer=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                    <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Customers Details</b></h5>
+                    <button wire:click="cCustomer" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form wire:submit.prevent="addcCustomers">
+                        <div>
+                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
+                            <input type="file" wire:model="customer_profile">
+                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <input type="text" wire:model="customer_company_name">
+                            @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="email" style="font-size: 12px;">Email:</label>
+                            <input type="email" wire:model="email">
+                            @error('email') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" style="font-size: 12px;">Phone:</label>
+                            <input type="text" wire:model="phone">
+                            @error('phone') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="address" style="font-size: 12px;">Address:</label>
+                            <textarea wire:model="address"></textarea>
+                            @error('address') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="notes" style="font-size: 12px;">Notes:</label>
+                            <textarea wire:model="notes"></textarea>
+                            @error('notes') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
+                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success me-2" type="submit">Submit</button>
+                            <button class="btn btn-danger" wire:click="cCustomer" type="button" style="font-size: 12px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+
     @if($edit=="true")
     <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -450,6 +518,10 @@
 
 
 
+
+
+
+
     @if($so=="true")
     <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -470,16 +542,22 @@
                         <form wire:submit.prevent="saveSalesOrder">
                             @csrf
 
+
                             <div class="form-group">
-                                <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
+                                <label style="font-size: 12px;" for="vendorName">Consultant Name:</label>
                                 <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultant_name">
                                     <option style="font-size: 12px;" value="">Select Consultant</option>
+                                    <option style="font-size: 12px;" value="addConsultant">
+                                        << Add Consultant>>
+                                    </option>
                                     @foreach($employees as $employee)
                                     <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
                                     @endforeach
+
                                 </select>
                                 @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
+
 
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="rate">Job Title:</label>
@@ -525,16 +603,22 @@
                                 </div>
                             </div>
 
+
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
-                                <select style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
+                                <select wire:change="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
                                     <option style="font-size: 12px;" value="">Select Customer</option>
+                                    <option style="font-size: 12px;" value="AddCustomer">
+                                        << Add Customer>>
+                                    </option>
                                     @foreach($customers as $customer)
                                     <option style="font-size: 12px;" value="{{ $customer->customer_id }}">{{ $customer->customer_company_name }}</option>
                                     @endforeach
+
                                 </select>
                                 @error('customerName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
+
 
 
                             <div class="form-group">
@@ -594,9 +678,14 @@
 
 
                             <div class="form-group">
-                                <label style="font-size: 12px;" for="paymentType">Payment Terms:</label>
-                                <input style="font-size: 12px;" type="text" class="form-control" id="rate" wire:model="paymentTerms" placeholder="Ex: Net 0,Net 10,........">
-
+                                <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                    <option style="font-size: 12px;">Select payment net terms</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                    <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                    <!-- Add more options as needed -->
+                                </select>
                                 @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
                             <div style="text-align: center;">
@@ -612,6 +701,8 @@
 
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
+
+
 
 
 
