@@ -249,28 +249,25 @@ a:hover{
 
                                 <!-- ... (other properties) ... -->
 
-
                                 <div class="form-group">
     <label for="employee_type">Employee Type:</label>
-    <select class="form-control custom-select placeholder-small" wire:model="employee_type" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
+    <select wire:model="employee_type" wire:change="employeeCall" class="form-control custom-select placeholder-small" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
         <option value="default">Select Employee Type</option>
         <option value="full-time">Full-Time</option>
         <option value="part-time">Part-Time</option>
         <option value="contract">Contract</option>
     </select>
     @error('employee_type') <span class="text-danger">{{ $message }}</span> @enderror
+
     @if($showContractorField)
-    <div class="form-group">
-        <label for="contractor_company_id">Contractor Company ID:</label>
-        <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
-        @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
-    </div>
-@endif
+        <div class="form-group">
+            <label for="contractor_company_id">Contractor Company ID:</label>
+            <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
+            @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+    @endif
 </div>
 
-
-
-<!-- ... (remaining code) ... -->
 
 
                                 <div class="form-group">

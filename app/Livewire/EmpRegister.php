@@ -62,12 +62,11 @@ class EmpRegister extends Component
     public $contractor_company_id;
     public $showContractorField = false;
 
-    public function updated($propertyName)
+    public function employeeCall()
     {
-        if ($propertyName === 'employee_type') {
-            $this->showContractorField = ($this->employee_type == 'contract');
-        }
+        $this->showContractorField = $this->employee_type === 'contract';
     }
+    
     public function register(){
         $this->validate([
             'first_name' => 'required|string|max:255',

@@ -40,6 +40,7 @@ class PageTitle extends Component
             'employee-pages' => 'Employees',
             'salesOrPurchase' => 'Sales / Purchase Orders',
             'billsOrInvoices' => 'Bills / Invoices',
+            'emp-register' => 'Employee Register',
             // Add more mappings as needed
         ];
 

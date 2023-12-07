@@ -128,8 +128,7 @@
            margin-top:-15px;
            white-space: nowrap;
            gap:20px;
-           font-size:0.725rem;
-           padding:5px 10px;
+           padding:5px 1px;
             align-items:center;
             transition: background-color 0.3s; 
         }
@@ -191,10 +190,13 @@
         margin-right: 5px; /* Adjust the value to control the space between strong and colon */
     }
         /* Style for the container with scrolling */
+        .input-group .form-control{
+        width:100%;
+        font-size: 11px; width:80%;box-sizing: border-boxcursor: pointer; border-radius: 5px 0 0 5px;
+    }
       .scroll-container {
           overflow-y: auto;
-          min-height: 250px;
-          max-height: 400px;
+          max-height: 300px;
           margin-top:-10px;
           scrollbar-width: thin; /* For Firefox */
           scrollbar-color: #ccc transparent; /* For Firefox */
@@ -222,6 +224,12 @@
       .container.employee-data:hover {
           background-color: #456787;
       }
+      
+    @media (max-width: 1060px) {
+    .input-group .form-control{
+            width:70%;
+        }
+    }
       @media (max-width: 760px) {
     .details {
         flex-direction: column;
@@ -232,12 +240,20 @@
         width: 100%;
         margin-bottom: 10px; /* Add some space between the columns */
     }
+    .col-md-3 {
+        margin-bottom: 10px; /* Add some space between the columns */
+    }
   
 }
+@media (max-width: 560px) {
+        .scroll-table {
+            overflow-x: scroll;
+        }
+    }
 
     </style>
 
-       <div style="margin-top:40px;display:flex;justify-content:flex-end; ">
+       <div style="display:flex;justify-content:flex-end; ">
           <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;"><a href="{{route('emp-register')}}" style="outline:none;text-decoration:none;color:#fff;">ADD Employees</a></button>
           <button class="button" style="text-align:center; padding:3px 10px;font-size:0.795rem;margin-left:10px;"><a href="{{route('contractor-page')}}" style="outline:none;text-decoration:none;color:#fff;">Contractor List</a></button>
        </div>
@@ -388,13 +404,13 @@
             <img src="https://img.freepik.com/premium-vector/no-data-concept-illustration_86047-488.jpg" alt="" style="width:400px; height:400px;">
             <p style="color:#778899; text-align:center; font-weight:500;">No data found</p>
      @else
-    <div class="row" style="margin-top: 10px; width: 100%; padding:0;">
+    <div class="row" style="margin-top: 10px; width: 100%;height:350px; padding:0;">
         <div class="col-md-3" style=" background-color: #f2f2f2;; border-radius: 5px; margin-right: 10px; ">
-            <div class="container" style="margin-top: 15px;">
+        <div class="container" style="margin-top: 15px; padding:0;">
                 <div class="row" >
                     <div class="col" style="margin: 0px; padding: 0px">
-                        <div class="input-group">
-                            <input wire:model="searchTerm" style="font-size: 11px; width:80%;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                        <div class="input-group" style="display:flex;">
+                            <input wire:model="searchTerm"  type="text" class="form-control" placeholder="Search for Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                             <div class="input-group-append">
                                 <button wire:click="filter" style="height: 28px; border-radius: 0 5px 5px 0; background-color: #003767; color: #fff; border: none;" class="btn" type="button">
                                     <i style="text-align: center;" class="fa fa-search"></i>
@@ -409,7 +425,7 @@
             @foreach($allCustomers as $customer)
                     <div wire:click="selectCustomer('{{ $customer->customer_id }}', '{{ $customer->emp_id }}')" class="container" style="width:95%; background-color: {{ optional($selectedCustomer)->customer_id == $customer->customer_id && optional($selectedCustomer)->emp_id == $customer->emp_id ? '#ccc' : 'white' }}; border-radius: 5px; padding:10px auto; cursor: pointer;">
                         <div class="employee-data">
-                            <span style="font-size: 0.795rem;  display: block;white-space: nowrap;text-overflow: ellipsis;  max-width: 150px;  line-height: 1.2;overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span> 
+                            <span style="font-size: 0.725rem;  display: block;white-space: nowrap;text-overflow: ellipsis;  max-width: 150px;  line-height: 1.2;overflow: hidden;">{{ $customer->first_name }} {{ $customer->last_name }}</span> 
                             <span style="color: #778899; font-size: 0.625rem;">(#{{ $customer->emp_id }})</span>
                         </div>
                     </div>
