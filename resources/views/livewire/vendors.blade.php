@@ -1,4 +1,4 @@
-<div style="padding:20px">
+<div style="padding:10px">
 
     <!-- Add this to your HTML file -->
     <style>
@@ -196,11 +196,11 @@
         }
     </style>
 
-    <p style="text-align: start;">
-        <button style="margin-right: 5px;" wire:click="open" class="button">ADD Vendors</button>
-        <button style="margin-right: 5px;" wire:click="addPO" class="button">ADD PO</button>
+    <div style="text-align: start">
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Vendors</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addPO" class="btn btn-primary">ADD PO</button>
 
-    </p>
+    </div>
     @if(session()->has('vendor'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
         {{ session('vendor') }}
@@ -216,17 +216,17 @@
             document.getElementById('purchaseOrderAlert').style.display = 'none';
         }, 5000);
     </script>
-    <div class="row" style="height:150px">
+    <div class="row m-0">
         @php
         $selectedPerson = $selectedVendor ?? $vendors->first();
         $isActive = $selectedPerson->status == 'active';
         @endphp
-        <div class="col-md-3" style="background-color: #f2f2f2;margin-right:5px">
-            <img style="height: 160px;" src="https://www.ibousa.org/wp-content/uploads/Vendors-e1503453975329.png" alt="">
+        <div class="col-md-3 rounded p-0 mt-2" style="background-color: #f2f2f2;margin-right:5px">
+            <img style="height: 160px; width:-webkit-fill-available; border-radius: 8px;" src="https://www.ibousa.org/wp-content/uploads/Vendors-e1503453975329.png" alt="">
         </div>
-        <div class="col-md-8" style="background-color: #f2f2f2; padding: 8px">
+        <div class="col-md-8 rounded mt-2" style="background-color: #f2f2f2; padding: 8px">
             <p style="text-align: start">
-                <button style="margin-right: 10px;" wire:click="editVendors('{{$selectedPerson->id}}')" class="button">Edit</button>
+                <button style="margin-right: 10px;" wire:click="editVendors('{{$selectedPerson->id}}')" class="rounded btn-outline-primary p-1 float-end">Edit</button>
             </p>
             @if ($selectedVendor)
             <div class="row" style="font-size: 13px;">
@@ -250,7 +250,7 @@
 
                             </div>
 
-                            <div style="flex: 1;margin-left: 8%;">
+                            <div style="flex: 1;">
                                 <h2 style="font-size: 10px;"><strong>Address</strong></h2>
                                 <p style="font-size: 10px;">{{ optional($selectedPerson)->address }}</p>
 
@@ -259,7 +259,7 @@
 
 
                             </div>
-                            <div style="flex: 1;margin-left: 8%;">
+                            <div style="flex: 1;">
 
                                 <h2 style="font-size: 10px;"><strong>Contact Phone</strong></h2>
                                 <p style="font-size: 10px;">{{ optional($selectedPerson)->phone_number }}</p>
@@ -298,14 +298,14 @@
 
                             </div>
 
-                            <div style="flex: 1;margin-left: 8%;">
+                            <div style="flex: 1;">
                                 <h2 style="font-size: 10px;"><strong>Address</strong></h2>
                                 <p style="font-size: 10px;">{{ optional($firstPerson)->address }}</p>
                                 <h2 style="font-size: 10px;"><strong>Email</strong></h2>
                                 <p style="font-size: 10px;">{{ optional($firstPerson)->email }}</p>
 
                             </div>
-                            <div style="flex: 1;margin-left: 8%;">
+                            <div style="flex: 1;">
                                 <h2 style="font-size: 10px;"><strong>Vendor Phone</strong></h2>
                                 <p style="font-size: 10px;">{{ optional($firstPerson)->phone_number }}</p>
                                 <h2 style="font-size: 10px;"><strong>Contact Name</strong></h2>
@@ -320,6 +320,67 @@
             @endif
         </div>
     </div>
+
+
+    @if($vendor=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                    <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Vendors Details</b></h5>
+                    <button wire:click="cVendor" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form wire:submit.prevent="addvVendors">
+                        <div>
+                            <label for="customer_profile" style="font-size: 12px;">Vendor Company Logo:</label>
+                            <input type="file" wire:model="vendor_profile">
+                            @error('vendor_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Vendor Name:</label>
+                            <input type="text" wire:model="vendor_name">
+                            @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_company_name" style="font-size: 12px;">Vendor Company Name:</label>
+                            <input type="text" wire:model="vendor_company_name">
+                            @error('vendor_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="email" style="font-size: 12px;">Email:</label>
+                            <input type="email" wire:model="email">
+                            @error('email') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" style="font-size: 12px;">Phone:</label>
+                            <input type="text" wire:model="phone">
+                            @error('phone') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="address" style="font-size: 12px;">Address:</label>
+                            <textarea wire:model="address"></textarea>
+                            @error('address') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
+                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success" type="submit">Submit</button>
+                            <button class="btn btn-danger" wire:click="cVendor" type="button" style="font-size: 12px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
 
 
 
@@ -371,7 +432,7 @@
                         </div>
 
                         <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
-                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success" type="submit">Submit</button>
+                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success me-2" type="submit">Submit</button>
                             <button class="btn btn-danger" wire:click="close" type="button" style="font-size: 12px;">Cancel</button>
                         </div>
                     </form>
@@ -431,7 +492,7 @@
                         </div>
 
                         <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
-                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success" type="submit">Update</button>
+                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success me-2" type="submit">Update</button>
                             <button class="btn btn-danger" wire:click="close" type="button" style="font-size: 12px;">Cancel</button>
                         </div>
                     </form>
@@ -469,6 +530,7 @@
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
                                 <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
                                     <option style="font-size: 12px;" value="">Select Consultant</option>
+                                    <option style="font-size: 12px;" value="addConsultant" wire:click="redirectToURL('{{ route('emp-register') }}')"> << Add Consultant >></option>
                                     @foreach($employees as $employee)
                                     <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
                                     @endforeach
@@ -487,13 +549,13 @@
 
 
                             <div class="row mb-2">
-                                <div class="col">
+                                <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
                                     <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-control">
                                 </div> <br>
                                 @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
-                                <div class="col">
+                                <div class="col p-0">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
                                     <input style="font-size: 12px;" type="date" wire:model="endDate" class="form-control">
 
@@ -522,8 +584,9 @@
 
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Vendor Name:</label>
-                                <select style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
+                                <select wire:change="callVendor" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
                                     <option style="font-size: 12px;" value="">Select Vendor</option>
+                                    <option style="font-size: 12px;" value="addVendor" > << Add Vendor >></option>
                                     @foreach($vendors as $vendor)
                                     <option style="font-size: 12px;" value="{{ $vendor->vendor_id }}">{{ $vendor->vendor_name }}</option>
                                     @endforeach
@@ -543,7 +606,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col">
+                                <div class="col p-0">
                                     <div class="form-group">
                                         <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
                                         <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
@@ -609,8 +672,8 @@
 
     <!-- Everyone tab content -->
 
-    <div class="row" style="margin-top: 15px;height:300px">
-        <div class="col-md-3" style="background-color:#f2f2f2; height: auto; padding: 5px;margin-right:5px;max-height:300px;overflow-y:auto">
+    <div class="row">
+        <div class="col-md-3 rounded mt-2" style="background-color:#f2f2f2; padding: 5px; max-height:300px;overflow-y:auto">
             <div class="container" style="margin-top: 8px;margin-bottom:8px">
                 <div class="row">
                     <div class="col" style="margin: 0px; padding: 0px">
@@ -626,21 +689,21 @@
                 </div>
             </div>
 
-            <div class="row" style="font-size: 13px">
+            <div class="row p-2" style="font-size: 13px">
                 @if ($allVendors->isEmpty())
                 <div class="container" style="text-align: center; color: gray;">No Vendors Found</div>
                 @else
                 @foreach($allVendors as $vendor)
-                <div wire:click="selectVendor('{{ $vendor->vendor_id }}')" class="container-1" style="margin-bottom:2px;height:25px;cursor: pointer; background-color: {{ $selectedVendor && $selectedVendor->vendor_id == $vendor->vendor_id ? '#ccc' : 'white' }}; width: 500px; border-radius: 5px;padding:5px">
+                <div wire:click="selectVendor('{{ $vendor->vendor_id }}')" class="container-1" style="margin-bottom:8px; cursor: pointer; background-color: {{ $selectedVendor && $selectedVendor->vendor_id == $vendor->vendor_id ? '#ccc' : 'white' }}; width: 500px; border-radius: 5px;padding:5px">
                     <div class="row align-items-center">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <h6 class="username" style="font-size: 10px; color: black;">{{ $vendor->vendor_name }}</h6>
                         </div>
-                        <div class="col-md-3">
-                            <h6 class="username" style="font-size: 8px; color: black;">{{ $vendor->phone_number }}</h6>
+                        <div class="col-md-4 pe-0">
+                            <h6 class="username" style="font-size: 8px; color: black; word-break: break-all;">{{ $vendor->phone_number }}</h6>
                         </div>
-                        <div class="col-md-4">
-                            <h6 class="username" style="font-size: 8px; color: black;">#({{ $vendor->vendor_id }})</h6>
+                        <div class="col-md-4 pe-0">
+                            <h6 class="username" style="font-size: 8px; color: black; word-break: break-all;">#({{ $vendor->vendor_id }})</h6>
                         </div>
                     </div>
                 </div>
@@ -650,27 +713,27 @@
         </div>
 
         <!-- Details of the selected person -->
-        <div class="col-md-8" style="background-color: #f2f2f2; padding: 5px;max-height:300px;overflow-y:auto">
+        <div class="col-md-8 rounded mt-2 ms-1" style="background-color: #f2f2f2; padding: 5px;max-height:300px;overflow-y:auto">
             @php
             $selectedPerson = $selectedVendor ?? $vendors->first();
             $isActive = $selectedPerson->status == 'active';
             @endphp
             <div style="text-align: start;">
-                <button wire:click="showBills('{{$selectedPerson->vendor_id}}')" style="{{ $activeButton === 'Bills' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
+                <button class="p-2 mb-2" wire:click="showBills('{{$selectedPerson->vendor_id}}')" style="{{ $activeButton === 'Bills' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
                     Bills & Sent Payments
                 </button>
 
-                <button wire:click="updateAndShowPoList('{{$selectedPerson->vendor_id}}')" style="{{ $activeButton === 'PO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
+                <button class="p-2 mb-2" wire:click="updateAndShowPoList('{{$selectedPerson->vendor_id}}')" style="{{ $activeButton === 'PO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
                     PO
                 </button>
 
-                <button wire:click="$set('activeButton', 'EmailActivities')" style="{{ $activeButton === 'EmailActivities' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
+                <button class="p-2 mb-2" wire:click="$set('activeButton', 'EmailActivities')" style="{{ $activeButton === 'EmailActivities' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
                     Email Activities
                 </button>
-                <button wire:click="$set('activeButton', 'Notes')" style="{{ $activeButton === 'Notes' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
+                <button class="p-2 mb-2" wire:click="$set('activeButton', 'Notes')" style="{{ $activeButton === 'Notes' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
                     Notes
                 </button>
-                <button wire:click="$set('activeButton', 'Contacts')" style="{{ $activeButton === 'Contacts' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
+                <button class="p-2 mb-2" wire:click="$set('activeButton', 'Contacts')" style="{{ $activeButton === 'Contacts' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}margin-right: 5px; border-radius: 5px; border: none;">
                     Contacts
                 </button>
             </div>
@@ -678,7 +741,7 @@
 
             <!-- resources/views/livewire/purchase-order-table.blade.php -->
 
-            <div>
+            <div class="table-responsive">
                 <table class="table">
                     <thead>
                         <tr>
@@ -722,6 +785,7 @@
             @endif
 
             @if($activeButton=="Bills")
+            <div class="table-responsive">
             <table class="table">
                 <thead>
                     <tr>
@@ -758,6 +822,7 @@
                     @endforelse
                 </tbody>
             </table>
+                        </div>
 
             @endif
 

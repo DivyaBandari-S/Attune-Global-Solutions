@@ -13,13 +13,14 @@ use App\Models\TimeSheet;
 
 class TimeSheetDisplay extends Component
 {
-
     public $hours = [];
     public $tab = 'timeSheet';
     public $timeSheetEntries = [];
     public $regular = [];
     public $casual = []; // Initialize as an empty array
     public $sick = [];
+    public $holiday = [];
+    public $vacation = [];
     public $currentWeekStart;
     public $currentWeekEnd;
     public $currentWeekDates = [];
@@ -27,6 +28,7 @@ class TimeSheetDisplay extends Component
     public $isValueEntered;
     public $empDetails;
     public $emp_id;
+    public $getTotalHours;
     public function mount()
     {
         // Load existing entries from the database
@@ -45,6 +47,8 @@ class TimeSheetDisplay extends Component
             $this->hours[$entry->day]['regular'] = $entry->regular;
             $this->hours[$entry->day]['casual'] = $entry->casual;
             $this->hours[$entry->day]['sick'] = $entry->sick;
+            $this->hours[$entry->day]['holiday'] = $entry->holiday;
+            $this->hours[$entry->day]['vacation'] = $entry->vacation;
             $today = Carbon::now();
             $this->setWeekDates(now());
             $this->currentWeekStart = $today->startOfWeek()->format('d-m-Y');
@@ -101,6 +105,16 @@ class TimeSheetDisplay extends Component
     {
         $this->setWeekDates(Carbon::parse($this->currentWeekStart)->subWeek());
     }
+    public function getTotalHours()
+    {
+        $totalHours = array_sum(array_column($this->hours, 'regular')) +
+            array_sum(array_column($this->hours, 'casual')) +
+            array_sum(array_column($this->hours, 'sick')) +
+            array_sum(array_column($this->hours, 'holiday')) +
+            array_sum(array_column($this->hours, 'vacation'));
+
+        return $totalHours;
+    }
 
     public function nextWeek()
     {
@@ -134,6 +148,8 @@ class TimeSheetDisplay extends Component
                     'regular' => $hours['regular'] ?? 0,
                     'casual' => $hours['casual'] ?? 0,
                     'sick' => $hours['sick'] ?? 0,
+                    'holiday' => $hours['holiday'] ?? 0,
+                    'vacation' => $hours['vacation'] ?? 0,
                     // Add other fields as needed
                 ];
 

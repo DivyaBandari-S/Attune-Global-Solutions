@@ -1,6 +1,35 @@
-<div style="padding:20px">
+<div style="padding:10px">
     <!-- Add this to your HTML file -->
     <style>
+        /* Add your custom CSS styles here */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 8px;
+            /* Set font size to 12px */
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-size: 8px;
+
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+            font-size: 8px;
+
+        }
+
         .customer-image {
             border-radius: 2;
             height: 100px;
@@ -168,11 +197,10 @@
         }
     </style>
 
-    <p style="text-align: start;margin-top:15px">
-        <button style="margin-right: 10px;" wire:click="open" class="button">ADD Customers</button>
-        <button style="margin-right: 10px;" wire:click="addSO" class="button">ADD SO</button>
-
-    </p>
+    <div style="text-align: start;">
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO" class="btn btn-primary">ADD SO</button>
+    </div>
     @if(session()->has('success'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
         {{ session('success') }}
@@ -428,6 +456,73 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
 
+
+    @if($customer=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                    <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Customers Details</b></h5>
+                    <button wire:click="cCustomer" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form wire:submit.prevent="addcCustomers">
+                        <div>
+                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
+                            <input type="file" wire:model="customer_profile">
+                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <input type="text" wire:model="customer_company_name">
+                            @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="email" style="font-size: 12px;">Email:</label>
+                            <input type="email" wire:model="email">
+                            @error('email') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="phone" style="font-size: 12px;">Phone:</label>
+                            <input type="text" wire:model="phone">
+                            @error('phone') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="address" style="font-size: 12px;">Address:</label>
+                            <textarea wire:model="address"></textarea>
+                            @error('address') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="notes" style="font-size: 12px;">Notes:</label>
+                            <textarea wire:model="notes"></textarea>
+                            @error('notes') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
+                            <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success me-2" type="submit">Submit</button>
+                            <button class="btn btn-danger" wire:click="cCustomer" type="button" style="font-size: 12px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+
     @if($edit=="true")
     <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -495,6 +590,10 @@
 
 
 
+
+
+
+
     @if($so=="true")
     <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -515,16 +614,22 @@
                         <form wire:submit.prevent="saveSalesOrder">
                             @csrf
 
+
                             <div class="form-group">
-                                <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
+                                <label style="font-size: 12px;" for="vendorName">Consultant Name:</label>
                                 <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultant_name">
                                     <option style="font-size: 12px;" value="">Select Consultant</option>
+                                    <option style="font-size: 12px;" value="addConsultant">
+                                        << Add Consultant>>
+                                    </option>
                                     @foreach($employees as $employee)
                                     <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
                                     @endforeach
+
                                 </select>
                                 @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
+
 
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="rate">Job Title:</label>
@@ -570,16 +675,22 @@
                                 </div>
                             </div>
 
+
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
-                                <select style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
+                                <select wire:change="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
                                     <option style="font-size: 12px;" value="">Select Customer</option>
+                                    <option style="font-size: 12px;" value="AddCustomer">
+                                        << Add Customer>>
+                                    </option>
                                     @foreach($customers as $customer)
                                     <option style="font-size: 12px;" value="{{ $customer->customer_id }}">{{ $customer->customer_company_name }}</option>
                                     @endforeach
+
                                 </select>
                                 @error('customerName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
+
 
 
                             <div class="form-group">
@@ -639,10 +750,15 @@
 
 
                             <div class="form-group">
-                                <label style="font-size: 12px;" for="paymentType">Payment Terms:</label>
-                                <input style="font-size: 12px;" type="text" class="form-control" id="rate" wire:model="rate" placeholder="Ex: Net 0,Net 10,........">
-
-                                @error('paymentType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                    <option style="font-size: 12px;">Select payment net terms</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                    <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                                @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
                             <div style="text-align: center;">
                                 <button style="margin-top: 15px;font-size:12px" type="submit" class="btn btn-success">Submit Sales Order</button>
@@ -658,78 +774,12 @@
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
 
-    <!-- Everyone tab content -->
-    @if($poList=="true")
-    <div style="text-align: end;">
-        <button wire:click="closePOList" style="background-color: rgb(2, 17, 79);color:white;border-radius:5px;border:none">Back</button>
-    </div>
-    <!-- resources/views/livewire/purchase-order-table.blade.php -->
 
-    <div>
-        <style>
-            /* Add your custom CSS styles here */
-            .table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-            }
 
-            th,
-            td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-                font-size: 12px;
-                /* Set font size to 12px */
-            }
 
-            th {
-                background-color: #f2f2f2;
-            }
 
-            tr:hover {
-                background-color: #f5f5f5;
-            }
-        </style>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>PO Number</th>
-                    <th>Customer ID</th>
-                    <th>Vendor ID</th>
-                    <th>Vendor Name</th>
-                    <th>Rate</th>
-                    <th>Time Sheet Type</th>
-                    <th>Time Sheet Begins</th>
-                    <th>Invoice Type</th>
-                    <th>Payment Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($showPOLists as $purchaseOrder)
-                <tr>
-                    <td>{{ $purchaseOrder->po_number }}</td>
-                    <td>{{ $purchaseOrder->customer_id }}</td>
-                    <td>{{ $purchaseOrder->vendor_id }}</td>
-                    <td>{{ $purchaseOrder->vendor->vendor_name }}</td>
-                    <td>{{ $purchaseOrder->rate }}</td>
-                    <td>{{ $purchaseOrder->time_sheet_type }}</td>
-                    <td>{{ $purchaseOrder->time_sheet_begins }}</td>
-                    <td>{{ $purchaseOrder->invoice_type }}</td>
-                    <td>{{ $purchaseOrder->payment_type }}</td>
-                </tr>
-                @empty
-                <div style="text-align: center; margin-top: 10px;">Purchase Orders Not Found</div>
-                @endforelse
-
-            </tbody>
-        </table>
-    </div>
-
-    @else
-    <div class="row" style="margin-top: 15px;height:400px">
-        <div class="col-md-3" style="background-color:#f2f2f2;height: auto; padding: 5px;margin-right:5px;max-height:500px;overflow-y:auto">
+    <div class="row">
+        <div class="col-md-3 rounded mt-2" style="background-color:#f2f2f2; padding: 5px; max-height:300px;overflow-y:auto">
             <div class="container" style="margin-top: 8px;margin-bottom:8px">
                 <div class="row">
                     <div class="col" style="margin: 0px; padding: 0px">

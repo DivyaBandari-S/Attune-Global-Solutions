@@ -15,16 +15,16 @@ return new class extends Migration
             $table->id();
             $table->string('emp_id');
             $table->date('day');
-            $table->integer('regular'); 
+            $table->integer('regular');
             $table->integer('casual');
             $table->integer('sick');
+            $table->integer('holiday');
+            $table->integer('vacation');
             $table->unique(['emp_id', 'day']);
             $table->foreign('emp_id')->references('emp_id')->on('emp_details')->onDelete('cascade');
 
             $table->timestamps();
-
         });
-
     }
 
     /**

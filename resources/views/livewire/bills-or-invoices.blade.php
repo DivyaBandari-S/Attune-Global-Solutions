@@ -1,9 +1,10 @@
 <div style="padding: 20px;">
     <style>
-        .error{
+        .error {
             font-size: 12px;
             color: red;
         }
+
         form {
             font-size: 12px;
         }
@@ -108,7 +109,7 @@
 
     <body>
         <p style="text-align: start">
-            <button wire:click="show" style="margin-right: 10px;" class="button">ADD Bill</button>
+            <button wire:click="openBill" style="margin-right: 10px;" class="button">ADD Bill</button>
             <button wire:click="showInvoice" style="margin-right: 10px;" class="button">ADD Invoice</button>
         </p>
         @if(session()->has('add-bill'))
@@ -141,18 +142,23 @@
                         </div>
                         <div class="modal-body">
                             <form wire:submit.prevent="addInvoice">
-                             
+
+
 
                                 <div class="form-group">
                                     <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
-                                    <select style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customer_name">
+                                    <select wire:click="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customer_name">
                                         <option style="font-size: 12px;" value="">Select Customer</option>
+                                        <option style="font-size: 12px;" value="addCustomer">
+                                            << Add Customer>>
+                                        </option>
                                         @foreach($customers as $customer)
                                         <option style="font-size: 12px;" value="{{ $customer->customer_id }}">{{ $customer->customer_company_name }}</option>
                                         @endforeach
                                     </select>
                                     @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
+
                                 <div>
                                     <label for="amount" style="font-size: 12px;">Amount:</label>
                                     <input type="text" wire:model="amount">
@@ -165,9 +171,15 @@
                                     @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div>
-                                    <label for="payment_terms" style="font-size: 12px;">Payment Terms:</label>
-                                    <input type="text" wire:model="payment_terms">
+                                <div class="form-group">
+                                    <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                    <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="payment_terms">
+                                        <option style="font-size: 12px;">Select payment net terms</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                        <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
                                     @error('payment_terms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
 
@@ -216,23 +228,26 @@
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                         <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>Add Bill</b></h5>
-                        <button wire:click="close" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <button wire:click="closeBill" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                             <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addBill">
 
+
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Vendor Name:</label>
-                                <select style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendor_name">
+                                <select wire:click="callVendor" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendor_name">
                                     <option style="font-size: 12px;" value="">Select Vendor</option>
+                                    <option style="font-size: 12px;" value="addVendor" > << Add Vendor >></option>
                                     @foreach($vendors as $vendor)
                                     <option style="font-size: 12px;" value="{{ $vendor->vendor_id }}">{{ $vendor->vendor_name }}</option>
                                     @endforeach
                                 </select>
                                 @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
+
 
 
                             <div>
@@ -247,9 +262,15 @@
                                 @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
-                            <div>
-                                <label for="payment_terms" style="font-size: 12px;">Payment Terms:</label>
-                                <input type="text" wire:model="payment_terms">
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="payment_terms">
+                                    <option style="font-size: 12px;">Select payment net terms</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                    <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                    <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                    <!-- Add more options as needed -->
+                                </select>
                                 @error('payment_terms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
@@ -289,6 +310,133 @@
 
         <div class="modal-backdrop fade show blurred-backdrop"></div>
 
+        @endif
+
+        @if($show=="true")
+        <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                        <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Customers Details</b></h5>
+                        <button wire:click="closeCustomer" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                            <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="addCustomers">
+                            <div>
+                                <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
+                                <input type="file" wire:model="customer_profile">
+                                @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
+                                <input type="text" wire:model="customer_name">
+                                @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                                <input type="text" wire:model="customer_company_name">
+                                @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label for="email" style="font-size: 12px;">Email:</label>
+                                <input type="email" wire:model="email">
+                                @error('email') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="phone" style="font-size: 12px;">Phone:</label>
+                                <input type="text" wire:model="phone">
+                                @error('phone') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="address" style="font-size: 12px;">Address:</label>
+                                <textarea wire:model="address"></textarea>
+                                @error('address') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="notes" style="font-size: 12px;">Notes:</label>
+                                <textarea wire:model="notes"></textarea>
+                                @error('notes') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
+                                <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success me-2" type="submit">Submit</button>
+                                <button class="btn btn-danger" wire:click="closeCustomer" type="button" style="font-size: 12px;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+        @endif
+
+
+        @if($showVendor=="true")
+        <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                        <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Vendors Details</b></h5>
+                        <button wire:click="closeVendor" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                            <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form wire:submit.prevent="addVendors">
+                            <div>
+                                <label for="customer_profile" style="font-size: 12px;">Vendor Company Logo:</label>
+                                <input type="file" wire:model="vendor_profile">
+                                @error('vendor_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="customer_name" style="font-size: 12px;">Vendor Name:</label>
+                                <input type="text" wire:model="vendor_name">
+                                @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="customer_company_name" style="font-size: 12px;">Vendor Company Name:</label>
+                                <input type="text" wire:model="vendor_company_name">
+                                @error('vendor_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label for="email" style="font-size: 12px;">Email:</label>
+                                <input type="email" wire:model="email">
+                                @error('email') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="phone" style="font-size: 12px;">Phone:</label>
+                                <input type="text" wire:model="phone">
+                                @error('phone') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="address" style="font-size: 12px;">Address:</label>
+                                <textarea wire:model="address"></textarea>
+                                @error('address') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div style="text-align: center; justify-content: center; align-items: center; display: flex; margin-top: 10px;">
+                                <button style="margin-left: 5%; font-size: 12px;" class="btn btn-success" type="submit">Submit</button>
+                                <button class="btn btn-danger" wire:click="closeVendor" type="button" style="font-size: 12px;">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
         @endif
         <p style="text-align: center;">
             <button class="button" wire:click="$set('activeButton', 'Bills')" style="{{ $activeButton === 'Bills' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }}; margin-right: 10px; border-radius: 5px; border: none">
