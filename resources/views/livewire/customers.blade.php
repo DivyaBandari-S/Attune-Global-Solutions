@@ -570,11 +570,11 @@
 
 
                             <div class="row mb-2">
-                                <div class="col p-0">
+                                <div class="col">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
                                     <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-control">
-                                </div> <br>
-                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                    @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                </div>
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
