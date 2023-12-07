@@ -30,8 +30,22 @@ class Customers extends Component
     public $show = false;
 
     public  $customer_profile, $company_id, $customer_name, $email, $phone, $address, $notes, $customer_company_name;
+    public $selectedDate;
+    public function updatedSelectedDate()
+    {
+        // This method will be called when the date input changes
+        // You can manually handle the date format conversion here
+        $this->selectedDate = date('m-d-Y', strtotime($this->selectedDate));
+    }
 
-    public $selectedCustomer;
+    public function hydrate()
+    {
+        // This method will be called on every Livewire request
+        // Use it to manually update the date format for display
+        $this->selectedDate = date('m-d-Y', strtotime($this->selectedDate));
+    }
+
+       public $selectedCustomer;
     public $customerId;
     public $soList = false;
     public $showSOLists;
@@ -166,7 +180,6 @@ class Customers extends Component
     {
 
         $this->validate([
-            'customer_profile' => 'required',
             'customer_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -174,11 +187,9 @@ class Customers extends Component
             'notes' => 'required',
             'customer_company_name' => 'required'
         ]);
-        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         CustomerDetails::create([
-            'customer_company_logo' => $customerProfilePath,
             'company_id' => $companyId,
             'customer_name' => $this->customer_name,
             'customer_company_name' => $this->customer_company_name,
@@ -197,7 +208,6 @@ class Customers extends Component
     {
 
         $this->validate([
-            'customer_profile' => 'required',
             'customer_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -205,11 +215,9 @@ class Customers extends Component
             'notes' => 'required',
             'customer_company_name' => 'required'
         ]);
-        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         CustomerDetails::create([
-            'customer_company_logo' => $customerProfilePath,
             'company_id' => $companyId,
             'customer_name' => $this->customer_name,
             'customer_company_name' => $this->customer_company_name,
@@ -328,7 +336,6 @@ class Customers extends Component
         $this->so = true;
         $this->customer = false;
         $this->resetFieldsForSo();
-
     }
     public function sCustomer()
     {

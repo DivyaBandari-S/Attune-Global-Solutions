@@ -1,6 +1,26 @@
 <div style="padding:10px">
     <!-- Add this to your HTML file -->
     <style>
+        .modal-content{
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .modal-backdrop {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            /* Adjust the opacity as needed */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1040;
+        }
+
+        .blurred-backdrop {
+            filter: blur(5px);
+            /* Adjust the blur intensity as needed */
+        }
+
         /* Add your custom CSS styles here */
         .table {
             width: 100%;
@@ -199,7 +219,7 @@
 
     <div style="text-align: start;">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
-        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO" class="btn btn-primary">ADD SO</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" onclick="openSalesOrderModal()" class="btn btn-primary">ADD SO</button>
     </div>
     @if(session()->has('success'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
@@ -330,22 +350,19 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="addCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
+
+
+
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -381,7 +398,8 @@
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
     @endif
 
 
@@ -397,22 +415,16 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="addcCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -448,7 +460,8 @@
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
     @endif
 
     @if($edit=="true")
@@ -463,21 +476,19 @@
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="updateCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                        </div>
+
+
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -512,8 +523,9 @@
             </div>
         </div>
     </div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+
     @endif
 
 
@@ -522,13 +534,12 @@
 
 
 
-    @if($so=="true")
-    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+    <div id="salesOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                     <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                    <button wire:click="cancelSO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                    <button onclick="closeSalesOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                         <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                     </button>
                 </div>
@@ -570,15 +581,15 @@
 
 
                             <div class="row mb-2">
-                                <div class="col">
+                                <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                    <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-control">
-                                    @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                </div>
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" class="form-control">
+                                </div> <br>
+                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                    <input style="font-size: 12px;" type="date" wire:model="endDate" class="form-control">
+                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" class="form-control">
 
                                 </div> <br>
                                 @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -699,8 +710,8 @@
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
-    @endif
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
 
 
 
@@ -864,3 +875,24 @@
     </div>
     <!-- End of Everyone tab content -->
 </div>
+
+
+<script>
+    function openSalesOrderModal() {
+        // Display the modal and backdrop
+        document.getElementById('salesOrderModal').style.display = 'block';
+        document.getElementById('modalBackdrop').style.display = 'block';
+
+        // Initialize flatpickr for date selection
+        flatpickr("#startDate, #endDate", {
+            dateFormat: "M d Y", // Dec 14 2023
+            altFormat: "F d Y", // December 14 2023
+        });
+    }
+
+    function closeSalesOrderModal() {
+        // Close the modal and backdrop
+        document.getElementById('salesOrderModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
+    }
+</script>

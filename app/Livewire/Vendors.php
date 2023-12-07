@@ -206,18 +206,16 @@ class Vendors extends Component
     public function addVendors()
     {
         $this->validate([
-            'vendor_profile' => 'required',
+            
             'vendor_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
             'vendor_company_name' => 'required'
         ]);
-        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         VendorDetails::create([
-            'vendor_image' => $vendorProfilePath,
             'company_id' => $companyId,
             'contact_person' => $this->vendor_name,
             'vendor_name' => $this->vendor_company_name,
@@ -236,18 +234,18 @@ class Vendors extends Component
     public function addvVendors()
     {
         $this->validate([
-            'vendor_profile' => 'required',
+            
             'vendor_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
             'vendor_company_name' => 'required'
         ]);
-        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
+
+
         $companyId = auth()->user()->company_id;
 
         VendorDetails::create([
-            'vendor_image' => $vendorProfilePath,
             'company_id' => $companyId,
             'contact_person' => $this->vendor_name,
             'vendor_name' => $this->vendor_company_name,
@@ -268,7 +266,8 @@ class Vendors extends Component
 
         $this->edit = true;
         $this->selected_vendor = VendorDetails::find($vendorId);
-        $this->vendor_profile = $this->selected_vendor->vendor_image;
+      
+        
         $this->company_id = $this->selected_vendor->company_id;
         $this->vendor_name = $this->selected_vendor->contact_person;
         $this->vendor_company_name = $this->selected_vendor->vendor_name;

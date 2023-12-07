@@ -1,6 +1,23 @@
 <div style="padding:20px">
     <html>
     <style>
+        .modal-backdrop {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            /* Adjust the opacity as needed */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1040;
+        }
+
+        .blurred-backdrop {
+            filter: blur(5px);
+            /* Adjust the blur intensity as needed */
+        }
+
         .error {
             font-size: 12px;
             color: red;
@@ -79,15 +96,19 @@
         .button:hover {
             background-color: #0056b3;
         }
+
+        .modal-content {
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
     </style>
 
     </html>
 
     <body>
-        <p style="text-align: start;">
-            <button style="margin-right: 10px;" wire:click="addSO" class="button">ADD SO</button>
-            <button style="margin-right: 10px;" wire:click="addPO" class="button">ADD PO</button>
-        </p>
+        <div style="text-align: start;">
+            <button style="margin-right: 10px;" onclick="openSalesOrderModal()" class="button">ADD SO</button>
+            <button style="margin-right: 10px;" onclick="openPurchaseOrderModal()" class="button">ADD PO</button>
+        </div>
         @if(session()->has('purchase-order'))
         <div id="purchaseOrderAlert" style="text-align: center;" class="alert alert-success">
             {{ session('purchase-order') }}
@@ -127,22 +148,19 @@
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addCustomers">
-                            <div>
-                                <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                                <input type="file" wire:model="customer_profile">
-                                @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                            </div>
+
+
+
 
                             <div>
-                                <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                                <input type="text" wire:model="customer_name">
-                                @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                                <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                                 <input type="text" wire:model="customer_company_name">
                                 @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+                            <div>
+                                <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                                <input type="text" wire:model="customer_name">
+                                @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label for="email" style="font-size: 12px;">Email:</label>
@@ -193,22 +211,19 @@
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addVendors">
-                            <div>
-                                <label for="customer_profile" style="font-size: 12px;">Vendor Company Logo:</label>
-                                <input type="file" wire:model="vendor_profile">
-                                @error('vendor_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                            </div>
+
+
 
                             <div>
-                                <label for="customer_name" style="font-size: 12px;">Vendor Name:</label>
-                                <input type="text" wire:model="vendor_name">
-                                @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                            </div>
-
-                            <div>
-                                <label for="customer_company_name" style="font-size: 12px;">Vendor Company Name:</label>
+                                <label for="customer_company_name" style="font-size: 12px;">Vendor Name:</label>
                                 <input type="text" wire:model="vendor_company_name">
                                 @error('vendor_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
+                                <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                                <input type="text" wire:model="vendor_name">
+                                @error('vendor_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
                             <div>
                                 <label for="email" style="font-size: 12px;">Email:</label>
@@ -242,13 +257,13 @@
         @endif
 
 
-        @if($so=="true")
-        <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+
+        <div id="salesOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                         <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                        <button wire:click="cancelSO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <button onclick="closeSalesOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                             <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                         </button>
                     </div>
@@ -264,8 +279,8 @@
 
 
                                 <div class="form-group">
-                                    <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
-                                    <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultantName">
+                                    <label style="font-size: 12px;" for="vendorName">Consultant Name:</label>
+                                    <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultant_name">
                                         <option style="font-size: 12px;" value="">Select Consultant</option>
                                         <option style="font-size: 12px;" value="addConsultant">
                                             << Add Consultant>>
@@ -275,9 +290,8 @@
                                         @endforeach
 
                                     </select>
-                                    @error('consultantName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                    @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
-
 
 
                                 <div class="form-group">
@@ -291,15 +305,15 @@
 
 
                                 <div class="row mb-2">
-                                    <div class="col">
+                                    <div class="col p-0">
                                         <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                        <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-control">
+                                        <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" class="form-control">
                                     </div> <br>
                                     @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                     <div class="col">
                                         <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                        <input style="font-size: 12px;" type="date" wire:model="endDate" class="form-control">
+                                        <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" class="form-control">
 
                                     </div> <br>
                                     @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -327,17 +341,19 @@
 
                                 <div class="form-group">
                                     <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
-                                    <select wire:click="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
-                                        <option wire:click="callCustomer" style="font-size: 12px;" value="">Select Customer</option>
+                                    <select wire:change="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
+                                        <option style="font-size: 12px;" value="">Select Customer</option>
                                         <option style="font-size: 12px;" value="addCustomer">
                                             << Add Customer>>
                                         </option>
                                         @foreach($customers as $customer)
                                         <option style="font-size: 12px;" value="{{ $customer->customer_id }}">{{ $customer->customer_company_name }}</option>
                                         @endforeach
+
                                     </select>
                                     @error('customerName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
+
 
 
                                 <div class="form-group">
@@ -352,7 +368,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col p-0">
                                         <div class="form-group">
                                             <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
                                             <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
@@ -397,9 +413,14 @@
 
 
                                 <div class="form-group">
-                                    <label style="font-size: 12px;" for="paymentType">Payment Terms:</label>
-                                    <input style="font-size: 12px;" type="text" class="form-control" id="rate" wire:model="paymentTerms" placeholder="Ex: Net 0,Net 10,........">
-
+                                    <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                    <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                        <option style="font-size: 12px;">Select payment net terms</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                        <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
                                     @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
                                 <div style="text-align: center;">
@@ -413,8 +434,14 @@
             </div>
         </div>
 
-        <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
+        <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
+
+
+
+
+
+
         @if($activeButton=="PO")
 
         <!-- resources/views/livewire/purchase-order-table.blade.php -->
@@ -496,13 +523,13 @@
         @endif
 
 
-        @if($po=="true")
-        <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div id="purchaseOrderModal" class="modal" tabindex="-1" role="dialog" style="display: none; overflow-y: auto;">
+
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                         <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Purchase Order</b></h5>
-                        <button wire:click="cancelPO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <button onclick="closePurchaseOrderModal()" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                             <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                         </button>
                     </div>
@@ -516,23 +543,18 @@
                             <form wire:submit.prevent="savePurchaseOrder">
                                 @csrf
 
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
-                                            <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
-                                                <option style="font-size: 12px;" value="">Select Consultant</option>
-                                                <option style="font-size: 12px;" value="addConsultant">
-                                                    << Add Consultant>>
-                                                </option>
-                                                @foreach($employees as $employee)
-                                                <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
+                                <div class="form-group">
+                                    <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
+                                    <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
+                                        <option style="font-size: 12px;" value="">Select Consultant</option>
+                                        <option style="font-size: 12px;" value="addConsultant" wire:click="redirectToURL('{{ route('emp-register') }}')">
+                                            << Add Consultant>>
+                                        </option>
+                                        @foreach($employees as $employee)
+                                        <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
 
                                 <div class="form-group">
@@ -546,15 +568,15 @@
 
 
                                 <div class="row mb-2">
-                                    <div class="col">
+                                    <div class="col p-0">
                                         <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                        <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-control">
+                                        <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" class="form-control">
                                     </div> <br>
                                     @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                     <div class="col">
                                         <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                        <input style="font-size: 12px;" type="date" wire:model="endDate" class="form-control">
+                                        <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" class="form-control">
 
                                     </div> <br>
                                     @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -579,22 +601,19 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-group">
                                     <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Vendor Name:</label>
-                                    <select wire:click="callVendor" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
+                                    <select wire:change="callVendor" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
                                         <option style="font-size: 12px;" value="">Select Vendor</option>
                                         <option style="font-size: 12px;" value="addVendor">
                                             << Add Vendor>>
                                         </option>
-
                                         @foreach($vendors as $vendor)
                                         <option style="font-size: 12px;" value="{{ $vendor->vendor_id }}">{{ $vendor->vendor_name }}</option>
                                         @endforeach
                                     </select>
                                     @error('vendorName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
-
 
                                 <div class="form-group">
                                     <label style="font-size: 12px;" for="endClientTimesheetRequired">End Client Time sheet required:</label>
@@ -608,7 +627,7 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col p-0">
                                         <div class="form-group">
                                             <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
                                             <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
@@ -653,9 +672,14 @@
 
 
                                 <div class="form-group">
-                                    <label style="font-size: 12px;" for="paymentType">Payment Terms:</label>
-                                    <input style="font-size: 12px;" type="text" class="form-control" id="rate" wire:model="paymentTerms" placeholder="Ex: Net 0,Net 10,........">
-
+                                    <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                    <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                        <option style="font-size: 12px;">Select payment net terms</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                        <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                        <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                        <!-- Add more options as needed -->
+                                    </select>
                                     @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
                                 <div style="text-align: center;">
@@ -668,9 +692,8 @@
                 </div>
             </div>
         </div>
+        <div id="modalBackdrop" class="modal-backdrop fade show"></div>
 
-        <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
 
 
 
@@ -760,3 +783,42 @@
     </body>
 
 </div>
+
+<script>
+    function openSalesOrderModal() {
+        // Display the modal and backdrop
+        document.getElementById('salesOrderModal').style.display = 'block';
+        document.getElementById('modalBackdrop').style.display = 'block';
+
+        // Initialize flatpickr for date selection
+        flatpickr("#startDate, #endDate", {
+            dateFormat: "M d Y", // Dec 14 2023
+            altFormat: "F d Y", // December 14 2023
+        });
+    }
+
+    function closeSalesOrderModal() {
+        // Close the modal and backdrop
+        document.getElementById('salesOrderModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
+    }
+
+
+    function openPurchaseOrderModal() {
+        // Display the modal and backdrop
+        document.getElementById('purchaseOrderModal').style.display = 'block';
+        document.getElementById('modalBackdrop').style.display = 'block';
+
+        // Initialize flatpickr for date selection
+        flatpickr("#startDate, #endDate", {
+            dateFormat: "M d Y", // Dec 14 2023
+            altFormat: "F d Y", // December 14 2023
+        });
+    }
+
+    function closePurchaseOrderModal() {
+        // Close the modal and backdrop
+        document.getElementById('purchaseOrderModal').style.display = 'none';
+        document.getElementById('modalBackdrop').style.display = 'none';
+    }
+</script>
