@@ -61,10 +61,22 @@ class EmpRegister extends Component
     public $isHr;
     public $contractor_company_id;
     public $showContractorField = false;
+    public $show = false;
 
     public function employeeCall()
     {
         $this->showContractorField = $this->employee_type === 'contract';
+    }
+    
+    public function open()
+    {
+      
+        $this->show = true;
+    }
+
+    public function close()
+    {
+        $this->show = false;
     }
     
     public function register(){

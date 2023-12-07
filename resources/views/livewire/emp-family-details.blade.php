@@ -46,6 +46,19 @@
         </script>
         @endif
         <div class="container " style=" padding:0;background:#f2f2f2;border:1px solid #ccc;">
+        <!-- modal -->
+
+        <div class="container " style=" padding:10px;background:#f2f2f2;border:1px solid #ccc;">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg">Large modal</button>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      ...
+    </div>
+  </div>
+</div>
+<!-- model end -->
             <div class="col-md-12">
                 <div class="emp-container" style="padding:0; margin:0 auto;">
                     <div class="card-header" style="background-color: rgb(2, 17, 79)">

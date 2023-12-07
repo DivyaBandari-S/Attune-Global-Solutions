@@ -98,6 +98,18 @@ a:hover{
     font-size: 0.625rem; /* Adjust the font size as needed */
     color: #6c757d; /* Muted color */
 }
+.btn-save {
+            background-color: #007bff;
+            /* Change to your desired color */
+            color: #fff;
+            /* Change to your desired color */
+        }
+ 
+        /* Custom CSS classes for the "Loading" text */
+        .text-loading {
+            color: #ff9900;
+            /* Change to your desired color */
+        }
 
 </style>
 <div>
@@ -125,22 +137,24 @@ a:hover{
             });
         });
     </script>
-
-        <div class="container " style=" padding:10px;background:#f2f2f2;border:1px solid #ccc;">
-            <div class="col-md-12">
-                <div class="emp-container" style="padding:0; margin:0 auto;">
-                     <div style="display:flex;justify-content:end;">
-                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('employee-list-page')}}"><button class="view-button">View Employees</button></a>
-                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('contractor-page')}}"><button class="view-button">View Contractors</button></a>
-                    </div>
-                    <div class="card-header" style="background-color: #00234f;padding:7px;width:35%;margin-left:30%; border-radius:20px;">
+<!-- modal -->
+@if($show=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                    <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Customers Details</b></h5>
+                    <button wire:click="close" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <div class="card-header" style="background-color: #00234f;padding:7px;width:35%;margin-left:30%; border-radius:20px;">
                         <h5 class="mb-0" style="text-align: center;color:white;font-size:0.955rem;">Employee Registration Form</h5>
                     </div>
-                    <div class="card-body">
-                        <form wire:submit.prevent="register" enctype="multipart/form-data">
-                           <div class="emp-info" style="display:flex; flex-direction:column;">
-                                <div class="details-emp" style=" display:flex; flex-direction:row;padding:0; gap:0px; margin-top:10px;">
-                                        <div class="col-md-6" >
+                    <form wire:submit.prevent="register" enctype="multipart/form-data">
+                            <div class="row">
+                               <div class="col-md-6" >
                                         <div class="emp" >
                                     <div class=" employee-details" > 
                                         <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>  
@@ -250,23 +264,23 @@ a:hover{
                                 <!-- ... (other properties) ... -->
 
                                 <div class="form-group">
-    <label for="employee_type">Employee Type:</label>
-    <select wire:model="employee_type" wire:change="employeeCall" class="form-control custom-select placeholder-small" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
-        <option value="default">Select Employee Type</option>
-        <option value="full-time">Full-Time</option>
-        <option value="part-time">Part-Time</option>
-        <option value="contract">Contract</option>
-    </select>
-    @error('employee_type') <span class="text-danger">{{ $message }}</span> @enderror
+                                    <label for="employee_type">Employee Type:</label>
+                                    <select wire:model="employee_type" wire:change="employeeCall" class="form-control custom-select placeholder-small" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
+                                        <option value="default">Select Employee Type</option>
+                                        <option value="full-time">Full-Time</option>
+                                        <option value="part-time">Part-Time</option>
+                                        <option value="contract">Contract</option>
+                                    </select>
+                                    @error('employee_type') <span class="text-danger">{{ $message }}</span> @enderror
 
-    @if($showContractorField)
-        <div class="form-group">
-            <label for="contractor_company_id">Contractor Company ID:</label>
-            <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
-            @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
-        </div>
-    @endif
-</div>
+                                    @if($showContractorField)
+                                        <div class="form-group">
+                                            <label for="contractor_company_id">Contractor Company ID:</label>
+                                            <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
+                                            @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    @endif
+                                </div>
 
 
 
@@ -341,12 +355,11 @@ a:hover{
                                </div>
                                    
                                 </div>
-                               <!-- second column -->
-                               <div class="col-md-6" >
-                                <div class="emp" >
-                               <div class=" employee-details" >     
-                               <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
-                               <div class="form-group" >
+                                <div class="col-md-6">
+                                    <div class="emp">
+                                        <div class="employee-details">
+                                        <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
+                                        <div class="form-group" >
                                     <label for="address">Address :</label>
                                     <input type="text" class="form-control" wire:model="address" style="margin-bottom:10px;">
                                     @error('address') <span class="text-danger">{{ $message }}</span> @enderror
@@ -437,9 +450,7 @@ a:hover{
                                 </div>
 
                       
-                                
-                               </div>
-                               <div class="employee-details">
+                                <div class="employee-details">
                                     <div style="margin:5px 0 20px 0"><h5>Other Details</h5></div>  
                                         <div class="form-group" >
                                                 <label for="nick_name">Nick Name :</label>
@@ -497,12 +508,11 @@ a:hover{
                                                 @error('skill_set') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                 </div>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
-                             
-                        </div>
-                        
-                                <div style="text-align: center; margin-top:20px;">
+                            </div>
+                            <div style="text-align: center; margin-top:20px;">
                                 <!-- Your Livewire component content -->
                                 <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">Save</button>
                                 <p wire:loading>Loading...</p>
@@ -522,28 +532,29 @@ a:hover{
                                     font-weight: bold;
                                 }
                             </style>
-                        </form>
-                    </div>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
-    <style>
-        /* Custom CSS classes for the "Save" button */
-        .btn-save {
-            background-color: #007bff;
-            /* Change to your desired color */
-            color: #fff;
-            /* Change to your desired color */
-        }
- 
-        /* Custom CSS classes for the "Loading" text */
-        .text-loading {
-            color: #ff9900;
-            /* Change to your desired color */
-        }
-    </style>
- 
+
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+<!-- model end -->
+        <div class="container " style=" padding:10px;background:#f2f2f2;border:1px solid #ccc;">
+            <div class="col-md-12">
+                <div class="emp-container" style="padding:0; margin:0 auto;">
+                     <div style="display:flex;justify-content:end;">
+                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('employee-list-page')}}"><button class="view-button">View Employees</button></a>
+                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('contractor-page')}}"><button class="view-button">View Contractors</button></a>
+                    </div>
+                    <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 </div>
