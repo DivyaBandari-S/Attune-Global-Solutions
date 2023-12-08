@@ -90,18 +90,16 @@ class BillsOrInvoices extends Component
     public function addVendors()
     {
         $this->validate([
-            'vendor_profile' => 'required',
+            
             'vendor_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
             'vendor_company_name' => 'required'
         ]);
-        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         VendorDetails::create([
-            'vendor_image' => $vendorProfilePath,
             'company_id' => $companyId,
             'contact_person' => $this->vendor_name,
             'vendor_name' => $this->vendor_company_name,
@@ -119,7 +117,6 @@ class BillsOrInvoices extends Component
     {
 
         $this->validate([
-            'customer_profile' => 'required',
             'customer_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -127,11 +124,9 @@ class BillsOrInvoices extends Component
             'notes' => 'required',
             'customer_company_name' => 'required'
         ]);
-        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         CustomerDetails::create([
-            'customer_company_logo' => $customerProfilePath,
             'company_id' => $companyId,
             'customer_name' => $this->customer_name,
             'customer_company_name' => $this->customer_company_name,
@@ -242,6 +237,10 @@ class BillsOrInvoices extends Component
     public function closeInvoice()
     {
         $this->invoice = false;
+    }
+    public function openInvoice()
+    {
+        $this->invoice = true;
     }
     public $vendors, $customers;
     public function render()

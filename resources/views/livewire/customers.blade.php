@@ -1,6 +1,26 @@
 <div style="padding:10px">
     <!-- Add this to your HTML file -->
     <style>
+        .modal-content{
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .modal-backdrop {
+            display: none;
+            background: rgba(0, 0, 0, 0.5);
+            /* Adjust the opacity as needed */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1040;
+        }
+
+        .blurred-backdrop {
+            filter: blur(5px);
+            /* Adjust the blur intensity as needed */
+        }
+
         /* Add your custom CSS styles here */
         .table {
             width: 100%;
@@ -196,12 +216,12 @@
             display: flex;
         }
         /* //REGISTRATION POP UP STYLES */
-        .form-group{
+       .employee-details .form-group{
     display:flex;
     flex-direction:column;
     justify-content:space-between;
 }
-.input-group{
+.employee-details .input-group{
     display:flex;
     flex-direction:row;
     justify-content:space-between;
@@ -209,17 +229,17 @@
     margin-top:10px;
     margin-bottom:10px;
 }
-.form-group label{
+.employee-details .form-group label{
     font-weight: 500;
     color:#5f6c79;
     margin-bottom:10px;
 }
-.form-group .form-control {
+.employee-details .form-group .form-control {
  height:28px;
  font-size:0.795rem;
  margin-bottom:10px;
 }
-.placeholder-small{
+.employee-details .placeholder-small{
     font-size:0.775rem;
     color:#778899;
 }
@@ -307,7 +327,7 @@ a:hover{
 
     <div style="text-align: start;">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
-        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO" class="btn btn-primary">ADD SO</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO"  class="btn btn-primary">ADD SO</button>
     </div>
     @if(session()->has('success'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
@@ -500,16 +520,16 @@ a:hover{
                                     @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <div class="inpu-group">
-                                         <label>Gender :</label><br>
-                                    <div class="form-check form-check-inline"style="margin-top:10px;" >
-                                        <input class="form-check-input" type="radio" wire:model="gender" value="Male" id="maleRadio" name="gender" >
-                                        <label class="form-check-label" for="maleRadio">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline" style="margin-top:10px;">
-                                        <input class="form-check-input" type="radio" wire:model="gender" value="Female" id="femaleRadio" name="gender">
-                                        <label class="form-check-label" for="femaleRadio">Female</label>
-                                    </div>
+                                    <div class="input-group-gender" style="display:flex;wrap:nowrap; justify-content:space-between;">
+                                         <label >Gender :</label><br>
+                                            <div class="gender"style="display:flex;wrap:nowrap;gap:5px;" >
+                                                <input class="form-check-input" type="radio" wire:model="gender" value="Male" id="maleRadio" name="gender" >
+                                                <label class="form-check-label" for="maleRadio" style="margin-top:7px;">Male</label>
+                                            </div>
+                                            <div class="gender" style="display:flex;wrap:nowrap;gap:5px;">
+                                                <input class="form-check-input" type="radio" wire:model="gender" value="Female" id="femaleRadio" name="gender">
+                                                <label class="form-check-label" for="femaleRadio" style="margin-top:7px;">Female</label>
+                                            </div>
                                     </div>
                                 </div>
                                 <div>
@@ -542,7 +562,7 @@ a:hover{
 
                                    <div class="form-group" >
                                         <label for="hire_date">Hire Date :</label>
-                                        <input type="date" class="form-control placeholder-small" wire:model="hire_date" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <input type="text" class="form-control placeholder-small" wire:model="hire_date" x-data x-init="initDatepicker($refs.hire_date, 'M-d-Y')" x-ref="hire_date" style="font-size: 12px;">
                                         @error('hire_date') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
@@ -619,15 +639,15 @@ a:hover{
                                                 @error('report_to') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                 <div class="form-group" >
-                                    <div class="input-group">
-                                    <label>International Employee :</label><br>
-                                    <div class="form-check form-check-inline">
+                                    <div class="input-group-gender" style="display:flex;wrap:nowrap; justify-content:space-between;margin-top:10px;">
+                                    <label style="margin-top:5px;">International Employee :</label><br>
+                                    <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
                                         <input class="form-check-input" type="radio" wire:model="inter_emp" value="yes" id="yesRadio" name="inter_emp" >
-                                        <label class="form-check-label" for="yesRadio">Yes</label>
+                                        <label class="form-check-label" style="margin-top:7px;" for="yesRadio">Yes</label>
                                     </div>
-                                    <div class="form-check form-check-inline">
+                                    <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
                                         <input class="form-check-input" type="radio" wire:model="inter_emp" value="no" id="noRadio" name="inter_emp">
-                                        <label class="form-check-label" for="noRadio">No</label>
+                                        <label class="form-check-label"style="margin-top:7px;" for="noRadio">No</label>
                                     </div>
                                     </div>
                                 </div>
@@ -695,15 +715,15 @@ a:hover{
                                     @error('nationality') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <label>Martial Status:</label><br>
-                                        <div class="form-check form-check-inline">
+                                    <div class="input-group" style="display:flex;wrap:nowrap; justify-content:space-between;">
+                                        <label style="margin-top:5px;">Martial Status:</label><br>
+                                        <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
                                             <input class="form-check-input" type="radio" wire:model="marital_status" value="unmarried" id="unmarriedRadio" name="marital_status_group">
-                                            <label class="form-check-label" for="unmarriedRadio">Single</label>
+                                            <label class="form-check-label" for="unmarriedRadio" style="margin-top:7px;">Unmarried</label>
                                         </div>
-                                        <div class="form-check form-check-inline">
+                                        <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
                                             <input class="form-check-input" type="radio" wire:model="marital_status" value="married" id="marriedRadio" name="marital_status_group">
-                                            <label class="form-check-label" for="marriedRadio">Married</label>
+                                            <label class="form-check-label" for="marriedRadio" style="margin-top:7px;">Married</label>
                                         </div>
                                     </div>
                                 </div>
@@ -841,22 +861,19 @@ a:hover{
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="addCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
+
+
+
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -892,7 +909,8 @@ a:hover{
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
     @endif
 
 
@@ -908,22 +926,16 @@ a:hover{
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="addcCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                            @error('customer_profile') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -959,7 +971,8 @@ a:hover{
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+
     @endif
 
     @if($edit=="true")
@@ -974,21 +987,19 @@ a:hover{
                 </div>
                 <div class="modal-body">
                     <form wire:submit.prevent="updateCustomers">
-                        <div>
-                            <label for="customer_profile" style="font-size: 12px;">Customer Company Logo:</label>
-                            <input type="file" wire:model="customer_profile">
-                        </div>
+
+
 
                         <div>
-                            <label for="customer_name" style="font-size: 12px;">Customer Name:</label>
-                            <input type="text" wire:model="customer_name">
-                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div>
-                            <label for="customer_company_name" style="font-size: 12px;">Customer Company Name:</label>
+                            <label for="customer_company_name" style="font-size: 12px;">Customer Name:</label>
                             <input type="text" wire:model="customer_company_name">
                             @error('customer_company_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div>
+                            <label for="customer_name" style="font-size: 12px;">Contact Name:</label>
+                            <input type="text" wire:model="customer_name">
+                            @error('customer_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                         </div>
                         <div>
                             <label for="email" style="font-size: 12px;">Email:</label>
@@ -1023,8 +1034,9 @@ a:hover{
             </div>
         </div>
     </div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+
     @endif
 
 
@@ -1039,7 +1051,7 @@ a:hover{
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                     <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                    <button wire:click="cancelSO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                    <button wire:click="cancelSO"  type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                         <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                     </button>
                 </div>
@@ -1081,15 +1093,15 @@ a:hover{
 
 
                             <div class="row mb-2">
-                                <div class="col">
+                                <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                    <input style="font-size: 12px;" type="date" wire:model="startDate" class="form-controls">
-                                    @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                </div>
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate"x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                </div> <br>
+                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                    <input style="font-size: 12px;" type="date" wire:model="endDate" class="form-controls">
+                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
 
                                 </div> <br>
                                 @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -1210,8 +1222,9 @@ a:hover{
         </div>
     </div>
 
-    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    <div id="modalBackdrop" class="modal-backdrop fade show"></div>
     @endif
+
 
 
 
@@ -1375,3 +1388,12 @@ a:hover{
     </div>
     <!-- End of Everyone tab content -->
 </div>
+
+
+<script>
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
+        });
+    }
+</script>

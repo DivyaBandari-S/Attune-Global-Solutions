@@ -257,7 +257,7 @@ a:hover{
 
                                    <div class="form-group" >
                                         <label for="hire_date">Hire Date :</label>
-                                        <input type="date" class="form-control placeholder-small" wire:model="hire_date" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <input style="font-size: 12px;" id="hire_date" type="text"  wire:model="hire_date" x-Data-x-init="initDatepicker($refs.hire_date, 'M-d-Y')" x-ref="hire_date" class="form-control">
                                         @error('hire_date') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
@@ -556,5 +556,11 @@ a:hover{
     </div>
 
 </div>
-
+<script>
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
+        });
+    }
+</script>
 </div>
