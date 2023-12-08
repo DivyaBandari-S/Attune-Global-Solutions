@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('emp_id')->nullable()->default(null)->unique();
             $table->string('first_name');
             $table->string('last_name');
-            $table->date('date_of_birth');
+            $table->string('date_of_birth');
             $table->string('gender');
             $table->string('email')->unique();
             $table->string('company_email')->unique();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('postal_code');
             $table->string('country');
-            $table->date('hire_date');
+            $table->string('hire_date');
             $table->enum('employee_type', ['full-time', 'part-time', 'contract']);
             $table->string('department');
             $table->string('job_title');
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->enum('employee_status', ['active', 'on-leave', 'terminated']);
             $table->string('emergency_contact')->nullable();
             $table->string('password')->nullable();
-            $table->string('image');
+            $table->string('image')->nullable();
             $table->string('blood_group');
             $table->string('nationality');
             $table->string('religion');

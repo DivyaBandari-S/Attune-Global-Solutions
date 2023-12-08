@@ -527,190 +527,186 @@ a:hover{
                                     <div class=" employee-details" > 
                                         <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>  
                                     <div class="form-group" >
-                                        <label for="first_name">First Name :</label>
-                                        <input type="text" class="form-control" wire:model="first_name" >
+                                        <label for="first_name">First Name <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" wire:model="first_name" placeholder="Enter first name" >
                                         @error('first_name') 
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
  
                                     <div class="form-group" >
-                                        <label for="last_name">Last Name :</label>
-                                        <input type="text" class="form-control" wire:model="last_name" style="margin-bottom:10px;;">
+                                        <label for="last_name">Last Name <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" placeholder="Enter last name" wire:model="last_name" style="margin-bottom:10px;;">
                                         @error('last_name') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                             
                                     <div class="form-group" >
-                                        <label for="mobile_number">Phone Number :</label>
-                                        <input type="text" class="form-control" wire:model="mobile_number" style="margin-bottom:10px;;">
+                                        <label for="mobile_number">Phone Number <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" placeholder="Enter phone number" wire:model="mobile_number" style="margin-bottom:10px;;">
                                         @error('mobile_number') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <div class="form-group" >
-                                        <label for="alternate_mobile_number">Alternate Phone Number :</label>
-                                        <input type="text" class="form-control" wire:model="alternate_mobile_number" style="margin-bottom:10px;;">
+                                        <label for="alternate_mobile_number">Alternate Phone Number <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" placeholder="Enter alternate phone number" wire:model="alternate_mobile_number" style="margin-bottom:10px;;">
                                         @error('alternate_mobile_number') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                         <div class="form-group" >
-                                                <label for="education">Education :</label>
-                                                <input type="text" class="form-control" wire:model="education"  style="margin-bottom:10px;;">
+                                                <label for="education">Education <span class="text-danger">  *</span></label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter education details" wire:model="education"  style="margin-bottom:10px;;">
                                                 @error('education') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                             <div class="form-group" >
                                                 <label for="experience">Experience :</label>
-                                                <input type="text" class="form-control" wire:model="experience"  style="margin-bottom:10px;;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter experience" wire:model="experience"  style="margin-bottom:10px;;">
                                                 @error('experience') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
-                                                <label for="email">Email  :</label>
-                                                <input type="email" class="form-control" wire:model="email" style="margin-bottom:10px;;">
+                                                <label for="email">Email  <span class="text-danger">  *</span></label>
+                                                <input type="email" class="form-control placeholder-small" placeholder="Enter email" wire:model="email" style="margin-bottom:10px;;">
                                                 @error('email') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
-                                                <label for="email">Company Email  :</label>
-                                                <input type="email" class="form-control" wire:model="company_email" style="margin-bottom:10px;;">
+                                                <label for="email">Company Email  <span class="text-danger">  *</span></label>
+                                                <input type="email" class="form-control placeholder-small" placeholder="Enter company email"wire:model="company_email" style="margin-bottom:10px;;">
                                                 @error('company_email') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
-                                                <label for="aadhar_no">Aadhar Number :</label>
-                                                <input type="text" class="form-control" wire:model="aadhar_no" style="margin-bottom:10px;;">
-                                                @error('aadhar_no') <span class="text-danger">{{ $message }}</span> @enderror
+                                                <label for="adhar_no">Aadhar Number :</label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter adhar number" wire:model="adhar_no" style="margin-bottom:10px;;">
+                                                @error('adhar_no') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
  
                                 <!-- Password -->
                                 <div class="form-group" >
-                                    <label for="password">Password :</label>
-                                    <input type="password" class="form-control" wire:model="password" style="margin-bottom:10px;;">
+                                    <label for="password">Password <span class="text-danger">  *</span></label>
+                                    <input type="password" class="form-control placeholder-small" placeholder="Enter password" wire:model="password" style="margin-bottom:10px;;">
                                     @error('password') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <div class="inpu-group">
-                                         <label>Gender :</label><br>
-                                    <div class="form-check form-check-inline"style="margin-top:10px;" >
-                                        <input class="form-check-input" type="radio" wire:model="gender" value="Male" id="maleRadio" name="gender" >
-                                        <label class="form-check-label" for="maleRadio">Male</label>
-                                    </div>
-                                    <div class="form-check form-check-inline" style="margin-top:10px;">
-                                        <input class="form-check-input" type="radio" wire:model="gender" value="Female" id="femaleRadio" name="gender">
-                                        <label class="form-check-label" for="femaleRadio">Female</label>
-                                    </div>
+                                    <div class="group" style="display:flex;wrap:nowrap; gap:20px;margin-bottom:10px;">
+                                         <label style="margin-top:5px;" >Gender <span class="text-danger">  *</span>:</label><br>
+                                            <div style="display:flex; align-items:start;gap:20px;margin-left:10px;margin-top:2px;">
+                                            <div class="form-check form-check-inline" style="display:flex;gap:5px;" >
+                                                <input class="form-check" type="radio" wire:model="gender" value="Male" id="maleRadio" name="gender" >
+                                                <label class="form-check-label" for="maleRadio" style="margin-top:5px;">Male</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="display:flex;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="gender" value="Female" id="femaleRadio" name="gender">
+                                                <label class="form-check-label" for="femaleRadio" style="margin-top:5px;">Female</label>
+                                            </div>
+                                            </div>
                                     </div>
                                 </div>
                                 <div>
                                     @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
- 
-                                {{-- Upload Employee Image --}}
-                                <div class="form-group">
-                                    <label for="image">Employee Image:</label>
-                                    <input type="file" class="form-control-file" wire:model="image" style="margin-bottom:10px;">
-                                    @error('image') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div >
-                                    <!-- Display the saved image -->
-                                    @if($savedImage)
-                                        <img height="50" width="50" src="{{ asset('storage/' . $savedImage) }}" alt="Saved Image" class="img-preview">
-                                        <span>{{ $savedImage }}</span>
-                                    @endif
-
-                                    <!-- Display the temporary image -->
-                                    @if($image)
-                                        <img height="50" width="50" src="{{ $image->temporaryUrl() }}" alt="Temporary Image" class="img-preview">
-                                        <span>{{ $image->getClientOriginalName() }}</span>
-                                    @endif
-                                </div>
+                                </div>         
                                </div>
                                  <div class="employee-details">
                                    <div style="margin:5px 0 20px 0"><h5>Job Details</h5></div>  
 
                                    <div class="form-group" >
-                                        <label for="hire_date">Hire Date :</label>
-                                        <input type="date" class="form-control placeholder-small" wire:model="hire_date" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <label for="hire_date">Hire Date <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" wire:model="hire_date" x-data x-init="initDatepicker($refs.hire_date, 'M-d-Y')" x-ref="hire_date" style="font-size: 12px;" placeholder="Enter hire date....">
                                         @error('hire_date') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
                                 <!-- ... (other properties) ... -->
-
                                 <div class="form-group">
-                                    <label for="employee_type">Employee Type:</label>
-                                    <select wire:model="employee_type" wire:change="employeeCall" class="form-control custom-select placeholder-small" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
-                                        <option value="default">Select Employee Type</option>
-                                        <option value="full-time">Full-Time</option>
-                                        <option value="part-time">Part-Time</option>
-                                        <option value="contract">Contract</option>
-                                    </select>
+                                    <label for="department">Department <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter department"wire:model="department" style="margin-bottom:10px;;">
+                                    @error('department') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group" >
+                                    <label for="job_title">Job Title <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter job title"wire:model="job_title" style="margin-bottom:10px;;">
+                                    @error('job_title') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                <div class="form-group" >
+                                    <label for="loction">Job Location <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter job location" wire:model="job_location" style="margin-bottom:10px;;">
+                                    @error('job_location') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
+                                    <div class="form-group" >
+                                        <label for="company_name">Company Name <span class="text-danger">  *</span></label>
+                                            <input type="text" class="form-control placeholder-small" placeholder="Enter company name" wire:model="company_name" style="margin-bottom:10px;;">
+                                             @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="form-group" >
+                                                <label for="company_id">Company ID <span class="text-danger">  *</span></label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter company Id" wire:model="company_id"  style="margin-bottom:10px;;">
+                                                @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+
+                                            <div class="form-group" >
+                                                <label for="manager_id">Manager Id <span class="text-danger">  *</span></label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter manager Id" wire:model="manager_id"  style="margin-bottom:10px;;">
+                                                @error('manager_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="form-group" >
+                                                <label for="report_to">Report To <span class="text-danger">  *</span></label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter reporting manager name" wire:model="report_to"  style="margin-bottom:10px;;">
+                                                @error('report_to') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                    <div class="form-group">
+                                        <div class="group" style="display:flex;wrap:nowrap; gap:10px;margin-top:15px;">
+                                        <label for="employee_type" style="margin-top:5px;">Employee Type <span class="text-danger">  *</span></label>
+                                       <div style="display:flex; align-items:start;gap:10px;  margin-left:10px;margin-top:2px;">
+                                            <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="employee_type" wire:change="employeeCall" value="full-time" id="full-timeRadio" name="employee_type" style="height:12px;width:12px;">
+                                                <label class="form-check-label" for="full-timeRadio" style="margin-top:4px;">Full Time</label>
+                                            </div>
+                                            <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="employee_type" wire:change="employeeCall"  value="part-time" id="part-timeRadio" name="employee_type"style="height:12px;width:12px;">
+                                                <label class="form-check-label" for="part-timeRadio" style="margin-top:4px;">Part Time</label>
+                                            </div>
+                                            <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="employee_type" wire:change="employeeCall"  value="contract" id="contractRadio" name="employee_type"style="height:12px;width:12px;">
+                                                <label class="form-check-label" for="contractRadio" style="margin-top:4px;">Contract</label>
+                                            </div>
+                                         </div>
+                                       </div>
                                     @error('employee_type') <span class="text-danger">{{ $message }}</span> @enderror
 
                                     @if($showContractorField)
                                         <div class="form-group">
-                                            <label for="contractor_company_id">Contractor Company ID:</label>
+                                            <label for="contractor_company_id">Contractor Company ID <span class="text-danger">  *</span></label>
                                             <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
                                             @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
                                         </div>
                                     @endif
                                 </div>
 
-
-
                                 <div class="form-group">
-                                    <label for="employee_status">Employee Status :</label>
-                                    <div class="input-group">
-                                    <select class="form-control custom-select placeholder-small" wire:model="employee_status" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
-                                            <option value="defualt" >Select Employee Status</option>
-                                            <option value="active">Active</option>
-                                            <option value="on-leave">On Leave</option>
-                                            <option value="terminated">Terminated</option>
-                                        </select>
+                                    <div class="group" style="display:flex;wrap:nowrap; gap:10px;margin-top:15px;">
+                                    <label for="employee_status" style="margin-top:5px;">Employee Status <span class="text-danger">  *</span></label>
+                                    <div style="display:flex; align-items:start;gap:10px;margin-left:10px;margin-top:2px;">
+                                         <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                            <input class="form-check" type="radio" wire:model="employee_status" value="active" id="activeRadio" name="employee_status" style="height:12px;width:12px;">
+                                            <label class="form-check-label" for="activeRadio" style="margin-top:4px;">Active</label>
+                                        </div>
+                                        <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                            <input class="form-check" type="radio" wire:model="employee_status"   value="on-leave" id="on-leaveRadio" name="employee_status"style="height:12px;width:12px;">
+                                            <label class="form-check-label" for="on-leaveRadio" style="margin-top:4px;">On-Leave</label>
+                                        </div>
+                                        <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                            <input class="form-check" type="radio" wire:model="employee_status"   value="terminated" id="terminatedRadio" name="employee_status"style="height:12px;width:12px;">
+                                            <label class="form-check-label" for="terminatedRadio" style="margin-top:4px;">Terminated</label>
+                                        </div>
+                                         </div>
                                     </div>
                                     @error('employee_status') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="form-group">
-                                    <label for="department">Department :</label>
-                                    <input type="text" class="form-control" wire:model="department" style="margin-bottom:10px;;">
-                                    @error('department') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
                                 <div class="form-group" >
-                                    <label for="job_title">Job Title :</label>
-                                    <input type="text" class="form-control" wire:model="job_title" style="margin-bottom:10px;;">
-                                    @error('job_title') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group" >
-                                    <label for="aadhar_no">Job Location :</label>
-                                    <input type="text" class="form-control" wire:model="job_location" style="margin-bottom:10px;;">
-                                    @error('job_location') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                    <div class="form-group" >
-                                                <label for="company_name">Company Name :</label>
-                                                <input type="text" class="form-control" wire:model="company_name" style="margin-bottom:10px;;">
-                                                @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                            <div class="form-group" >
-                                                <label for="company_id">Company ID :</label>
-                                                <input type="text" class="form-control" wire:model="company_id"  style="margin-bottom:10px;;">
-                                                @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-
-                                            <div class="form-group" >
-                                                <label for="manager_id">Manager Id :</label>
-                                                <input type="text" class="form-control" wire:model="manager_id"  style="margin-bottom:10px;;">
-                                                @error('manager_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                            <div class="form-group" >
-                                                <label for="report_to">Report To :</label>
-                                                <input type="text" class="form-control" wire:model="report_to"  style="margin-bottom:10px;;">
-                                                @error('report_to') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                <div class="form-group" >
-                                    <div class="input-group">
-                                    <label>International Employee :</label><br>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" wire:model="inter_emp" value="yes" id="yesRadio" name="inter_emp" >
-                                        <label class="form-check-label" for="yesRadio">Yes</label>
+                                    <div class="group" style="display:flex;wrap:nowrap; gap:20px;margin-top:15px;">
+                                    <label style="margin-top:5px;">International Employee <span class="text-danger">  *</span></label>
+                                    <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                        <input class="form-check" type="radio" wire:model="inter_emp" value="yes" id="yesRadio" name="inter_emp" style="height:12px;width:12px;" >
+                                        <label class="form-check-label" style="margin-top:5px;" for="yesRadio">Yes</label>
                                     </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" wire:model="inter_emp" value="no" id="noRadio" name="inter_emp">
-                                        <label class="form-check-label" for="noRadio">No</label>
+                                    <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                        <input class="form-check" type="radio" wire:model="inter_emp" value="no" id="noRadio" name="inter_emp"  style="height:12px;width:12px;">
+                                        <label class="form-check-label"style="margin-top:5px;" for="noRadio">No</label>
                                     </div>
                                     </div>
                                 </div>
@@ -718,8 +714,7 @@ a:hover{
                                     @error('inter_emp') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div> 
                                  </div>
-                                
-                              
+                            
                                </div>
                                    
                                 </div>
@@ -728,28 +723,28 @@ a:hover{
                                         <div class="employee-details">
                                         <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
                                         <div class="form-group" >
-                                    <label for="address">Address :</label>
-                                    <input type="text" class="form-control" wire:model="address" style="margin-bottom:10px;">
+                                    <label for="address">Address <span class="text-danger">  *</span></label>
+                                    <input type="text"class="form-control placeholder-small" placeholder="Enter employee address" wire:model="address" style="margin-bottom:10px;">
                                     @error('address') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <label for="city">City :</label>
-                                    <input type="text" class="form-control" wire:model="city" style="margin-bottom:10px;">
+                                    <label for="city">City <span class="text-danger">  *</span></label>
+                                    <input type="text"class="form-control placeholder-small" placeholder="Enter city" wire:model="city" style="margin-bottom:10px;">
                                     @error('city') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <label for="state">State :</label>
-                                    <input type="text" class="form-control" wire:model="state" style="margin-bottom:10px;">
+                                    <label for="state">State <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter state name" wire:model="state" style="margin-bottom:10px;">
                                     @error('state') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <label for="postal_code">Pin Code :</label>
-                                    <input type="text" class="form-control" wire:model="postal_code" style="margin-bottom:10px;">
+                                    <label for="postal_code">Pin Code <span class="text-danger">  *</span></label>
+                                    <input type="text"class="form-control placeholder-small" placeholder="Enter pincode" wire:model="postal_code" style="margin-bottom:10px;">
                                     @error('postal_code') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label for="country">Country :</label>
-                                    <input type="text" class="form-control" wire:model="country"style="margin-bottom:10px;">
+                                    <label for="country">Country <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter country name" wire:model="country" style="margin-bottom:10px;">
                                     @error('country') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                </div>
@@ -757,62 +752,67 @@ a:hover{
                                          <div style="margin:5px 0 20px 0"><h5>Employee Personal Details</h5></div>  
 
                                 <div class="form-group" >
-                                        <label for="date_of_birth">Date of Birth :</label>
-                                        <input type="date" class="form-control placeholder-small" wire:model="date_of_birth" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <label for="date_of_birth">Date of Birth <span class="text-danger">  *</span></label>
+                                        <input type="text" class="form-control placeholder-small" placeholder="Enter date of birth" wire:model="date_of_birth" x-data x-init="initDatepicker($refs.date_of_birth, 'M-d-Y')" x-ref="date_of_birth" style="font-size: 12px;margin-bottom:10px;">
                                         @error('date_of_birth') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
     
                                     <div class="form-group">
-                                    <label for="blood_group">Blood Group :</label>
-                                    <input type="text" class="form-control" wire:model="blood_group" style="margin-bottom:10px;">
+                                    <label for="blood_group">Blood Group <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter blood group type" wire:model="blood_group" style="margin-bottom:10px;">
                                     @error('blood_group') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <label for="religion">Religion :</label>
-                                    <input type="text" class="form-control" wire:model="religion" style="margin-bottom:10px;">
+                                    <label for="religion">Religion <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter religion" wire:model="religion" style="margin-bottom:10px;">
                                     @error('religion') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group" >
-                                    <label for="nationality">Nationality :</label>
-                                    <input type="text" class="form-control" wire:model="nationality" style="margin-bottom:10px;">
+                                    <label for="nationality">Nationality <span class="text-danger">  *</span></label>
+                                    <input type="text" class="form-control placeholder-small" placeholder="Enter natinality" wire:model="nationality" style="margin-bottom:10px;">
                                     @error('nationality') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
                                 <div class="form-group">
-                                    <div class="input-group">
-                                        <label>Martial Status:</label><br>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" wire:model="marital_status" value="unmarried" id="unmarriedRadio" name="marital_status_group">
-                                            <label class="form-check-label" for="unmarriedRadio">Single</label>
+                                    <div  class="group" style="display:flex;wrap:nowrap; gap:20px;">
+                                        <label style="margin-top:5px;">Martial Status <span class="text-danger">  *</span>:</label><br>
+                                         <div style="display:flex; align-items:start;gap:20px;margin-left:10px;margin-top:2px;">
+                                         <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                            <input class="form-check" type="radio" wire:model="marital_status"  wire:change="marriedStatus" value="unmarried" id="unmarriedRadio" name="marital_status_group" style="height:12px;width:12px;">
+                                            <label class="form-check-label" for="unmarriedRadio" style="margin-top:3px;">Unmarried</label>
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" wire:model="marital_status" value="married" id="marriedRadio" name="marital_status_group">
-                                            <label class="form-check-label" for="marriedRadio">Married</label>
+                                        <div class="gender"style="display:flex;wrap:nowrap;gap:5px;">
+                                            <input class="form-check" type="radio" wire:model="marital_status"  wire:change="marriedStatus" value="married" id="marriedRadio" name="marital_status_group"style="height:12px;width:12px;">
+                                            <label class="form-check-label" for="marriedRadio" style="margin-top:3px;">Married</label>
                                         </div>
+                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     @error('marital_status') <span class="text-danger">{{ $message }}</span> @enderror
+                                    @if($showSpouseField)
+                                        <div class="form-group">
+                                            <label for="spouse">Spouse :</label>
+                                            <input type="text" class="form-control placeholder-small" placeholder="Enter spouse name" id="spouse" wire:model="spouse">
+                                            @error('spouse') <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    @endif
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="spouse">Spouse:</label>
-                                    <input type="text" class="form-control" wire:model="spouse" style="margin-bottom:10px;">
-                                    @error('spouse') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <label>Physically Challenge:</label><br>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" wire:model="physically_challenge" value="Yes" id="yesRadio" name="physically_challenge_group">
-                                            <label class="form-check-label" for="yesRadio">Yes</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" wire:model="physically_challenge" value="No" id="noRadio" name="physically_challenge_group">
-                                            <label class="form-check-label" for="noRadio">No</label>
-                                        </div>
+                                    <div class="group" style="display:flex;wrap:nowrap; gap:20px;margin:10px 0;" >
+                                        <label>Physically Challenge <span class="text-danger">  *</span></label><br>
+                                         <div style="display:flex; align-items:start;gap:20px;">
+                                            <div class="form-check form-check-inline" style="display:flex;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="physically_challenge" value="Yes" id="yesRadio" name="physically_challenge_group" style="height:12px;width:12px;">
+                                                <label style="margin-top:3px;" class="form-check-label" for="yesRadio">Yes</label>
+                                            </div>
+                                            <div class="form-check form-check-inline" style="display:flex;gap:5px;">
+                                                <input class="form-check" type="radio" wire:model="physically_challenge" value="No" id="noRadio" name="physically_challenge_group" style="height:12px;width:12px;">
+                                                <label class="form-check-label" for="noRadio" style="margin-top:3px;">No</label>
+                                            </div>
+                                         </div>
                                     </div>
-                                </div>
+                                 </div>
                                 <div>
                                     @error('physically_challenge') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -822,60 +822,55 @@ a:hover{
                                     <div style="margin:5px 0 20px 0"><h5>Other Details</h5></div>  
                                         <div class="form-group" >
                                                 <label for="nick_name">Nick Name :</label>
-                                                <input type="text" class="form-control" wire:model="nick_name"  style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter nick name" wire:model="nick_name"  style="margin-bottom:10px;">
                                                 @error('nick_name') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="emergency_contact">Emergency Contact :</label>
-                                                <input type="text" class="form-control" wire:model="emergency_contact"  style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter emergency phone number" wire:model="emergency_contact"  style="margin-bottom:10px;">
                                                 @error('emergency_contact') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="time_zone">Time Zone :</label>
-                                                <input type="text" class="form-control" wire:model="time_zone" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter time zone" wire:model="time_zone" style="margin-bottom:10px;">
                                                 @error('time_zone') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="pf_no">PF Number :</label>
-                                                <input type="text" class="form-control" wire:model="pf_no" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter PF number" wire:model="pf_no" style="margin-bottom:10px;">
                                                 @error('pf_no') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="pan_no">Pan Number :</label>
-                                                <input type="text" class="form-control" wire:model="pan_no" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter PAN number" wire:model="pan_no" style="margin-bottom:10px;">
                                                 @error('pan_no') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="biography">Biography :</label>
-                                                <input type="text" class="form-control" wire:model="biography" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter biography" wire:model="biography" style="margin-bottom:10px;">
                                                 @error('biography') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="facebook">Facebook :</label>
-                                                <input type="text" class="form-control" wire:model="facebook" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter your facebook URL" wire:model="facebook" style="margin-bottom:10px;">
                                                 @error('facebook') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="linked_in">LinkedIn :</label>
-                                                <input type="text" class="form-control" wire:model="linked_in" style="margin-bottom:10px;">
+                                                <input type="text" class="form-control placeholder-small" placeholder="Enter your LinkedIn URL" wire:model="linked_in" style="margin-bottom:10px;">
                                                 @error('linked_in') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                             <div class="form-group" >
                                                 <label for="twitter">Twitter :</label>
-                                                <input type="text" class="form-control" wire:model="twitter" style="margin-bottom:10px;">
+                                                <input type="text"class="form-control placeholder-small" placeholder="Enter your twitter URL" wire:model="twitter" style="margin-bottom:10px;">
                                                 @error('twitter') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
+                                           
                                             <div class="form-group" >
-                                                <label for="is_starred">Is Starred :</label>
-                                                <input type="text" class="form-control" wire:model="is_starred" style="margin-bottom:10px;">
-                                                @error('is_starred') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                            <div class="form-group" >
-                                                <label for="skill_set">Skill Set :</label>
-                                                <input type="text" class="form-control" wire:model="skill_set" style="margin-bottom:10px;">
+                                                <label for="skill_set">Skill Set<span class="text-danger">  *</span></label>
+                                                <input type="text" class="form-control placeholder-small" placeholder="Example UI developer" wire:model="skill_set" style="margin-bottom:10px;">
                                                 @error('skill_set') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
-                                
                                         </div>
                                     </div>
                                 </div>
@@ -883,7 +878,7 @@ a:hover{
                             <div style="text-align: center; margin-top:20px;">
                                 <!-- Your Livewire component content -->
                                 <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">Save</button>
-                                <p wire:loading>Loading...</p>
+                                <p wire:loading></p>
                                 <p wire:loading.remove></p>
                             </div>
                             <div wire:debug></div>

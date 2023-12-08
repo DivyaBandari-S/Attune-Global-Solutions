@@ -55,7 +55,7 @@ class Customers extends Component
     public $first_name;
     public $last_name;
     public $date_of_birth;
-    public $gender;
+    public $gender ='Male';
     public $company_email;
     public $mobile_number;
     public $alternate_mobile_number;
@@ -64,26 +64,26 @@ class Customers extends Component
     public $postal_code;
     public $country;
     public $hire_date;
-    public $employee_type;
+    public $employee_type = 'full-time';
     public $department;
     public $manager_id;
     public $report_to;
-    public $employee_status;
+    public $employee_status ='active';
     public $emergency_contact;
     public $password;
     public $image;
     public $blood_group;
     public $nationality;
     public $religion;
-    public $marital_status;
+    public $marital_status ='unmarried';
     public $spouse;
-    public $physically_challenge;
-    public $inter_emp;
+    public $physically_challenge = 'No';
+    public $inter_emp ='no';
     public $job_location;
     public $education;
     public $experience;
     public $pan_no;
-    public $aadhar_no;
+    public $adhar_no;
     public $pf_no;
     public $nick_name;
     public $time_zone;
@@ -97,11 +97,16 @@ class Customers extends Component
     public $isHr;
     public $contractor_company_id;
     public $showContractorField = false;
+    public $showSpouseField = false;
     public $regForm = false;
 
     public function employeeCall()
     {
         $this->showContractorField = $this->employee_type === 'contract';
+    }
+    public function marriedStatus()
+    {
+        $this->showSpouseField = $this->marital_status === 'married';
     }
     
     public function regOpen()
@@ -140,12 +145,9 @@ class Customers extends Component
             'report_to' => 'required|string|max:255',
             'company_id' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
             'contractor_company_id' => $this->employee_type == 'contract' ? 'required|string|max:255' : '', // Add this line
         ]);
 
-       $imagePath = $this->image->store('employee_image', 'public');
-       $this->savedImage = $imagePath;
        $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
      
        
@@ -175,7 +177,6 @@ class Customers extends Component
             'employee_status' => $this->employee_status,
             'emergency_contact' => $this->emergency_contact,
             'password' => $this->password,
-            'image' => $imagePath, // Example storage for image upload
             'blood_group' => $this->blood_group,
             'nationality' => $this->nationality,
             'religion' => $this->religion,
@@ -187,7 +188,7 @@ class Customers extends Component
             'education' => $this->education,
             'experience' => $this->experience,
             'pan_no' => $this->pan_no,
-            'aadhar_no' => $this->aadhar_no,
+            'adhar_no' => $this->adhar_no,
             'pf_no' => $this->pf_no,
             'nick_name' => $this->nick_name,
             'time_zone' => $this->time_zone,

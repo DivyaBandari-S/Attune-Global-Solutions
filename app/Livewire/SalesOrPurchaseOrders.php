@@ -22,7 +22,7 @@ class SalesOrPurchaseOrders extends Component
     public $first_name;
     public $last_name;
     public $date_of_birth;
-    public $gender;
+    public $gender ='Male';
     public $company_name;
     public $company_email;
     public $mobile_number;
@@ -32,21 +32,21 @@ class SalesOrPurchaseOrders extends Component
     public $postal_code;
     public $country;
     public $hire_date;
-    public $employee_type;
+    public $employee_type = 'full-time';
     public $department;
     public $manager_id;
     public $report_to;
-    public $employee_status;
+    public $employee_status ='active';
     public $emergency_contact;
     public $password;
     public $image;
     public $blood_group;
     public $nationality;
     public $religion;
-    public $marital_status;
+    public $marital_status ='unmarried';
     public $spouse;
-    public $physically_challenge;
-    public $inter_emp;
+    public $physically_challenge = 'No';
+    public $inter_emp ='no';
     public $job_location;
     public $education;
     public $experience;
@@ -67,11 +67,16 @@ class SalesOrPurchaseOrders extends Component
     public $contractor_company_id;
     public $showContractorField = false;
     public $regForm = false;
+    public $showSpouseField = false;
     public $edit = false;
 
     public function employeeCall()
     {
         $this->showContractorField = $this->employee_type === 'contract';
+    }
+    public function marriedStatus()
+    {
+        $this->showSpouseField = $this->marital_status === 'married';
     }
     
     public function regOpen()
@@ -111,12 +116,9 @@ class SalesOrPurchaseOrders extends Component
             'report_to' => 'required|string|max:255',
             'company_id' => 'required|string|max:255',
             'job_title' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
             'contractor_company_id' => $this->employee_type == 'contract' ? 'required|string|max:255' : '', // Add this line
         ]);
 
-       $imagePath = $this->image->store('employee_image', 'public');
-       $this->savedImage = $imagePath;
        $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
      
        
