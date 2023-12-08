@@ -171,7 +171,7 @@
             vertical-align: top;
             border-top: 1px solid #dee2e6;
             text-align: center;
-            width: 20%;
+            width: 100px;
         }
 
         .table thead th {
@@ -1270,37 +1270,35 @@ a:hover{
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>PO Number</th>
-                            <th>Vendor ID</th>
-                            <th>Vendor Name</th>
-                            <th>Employee Name</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Rate</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Time Sheet Type</th>
-                            <th>Time Sheet Begins</th>
                             <th>Invoice Type</th>
                             <th>Payment Terms</th>
-                            <th>PO By</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($showPOLists as $salesOrder)
                         <tr>
+                            <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
+                            <td>PO</td>
                             <td>{{ $salesOrder->po_number }}</td>
-                            <td>{{ $salesOrder->vendor_id }}</td>
-                            <td>{{ $salesOrder->ven->vendor_name }}</td>
                             <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                            <td>{{ $salesOrder->start_date }}</td>
-                            <td>{{ $salesOrder->end_date }}</td>
+                            <td>{{ $salesOrder->rate }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                             <td>{{ $salesOrder->time_sheet_type }}</td>
-                            <td>{{ $salesOrder->time_sheet_begins }}</td>
                             <td>{{ $salesOrder->invoice_type }}</td>
                             <td>{{ $salesOrder->payment_terms }}</td>
-                            <td>{{ $salesOrder->com->company_name }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="11" style="text-align: center;">PurchaseOrders Not Found</td>
+                            <td colspan="10" style="text-align: center;">PurchaseOrders Not Found</td>
                         </tr>
                         @endforelse
 
@@ -1314,35 +1312,33 @@ a:hover{
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Bill Number</th>
-                            <th>Vendor ID</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Hrs/Days</th>
+                            <th>Rate</th>
+                            <th>Period</th>
                             <th>Amount</th>
-                            <th>Due Date</th>
-                            <th>Payment Terms</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Currency</th>
-                            <th>Notes</th>
-                            <th>Billed By</th>
+                            <th>Open Balance</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bills as $bill)
                         <tr>
+                            <td>{{ $bill->created_at->format('M-d-Y') }}</td>
+                            <td>{{ $bill->type }}</td>
                             <td>{{ $bill->bill_number }}</td>
-                            <td>{{ $bill->vendor_id }}</td>
+                            <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                            <td>{{ $bill->hrs_or_days }}</td>
+                            <td>{{ $bill->rate }}</td>
+                            <td>{{ $bill->period}}</td>
                             <td>{{ $bill->amount }}</td>
-                            <td>{{ $bill->due_date }}</td>
-                            <td>{{ $bill->payment_terms }}</td>
-                            <td>{{ $bill->description }}</td>
-                            <td>{{ $bill->status }}</td>
-                            <td>{{ $bill->currency }}</td>
-                            <td>{{ $bill->notes }}</td>
-                            <td>{{ $bill->company->company_name }}</td>
+                            <td>{{ $bill->open_balance }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" style="text-align: center;">Bills Not Found</td>
+                            <td colspan="9" style="text-align: center;">Bills Not Found</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -61,7 +61,7 @@
             vertical-align: top;
             border-top: 1px solid #dee2e6;
             text-align: center;
-            width: 20%;
+            width: 100px;
         }
 
         .table thead th {
@@ -161,6 +161,80 @@
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addInvoice">
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="endClientTimesheetRequired">Type:</label>
+                                <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="type">
+                                    <option style="font-size: 12px;">Select type</option>
+                                    <option style="font-size: 12px;" value="Invoice">Invoice</option>
+                                    <option style="font-size: 12px;" value="Payment">Payment</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                                @error('type') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="vendorName">Consultant Name:</label>
+                                <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultant_name">
+                                    <option style="font-size: 12px;" value="">Select Consultant</option>
+                                    <option style="font-size: 12px;" value="addConsultant">
+                                        << Add Consultant>>
+                                    </option>
+                                    @foreach($employees as $employee)
+                                    <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                    @endforeach
+
+                                </select>
+                                @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="rate">Rate:</label>
+                                <div class="input-group">
+                                    <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="rate">
+                                    @error('rate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                    <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="rateType">
+                                        <option style="font-size: 12px;">Select Rate Type</option>
+                                        <option style="font-size: 12px;" value="Hourly">Per Hour</option>
+                                        <option style="font-size: 12px;" value="Daily">Per Day</option>
+                                        <option style="font-size: 12px;" value="Weekly">Per Week</option>
+                                        <option style="font-size: 12px;" value="Monthly">Per Month</option>
+                                    </select>
+                                    @error('rateType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col p-0">
+                                    <label style="font-size: 12px;" for="start_date">Hours:</label>
+                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
+                                </div> <br>
+                                @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                <div class="col">
+                                    <label style="font-size: 12px;" for="end_date">Days:</label>
+                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
+
+                                </div> <br>
+                                @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col p-0">
+                                    <label style="font-size: 12px;" for="start_date">Start Date:</label>
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                </div> <br>
+                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                <div class="col">
+                                    <label style="font-size: 12px;" for="end_date">End Date:</label>
+                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
+
+                                </div> <br>
+                                @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                            </div>
+
 
                             <div class="form-group">
                                 <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
@@ -178,13 +252,20 @@
 
                             <div>
                                 <label for="amount" style="font-size: 12px;">Amount:</label>
-                                <input type="text" wire:model="amount">
+                                <input type="number" wire:model="amount">
                                 @error('amount') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
+                                <label for="amount" style="font-size: 12px;">Open Balance:</label>
+                                <input type="number" wire:model="open_balance">
+                                @error('open_balance') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+
+                            <div>
                                 <label for="due_date" style="font-size: 12px;">Due Date:</label>
-                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date"x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
+                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date" x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
 
                                 @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
@@ -253,6 +334,79 @@
                     </div>
                     <div class="modal-body">
                         <form wire:submit.prevent="addBill">
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="endClientTimesheetRequired">Type:</label>
+                                <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="type">
+                                    <option style="font-size: 12px;">Select type</option>
+                                    <option style="font-size: 12px;" value="Bill">Bill</option>
+                                    <option style="font-size: 12px;" value="Payment">Payment</option>
+                                    <!-- Add more options as needed -->
+                                </select>
+                                @error('type') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="vendorName">Consultant Name:</label>
+                                <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="consultant_name">
+                                    <option style="font-size: 12px;" value="">Select Consultant</option>
+                                    <option style="font-size: 12px;" value="addConsultant">
+                                        << Add Consultant>>
+                                    </option>
+                                    @foreach($employees as $employee)
+                                    <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                    @endforeach
+
+                                </select>
+                                @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="rate">Rate:</label>
+                                <div class="input-group">
+                                    <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="rate">
+                                    @error('rate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                    <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="rateType">
+                                        <option style="font-size: 12px;">Select Rate Type</option>
+                                        <option style="font-size: 12px;" value="Hourly">Per Hour</option>
+                                        <option style="font-size: 12px;" value="Daily">Per Day</option>
+                                        <option style="font-size: 12px;" value="Weekly">Per Week</option>
+                                        <option style="font-size: 12px;" value="Monthly">Per Month</option>
+                                    </select>
+                                    @error('rateType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                </div>
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col p-0">
+                                    <label style="font-size: 12px;" for="start_date">Hours:</label>
+                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
+                                </div> <br>
+                                @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                <div class="col">
+                                    <label style="font-size: 12px;" for="end_date">Days:</label>
+                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
+
+                                </div> <br>
+                                @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                            </div>
+
+                            <div class="row mb-2">
+                                <div class="col p-0">
+                                    <label style="font-size: 12px;" for="start_date">Start Date:</label>
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                </div> <br>
+                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                <div class="col">
+                                    <label style="font-size: 12px;" for="end_date">End Date:</label>
+                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
+
+                                </div> <br>
+                                @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                            </div>
 
 
                             <div class="form-group">
@@ -273,13 +427,19 @@
 
                             <div>
                                 <label for="amount" style="font-size: 12px;">Amount:</label>
-                                <input type="text" wire:model="amount">
+                                <input type="number" wire:model="amount">
                                 @error('amount') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
                             <div>
+                                <label for="amount" style="font-size: 12px;">Open Balance:</label>
+                                <input type="number" wire:model="open_balance">
+                                @error('open_balance') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            </div>
+
+                            <div>
                                 <label for="due_date" style="font-size: 12px;">Due Date:</label>
-                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date"x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
+                                <input style="font-size: 12px;" id="due_date" type="text" wire:model="due_date" x-data x-init="initDatepicker($refs.due_date, 'M-d-Y')" x-ref="due_date" class="form-control">
 
                                 @error('due_date') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
@@ -470,37 +630,33 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Invoice Number</th>
-                    <th>Customer ID</th>
-                    <th>Customer Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>No</th>
+                    <th>Consultant Name</th>
+                    <th>Hrs/Days</th>
+                    <th>Rate</th>
+                    <th>Period</th>
                     <th>Amount</th>
-                    <th>Due Date</th>
-                    <th>Payment Terms</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Currency</th>
-                    <th>Notes</th>
-                    <th>Invoiced By</th>
+                    <th>Open Balance</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($invoices as $invoice)
+                @forelse($invoices as $bill)
                 <tr>
-                    <td>{{ $invoice->invoice_number }}</td>
-                    <td>{{ $invoice->customer_id }}</td>
-                    <td>{{ $invoice->customer->customer_company_name }}</td>
-                    <td>{{ $invoice->amount }}</td>
-                    <td>{{ $invoice->due_date }}</td>
-                    <td>{{ $invoice->payment_terms }}</td>
-                    <td>{{ $invoice->description }}</td>
-                    <td>{{ $invoice->status }}</td>
-                    <td>{{ $invoice->currency }}</td>
-                    <td>{{ $invoice->notes }}</td>
-                    <td>{{ $invoice->company->company_name }}</td>
+                    <td>{{ $bill->created_at->format('M-d-Y') }}</td>
+                    <td>{{ $bill->type }}</td>
+                    <td>{{ $bill->invoice_number }}</td>
+                    <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                    <td>{{ $bill->hrs_or_days }}</td>
+                    <td>{{ $bill->rate }}</td>
+                    <td>{{ $bill->period}}</td>
+                    <td>{{ $bill->amount }}</td>
+                    <td>{{ $bill->open_balance }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" style="text-align: center;">Invoices Not Found</td>
+                    <td colspan="9" style="text-align: center;">Invoices Not Found</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -511,37 +667,33 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Bill Number</th>
-                    <th>Vendor ID</th>
-                    <th>Vendor Name</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>No</th>
+                    <th>Consultant Name</th>
+                    <th>Hrs/Days</th>
+                    <th>Rate</th>
+                    <th>Period</th>
                     <th>Amount</th>
-                    <th>Due Date</th>
-                    <th>Payment Terms</th>
-                    <th>Description</th>
-                    <th>Status</th>
-                    <th>Currency</th>
-                    <th>Notes</th>
-                    <th>Billed By</th>
+                    <th>Open Balance</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($bills as $bill)
                 <tr>
+                    <td>{{ $bill->created_at->format('M-d-Y') }}</td>
+                    <td>{{ $bill->type }}</td>
                     <td>{{ $bill->bill_number }}</td>
-                    <td>{{ $bill->vendor_id }}</td>
-                    <td>{{ $bill->vendor->vendor_name }}</td>
+                    <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                    <td>{{ $bill->hrs_or_days }}</td>
+                    <td>{{ $bill->rate }}</td>
+                    <td>{{ $bill->period}}</td>
                     <td>{{ $bill->amount }}</td>
-                    <td>{{ $bill->due_date }}</td>
-                    <td>{{ $bill->payment_terms }}</td>
-                    <td>{{ $bill->description }}</td>
-                    <td>{{ $bill->status }}</td>
-                    <td>{{ $bill->currency }}</td>
-                    <td>{{ $bill->notes }}</td>
-                    <td>{{ $bill->company->company_name }}</td>
+                    <td>{{ $bill->open_balance }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="10" style="text-align: center;">Bills Not Found</td>
+                    <td colspan="9" style="text-align: center;">Bills Not Found</td>
                 </tr>
                 @endforelse
             </tbody>
@@ -549,10 +701,6 @@
 
         @endif
         </p>
-
-
-
-
     </body>
 </div>
 
