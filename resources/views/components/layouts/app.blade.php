@@ -267,6 +267,7 @@
     <!-- Include Alpine.js -->
 
     <!-- Include Alpine.js datepicker -->
+    <!-- Add these lines to include Select2 CSS and JS files -->
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
