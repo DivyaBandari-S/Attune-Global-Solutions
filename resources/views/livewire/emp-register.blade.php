@@ -17,9 +17,18 @@
     margin-bottom:10px;
 }
 .form-group label{
-    font-weight:500;
+    font-weight: 500;
     color:#5f6c79;
     margin-bottom:10px;
+}
+.form-group .form-control {
+ height:28px;
+ font-size:0.795rem;
+ margin-bottom:10px;
+}
+.placeholder-small{
+    font-size:0.775rem;
+    color:#778899;
 }
 a:hover{
     color:green;
@@ -35,14 +44,14 @@ a:hover{
 .employee-details{
     border:1px solid #ccc;
     padding:5px 10px;
-    font-size:0.925rem;
+    font-size:0.785rem;
     border-radius:10px;
     background:#fff;
 }
 
 .employee-details h5{
    font-weight:400;
-   font-size:18px;
+   font-size:0.905rem;
    color:rgb(2, 17, 79);
 }
 .alert-container {
@@ -89,10 +98,22 @@ a:hover{
     font-size: 0.625rem; /* Adjust the font size as needed */
     color: #6c757d; /* Muted color */
 }
+.btn-save {
+            background-color: #007bff;
+            /* Change to your desired color */
+            color: #fff;
+            /* Change to your desired color */
+        }
+ 
+        /* Custom CSS classes for the "Loading" text */
+        .text-loading {
+            color: #ff9900;
+            /* Change to your desired color */
+        }
 
 </style>
 <div>
-    <div class="container" style="padding:0px;margin:30px 0;">
+    <div class="container" style="padding:0px;">
     <div id="alert-container" class="alert-container">
             <span id="close-btn" class="close-btn">&times;</span>
             @if(session()->has('emp_success'))
@@ -116,32 +137,34 @@ a:hover{
             });
         });
     </script>
-
-        <div class="container " style=" padding:10px;background:#f2f2f2;border:1px solid #ccc;">
-            <div class="col-md-12">
-                <div class="emp-container" style="padding:0; margin:0 auto;">
-                     <div style="display:flex;justify-content:end;">
-                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('employee-list-page')}}"><button class="view-button">View Employees</button></a>
-                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('contractor-page')}}"><button class="view-button">View Contractors</button></a>
+<!-- modal -->
+@if($show=="true")
+    <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                    <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Customers Details</b></h5>
+                    <button wire:click="close" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                        <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <div class="card-header" style="background-color: #00234f;padding:7px;width:35%;margin-left:30%; border-radius:20px;">
+                        <h5 class="mb-0" style="text-align: center;color:white;font-size:0.955rem;">Employee Registration Form</h5>
                     </div>
-                    <div class="card-header" style="background-color: #00234f;padding:7px;width:50%;margin-left:20%; border-radius:20px;;">
-                        <h5 class="mb-0" style="text-align: center;color:white;">Employee Registration Form</h5>
-                    </div>
-                    <div class="card-body">
-                        <form wire:submit.prevent="register" enctype="multipart/form-data">
-                        <div class="emp-info" style="display:flex; flex-direction:column;">
-                        <div class="details-emp" style=" display:flex; flex-direction:row;padding:0; gap:0px; margin-top:10px;">
-                                <div class="col-md-6" >
-                                <div class="emp" >
-                               <div class=" employee-details" > 
-                                <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>  
-                            <div class="form-group" >
-                                <label for="first_name">First Name :</label>
-                                <input type="text" class="form-control" wire:model="first_name" style="margin-bottom:10px;">
-                                @error('first_name') 
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                    <form wire:submit.prevent="register" enctype="multipart/form-data">
+                            <div class="row">
+                               <div class="col-md-6" >
+                                        <div class="emp" >
+                                    <div class=" employee-details" > 
+                                        <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>  
+                                    <div class="form-group" >
+                                        <label for="first_name">First Name :</label>
+                                        <input type="text" class="form-control" wire:model="first_name" >
+                                        @error('first_name') 
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
  
                                     <div class="form-group" >
                                         <label for="last_name">Last Name :</label>
@@ -169,21 +192,21 @@ a:hover{
                                                 <input type="text" class="form-control" wire:model="experience"  style="margin-bottom:10px;;">
                                                 @error('experience') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
-                                <div class="form-group" >
-                                    <label for="email">Email  :</label>
-                                    <input type="email" class="form-control" wire:model="email" style="margin-bottom:10px;;">
-                                    @error('email') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group" >
-                                    <label for="email">Company Email  :</label>
-                                    <input type="email" class="form-control" wire:model="company_email" style="margin-bottom:10px;;">
-                                    @error('company_email') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
-                                <div class="form-group" >
-                                    <label for="aadhar_no">Aadhar Number :</label>
-                                    <input type="text" class="form-control" wire:model="aadhar_no" style="margin-bottom:10px;;">
-                                    @error('aadhar_no') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                            <div class="form-group" >
+                                                <label for="email">Email  :</label>
+                                                <input type="email" class="form-control" wire:model="email" style="margin-bottom:10px;;">
+                                                @error('email') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="form-group" >
+                                                <label for="email">Company Email  :</label>
+                                                <input type="email" class="form-control" wire:model="company_email" style="margin-bottom:10px;;">
+                                                @error('company_email') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div class="form-group" >
+                                                <label for="aadhar_no">Aadhar Number :</label>
+                                                <input type="text" class="form-control" wire:model="aadhar_no" style="margin-bottom:10px;;">
+                                                @error('aadhar_no') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
  
                                 <!-- Password -->
                                 <div class="form-group" >
@@ -234,26 +257,38 @@ a:hover{
 
                                    <div class="form-group" >
                                         <label for="hire_date">Hire Date :</label>
-                                        <input type="date" class="form-control" wire:model="hire_date" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <input style="font-size: 12px;" id="hire_date" type="text"  wire:model="hire_date" x-Data-x-init="initDatepicker($refs.hire_date, 'M-d-Y')" x-ref="hire_date" class="form-control">
                                         @error('hire_date') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
 
+                                <!-- ... (other properties) ... -->
+
                                 <div class="form-group">
                                     <label for="employee_type">Employee Type:</label>
-                                    <select class="form-control custom-select placeholder-small" wire:model="employee_type" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
-                                        <option value="defualt" disabled selected >Select Employee Type</option>
+                                    <select wire:model="employee_type" wire:change="employeeCall" class="form-control custom-select placeholder-small" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
+                                        <option value="default">Select Employee Type</option>
                                         <option value="full-time">Full-Time</option>
                                         <option value="part-time">Part-Time</option>
                                         <option value="contract">Contract</option>
                                     </select>
                                     @error('employee_type') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                    @if($showContractorField)
+                                        <div class="form-group">
+                                            <label for="contractor_company_id">Contractor Company ID:</label>
+                                            <input type="text" class="form-control" id="contractor_company_id" wire:model="contractor_company_id">
+                                            @error('contractor_company_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                        </div>
+                                    @endif
                                 </div>
 
+
+
                                 <div class="form-group">
-                                    <label for="employee_status">Employee Status:</label>
+                                    <label for="employee_status">Employee Status :</label>
                                     <div class="input-group">
-                                    <select class="form-control custom-select" wire:model="employee_status" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
-                                            <option value="defualt" disabled selected>Select Employee Status</option>
+                                    <select class="form-control custom-select placeholder-small" wire:model="employee_status" style="margin-bottom: 10px; background-image: url('data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' fill=\'grey\' class=\'bi bi-chevron-down\' width=\'22\' height=\'22\' viewBox=\'0 0 20 16\'><path d=\'M1 5l7 7 7-7H1z\'/></svg>'); background-repeat: no-repeat; background-position: right;">
+                                            <option value="defualt" >Select Employee Status</option>
                                             <option value="active">Active</option>
                                             <option value="on-leave">On Leave</option>
                                             <option value="terminated">Terminated</option>
@@ -272,9 +307,6 @@ a:hover{
                                     <input type="text" class="form-control" wire:model="job_title" style="margin-bottom:10px;;">
                                     @error('job_title') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                              
-                               
-                              
                                 <div class="form-group" >
                                     <label for="aadhar_no">Job Location :</label>
                                     <input type="text" class="form-control" wire:model="job_location" style="margin-bottom:10px;;">
@@ -285,21 +317,11 @@ a:hover{
                                                 <input type="text" class="form-control" wire:model="company_name" style="margin-bottom:10px;;">
                                                 @error('company_name') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
-                                            @php
-                                                $companyId = auth()->user()->company_id;
-                                                $isHr = (auth()->user()->role === 'hr'); // Adjust the role check based on your user model
-                                            @endphp
-
-                                            <div class="form-group">
-                                    <label for="company_id">Company ID</label>
-                                    @if($isHr)
-                                        <input wire:model="company_id" type="text" id="company_id" name="company_id" readonly value="{{ $companyId }}">
-                                    @else
-                                        <input wire:model="company_id" type="text" id="company_id" name="company_id" value="{{ $companyId }}">
-                                    @endif
-
-                                    @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                            <div class="form-group" >
+                                                <label for="company_id">Company ID :</label>
+                                                <input type="text" class="form-control" wire:model="company_id"  style="margin-bottom:10px;;">
+                                                @error('company_id') <span class="text-danger">{{ $message }}</span> @enderror
+                                            </div>
 
                                             <div class="form-group" >
                                                 <label for="manager_id">Manager Id :</label>
@@ -333,12 +355,11 @@ a:hover{
                                </div>
                                    
                                 </div>
-                               <!-- second column -->
-                               <div class="col-md-6" >
-                                <div class="emp" >
-                               <div class=" employee-details" >     
-                               <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
-                               <div class="form-group" >
+                                <div class="col-md-6">
+                                    <div class="emp">
+                                        <div class="employee-details">
+                                        <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
+                                        <div class="form-group" >
                                     <label for="address">Address :</label>
                                     <input type="text" class="form-control" wire:model="address" style="margin-bottom:10px;">
                                     @error('address') <span class="text-danger">{{ $message }}</span> @enderror
@@ -369,7 +390,7 @@ a:hover{
 
                                 <div class="form-group" >
                                         <label for="date_of_birth">Date of Birth :</label>
-                                        <input type="date" class="form-control" wire:model="date_of_birth" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
+                                        <input type="date" class="form-control placeholder-small" wire:model="date_of_birth" max="{{ date('Y-m-d') }}" style="margin-bottom:10px;">
                                         @error('date_of_birth') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
     
@@ -429,9 +450,7 @@ a:hover{
                                 </div>
 
                       
-                                
-                               </div>
-                               <div class="employee-details">
+                                <div class="employee-details">
                                     <div style="margin:5px 0 20px 0"><h5>Other Details</h5></div>  
                                         <div class="form-group" >
                                                 <label for="nick_name">Nick Name :</label>
@@ -489,12 +508,11 @@ a:hover{
                                                 @error('skill_set') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
                                 </div>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
-                             
-                        </div>
-                        
-                                <div style="text-align: center; margin-top:20px;">
+                            </div>
+                            <div style="text-align: center; margin-top:20px;">
                                 <!-- Your Livewire component content -->
                                 <button type="submit" wire:loading.attr="disabled" class="btn btn-primary">Save</button>
                                 <p wire:loading>Loading...</p>
@@ -514,28 +532,35 @@ a:hover{
                                     font-weight: bold;
                                 }
                             </style>
-                        </form>
-                    </div>
+                    </form>
+
                 </div>
             </div>
         </div>
     </div>
-    <style>
-        /* Custom CSS classes for the "Save" button */
-        .btn-save {
-            background-color: #007bff;
-            /* Change to your desired color */
-            color: #fff;
-            /* Change to your desired color */
-        }
- 
-        /* Custom CSS classes for the "Loading" text */
-        .text-loading {
-            color: #ff9900;
-            /* Change to your desired color */
-        }
-    </style>
- 
-</div>
 
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+<!-- model end -->
+        <div class="container " style=" padding:10px;background:#f2f2f2;border:1px solid #ccc;">
+            <div class="col-md-12">
+                <div class="emp-container" style="padding:0; margin:0 auto;">
+                     <div style="display:flex;justify-content:end;">
+                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('employee-list-page')}}"><button class="view-button">View Employees</button></a>
+                     <a style="text-decoration:none;font-weight:600;color:#00459c;"href="{{route('contractor-page')}}"><button class="view-button">View Contractors</button></a>
+                    </div>
+                    <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
+        });
+    }
+</script>
 </div>
