@@ -903,35 +903,33 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Invoice Number</th>
-                            <th>Customer ID</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Hrs/Days</th>
+                            <th>Rate</th>
+                            <th>Period</th>
                             <th>Amount</th>
-                            <th>Due Date</th>
-                            <th>Payment Terms</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Currency</th>
-                            <th>Notes</th>
-                            <th>Invoiced By</th>
+                            <th>Open Balance</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($invoices as $invoice)
+                        @forelse($invoices as $bill)
                         <tr>
-                            <td>{{ $invoice->invoice_number }}</td>
-                            <td>{{ $invoice->customer_id }}</td>
-                            <td>{{ $invoice->amount }}</td>
-                            <td>{{ $invoice->due_date }}</td>
-                            <td>{{ $invoice->payment_terms }}</td>
-                            <td>{{ $invoice->description }}</td>
-                            <td>{{ $invoice->status }}</td>
-                            <td>{{ $invoice->currency }}</td>
-                            <td>{{ $invoice->notes }}</td>
-                            <td>{{ $invoice->company->company_name }}</td>
+                            <td>{{ $bill->created_at->format('M-d-Y') }}</td>
+                            <td>{{ $bill->type }}</td>
+                            <td>{{ $bill->invoice_number }}</td>
+                            <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                            <td>{{ $bill->hrs_or_days }}</td>
+                            <td>{{ $bill->rate }}</td>
+                            <td>{{ $bill->period}}</td>
+                            <td>{{ $bill->amount }}</td>
+                            <td>{{ $bill->open_balance }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" style="text-align: center;">Invoices Not Found</td>
+                            <td colspan="9" style="text-align: center;">Invoices Not Found</td>
                         </tr>
                         @endforelse
                     </tbody>

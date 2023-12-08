@@ -762,7 +762,7 @@
             <!-- resources/views/livewire/purchase-order-table.blade.php -->
 
             <div class="table-responsive">
-            <table class="table">
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -807,35 +807,33 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Bill Number</th>
-                            <th>Vendor ID</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Hrs/Days</th>
+                            <th>Rate</th>
+                            <th>Period</th>
                             <th>Amount</th>
-                            <th>Due Date</th>
-                            <th>Payment Terms</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Currency</th>
-                            <th>Notes</th>
-                            <th>Billed By</th>
+                            <th>Open Balance</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bills as $bill)
                         <tr>
+                            <td>{{ $bill->created_at->format('M-d-Y') }}</td>
+                            <td>{{ $bill->type }}</td>
                             <td>{{ $bill->bill_number }}</td>
-                            <td>{{ $bill->vendor_id }}</td>
+                            <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                            <td>{{ $bill->hrs_or_days }}</td>
+                            <td>{{ $bill->rate }}</td>
+                            <td>{{ $bill->period}}</td>
                             <td>{{ $bill->amount }}</td>
-                            <td>{{ $bill->due_date }}</td>
-                            <td>{{ $bill->payment_terms }}</td>
-                            <td>{{ $bill->description }}</td>
-                            <td>{{ $bill->status }}</td>
-                            <td>{{ $bill->currency }}</td>
-                            <td>{{ $bill->notes }}</td>
-                            <td>{{ $bill->company->company_name }}</td>
+                            <td>{{ $bill->open_balance }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="10" style="text-align: center;">Bills Not Found</td>
+                            <td colspan="9" style="text-align: center;">Bills Not Found</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -165,7 +165,7 @@
                                 <label style="font-size: 12px;" for="endClientTimesheetRequired">Type:</label>
                                 <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="type">
                                     <option style="font-size: 12px;">Select type</option>
-                                    <option style="font-size: 12px;" value="Required">Invoice</option>
+                                    <option style="font-size: 12px;" value="Invoice">Invoice</option>
                                     <option style="font-size: 12px;" value="Payment">Payment</option>
                                     <!-- Add more options as needed -->
                                 </select>
@@ -206,13 +206,13 @@
                             <div class="row mb-2">
                                 <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Hours:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs"class="form-control">
+                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
                                 </div> <br>
                                 @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">Days:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days"  class="form-control">
+                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
 
                                 </div> <br>
                                 @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -338,7 +338,7 @@
                                 <label style="font-size: 12px;" for="endClientTimesheetRequired">Type:</label>
                                 <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="type">
                                     <option style="font-size: 12px;">Select type</option>
-                                    <option style="font-size: 12px;" value="Required">Bill</option>
+                                    <option style="font-size: 12px;" value="Bill">Bill</option>
                                     <option style="font-size: 12px;" value="Payment">Payment</option>
                                     <!-- Add more options as needed -->
                                 </select>
@@ -379,13 +379,13 @@
                             <div class="row mb-2">
                                 <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Hours:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs"class="form-control">
+                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
                                 </div> <br>
                                 @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
                                 <div class="col">
                                     <label style="font-size: 12px;" for="end_date">Days:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days"  class="form-control">
+                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
 
                                 </div> <br>
                                 @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
@@ -646,7 +646,7 @@
                 <tr>
                     <td>{{ $bill->created_at->format('M-d-Y') }}</td>
                     <td>{{ $bill->type }}</td>
-                    <td>{{ $bill->bill_number }}</td>
+                    <td>{{ $bill->invoice_number }}</td>
                     <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
                     <td>{{ $bill->hrs_or_days }}</td>
                     <td>{{ $bill->rate }}</td>
@@ -660,7 +660,6 @@
                 </tr>
                 @endforelse
             </tbody>
-        </table>
         </table>
         @endif
 
