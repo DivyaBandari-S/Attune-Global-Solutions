@@ -171,7 +171,7 @@
             vertical-align: top;
             border-top: 1px solid #dee2e6;
             text-align: center;
-            width: 20%;
+            width: 100px;
         }
 
         .table thead th {
@@ -762,40 +762,38 @@
             <!-- resources/views/livewire/purchase-order-table.blade.php -->
 
             <div class="table-responsive">
-                <table class="table">
+            <table class="table">
                     <thead>
                         <tr>
-                            <th>PO Number</th>
-                            <th>Vendor ID</th>
-                            <th>Vendor Name</th>
-                            <th>Employee Name</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Rate</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Time Sheet Type</th>
-                            <th>Time Sheet Begins</th>
                             <th>Invoice Type</th>
                             <th>Payment Terms</th>
-                            <th>PO By</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($showPOLists as $salesOrder)
                         <tr>
+                            <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
+                            <td>PO</td>
                             <td>{{ $salesOrder->po_number }}</td>
-                            <td>{{ $salesOrder->vendor_id }}</td>
-                            <td>{{ $salesOrder->ven->vendor_name }}</td>
                             <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                            <td>{{ $salesOrder->start_date }}</td>
-                            <td>{{ $salesOrder->end_date }}</td>
+                            <td>{{ $salesOrder->rate }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                             <td>{{ $salesOrder->time_sheet_type }}</td>
-                            <td>{{ $salesOrder->time_sheet_begins }}</td>
                             <td>{{ $salesOrder->invoice_type }}</td>
                             <td>{{ $salesOrder->payment_terms }}</td>
-                            <td>{{ $salesOrder->com->company_name }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="11" style="text-align: center;">PurchaseOrders Not Found</td>
+                            <td colspan="10" style="text-align: center;">PurchaseOrders Not Found</td>
                         </tr>
                         @endforelse
 

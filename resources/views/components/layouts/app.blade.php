@@ -268,7 +268,15 @@
 
     <!-- Include Alpine.js datepicker -->
     <!-- Add these lines to include Select2 CSS and JS files -->
+    <!-- Add these lines to include Select2 CSS and JS files -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-R9JvFfoXqtJCt7Sfu5/zt0sQIlw9z+SQol6eL25zj2/XkHtDGdPhfNvZkdKr3yUOEyyDzPweK++c1E0cD7unYw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+    <!-- Include jQuery (required for Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha512-/S7rPp7Vc3F1+8V2KQ3cK5u67qOm6Zd6okWM/7Wz+Umkhpl/JkuKQ0pf+QoXKWY8e4g4k5JbYqubEQv5p9pZzw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{{ asset('vendor/livewire/livewire.js') }}" defer></script>
+
+    <!-- Include Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-QYCA01nvh4KMyZL/n9o4yHEUxfBc8KpR7N6v6dTr4C7b1Ll3rFnFbA3Ia7EaaHrzX/f1aGvxe3AfQEhrr3DRoQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>

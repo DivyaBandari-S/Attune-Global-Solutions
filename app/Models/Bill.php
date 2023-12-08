@@ -20,7 +20,7 @@ class Bill extends Model
         'status',
         'currency',
         'notes',
-        'company_id',
+        'company_id','type','emp_id','rate','period','hrs_or_days','open_balance'
     ];
 
     public function vendor()
@@ -28,6 +28,10 @@ class Bill extends Model
         return $this->belongsTo(VendorDetails::class,'vendor_id','vendor_id');
     }
 
+    public function emp()
+    {
+        return $this->belongsTo(EmpDetails::class,'emp_id','emp_id');
+    }
     public function company()
     {
         return $this->belongsTo(CompanyDetails::class, 'company_id','company_id');

@@ -1,9 +1,76 @@
 <div style="padding:10px">
     <!-- Add this to your HTML file -->
     <style>
-        .modal-content{
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        .dropbtn:hover,
+        .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+
+        #myInput {
+            box-sizing: border-box;
+            background-image: url('searchicon.png');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #myInput:focus {
+            outline: 3px solid #ddd;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f6f6f6;
+            min-width: 230px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            z-index: 1;
+            margin-left: 20px;
+            margin-top: 8px;
+            border-radius: 5px;
+            border-color: black;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #ddd;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .modal-content {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
+
         .modal-backdrop {
             display: none;
             background: rgba(0, 0, 0, 0.5);
@@ -171,7 +238,7 @@
             vertical-align: top;
             border-top: 1px solid #dee2e6;
             text-align: center;
-            width: 20%;
+            width: 100px;
         }
 
         .table thead th {
@@ -219,7 +286,7 @@
 
     <div style="text-align: start;">
         <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="open" class="btn btn-primary">ADD Customers</button>
-        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO"  class="btn btn-primary">ADD SO</button>
+        <button style="margin-right: 5px; font-size: 13px; background-color: #02114f;" wire:click="addSO" class="btn btn-primary">ADD SO</button>
     </div>
     @if(session()->has('success'))
     <div id="successAlert" style="text-align: center;" class="alert alert-success">
@@ -540,7 +607,7 @@
             <div class="modal-content">
                 <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                     <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                    <button wire:click="cancelSO"  type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
+                    <button wire:click="cancelSO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
                         <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
                     </button>
                 </div>
@@ -584,7 +651,7 @@
                             <div class="row mb-2">
                                 <div class="col p-0">
                                     <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate"x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
                                 </div> <br>
                                 @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
@@ -614,6 +681,7 @@
                                     @error('rateType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                 </div>
                             </div>
+
 
 
                             <div class="form-group">
@@ -743,13 +811,13 @@
                 @foreach($allCustomers as $customer)
                 <div wire:click="selectCustomer('{{ $customer->customer_id }}')" class="container-11" style="margin-bottom:8px;cursor: pointer; background-color: {{ $selectedCustomer && $selectedCustomer->customer_id == $customer->customer_id ? '#ccc' : 'white' }}; width: 500px; border-radius: 5px;padding:5px;">
                     <div class="row align-items-center">
-                        <div class="col-md-5">
+                        <div class="col-md-4">
                             <h6 class="username" style="font-size: 10px; color: black;">{{ $customer->customer_company_name }}</h6>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4 pe-0">
                             <h6 class="username" style="font-size: 8px; color: black;">{{ $customer->phone }}</h6>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 pe-0">
                             <h6 class="username" style="font-size: 8px; color: black;">#({{ $customer->customer_id }})</h6>
                         </div>
 
@@ -794,37 +862,35 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>SO Number</th>
-                            <th>Customer ID</th>
-                            <th>Customer Name</th>
-                            <th>Employee Name</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Rate</th>
                             <th>Start Date</th>
                             <th>End Date</th>
                             <th>Time Sheet Type</th>
-                            <th>Time Sheet Begins</th>
                             <th>Invoice Type</th>
                             <th>Payment Terms</th>
-                            <th>SO to</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($showSOLists as $salesOrder)
                         <tr>
+                            <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
+                            <td>SO</td>
                             <td>{{ $salesOrder->so_number }}</td>
-                            <td>{{ $salesOrder->customer_id }}</td>
-                            <td>{{ $salesOrder->cus->customer_company_name }}</td>
                             <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                            <td>{{ $salesOrder->start_date }}</td>
-                            <td>{{ $salesOrder->end_date }}</td>
+                            <td>{{ $salesOrder->rate }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                             <td>{{ $salesOrder->time_sheet_type }}</td>
-                            <td>{{ $salesOrder->time_sheet_begins }}</td>
                             <td>{{ $salesOrder->invoice_type }}</td>
                             <td>{{ $salesOrder->payment_terms }}</td>
-                            <td>{{ $salesOrder->com->company_name }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="11" style="text-align: center;">SalesOrders Not Found</td>
+                            <td colspan="10" style="text-align: center;">SalesOrders Not Found</td>
                         </tr>
                         @endforelse
 
@@ -885,4 +951,39 @@
             dateFormat: format,
         });
     }
+
+    function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    function selectCustomer(customerId, customerName) {
+        // You can use customerId and customerName as needed
+        // For demonstration, let's assume you have a Livewire method called setSelectedCustomer
+        @this.set('selectedCustomerId', customerId);
+        @this.set('selectedCustomerName', customerName);
+
+        // Update the button text with the selected customer's name
+        document.getElementById("selectedCustomerButton").innerText = customerName;
+
+        // Optionally, close the dropdown after selecting
+        document.getElementById("myDropdown").classList.remove("show");
+    }
+
+    function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("searchInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a[i].style.display = "";
+            } else {
+                a[i].style.display = "none";
+            }
+        }
+    }
+
+    document.getElementById("searchInput").addEventListener("input", filterFunction);
 </script>

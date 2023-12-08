@@ -25,6 +25,13 @@ return new class extends Migration
             $table->string('currency', 3)->default('USD'); // assuming USD, but you can customize
             $table->string('notes')->nullable();
             $table->string('company_id');
+            $table->string('type'); // Assuming a 'vendors' table exists
+            $table->string('emp_id');
+            $table->string('rate');
+            $table->string('period');
+            $table->string('hrs_or_days');
+            $table->string('open_balance');
+
             $table->foreign('company_id')
                 ->references('company_id')
                 ->on('company_details')
@@ -33,6 +40,11 @@ return new class extends Migration
             $table->foreign('customer_id')
                 ->references('customer_id')
                 ->on('customer_details')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
+            $table->foreign('emp_id')
+                ->references('emp_id')
+                ->on('emp_details')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
             $table->timestamps();
