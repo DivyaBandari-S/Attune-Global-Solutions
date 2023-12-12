@@ -17,8 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('bill_number')->nullable()->default(null)->unique();
             $table->string('vendor_id'); // Assuming a 'vendors' table exists
+            $table->string('type'); // Assuming a 'vendors' table exists
+            $table->string('emp_id'); // Assuming a 'vendors' table exists
             $table->decimal('amount', 10, 2);
             $table->string('due_date');
+            $table->string('rate');
+            $table->string('hrs_or_days');
+            $table->string('period');
+            $table->string('open_balance');
             $table->string('payment_terms');
             $table->text('description')->nullable();
             $table->string('status')->default('unpaid'); // e.g., unpaid, paid, pending
@@ -33,6 +39,11 @@ return new class extends Migration
             $table->foreign('vendor_id')
                 ->references('vendor_id')
                 ->on('vendor_details')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
+            $table->foreign('emp_id')
+                ->references('emp_id')
+                ->on('emp_details')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
             $table->timestamps();

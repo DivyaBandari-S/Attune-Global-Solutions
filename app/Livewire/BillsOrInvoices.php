@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Bill;
 use App\Models\CustomerDetails;
+use App\Models\EmpDetails;
 use App\Models\Invoice;
 use App\Models\VendorDetails;
 use Livewire\Component;
@@ -90,18 +91,16 @@ class BillsOrInvoices extends Component
     public function addVendors()
     {
         $this->validate([
-            'vendor_profile' => 'required',
+
             'vendor_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
             'address' => 'required',
             'vendor_company_name' => 'required'
         ]);
-        $vendorProfilePath = $this->vendor_profile->store('vendor_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         VendorDetails::create([
-            'vendor_image' => $vendorProfilePath,
             'company_id' => $companyId,
             'contact_person' => $this->vendor_name,
             'vendor_name' => $this->vendor_company_name,
@@ -119,7 +118,6 @@ class BillsOrInvoices extends Component
     {
 
         $this->validate([
-            'customer_profile' => 'required',
             'customer_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -127,11 +125,9 @@ class BillsOrInvoices extends Component
             'notes' => 'required',
             'customer_company_name' => 'required'
         ]);
-        $customerProfilePath = $this->customer_profile->store('customer_profiles', 'public');
         $companyId = auth()->user()->company_id;
 
         CustomerDetails::create([
-            'customer_company_logo' => $customerProfilePath,
             'company_id' => $companyId,
             'customer_name' => $this->customer_name,
             'customer_company_name' => $this->customer_company_name,
@@ -147,6 +143,7 @@ class BillsOrInvoices extends Component
         $this->invoice = true;
     }
 
+    public $open_balance;
     public function addBill()
     {
         $this->validate([
@@ -158,12 +155,25 @@ class BillsOrInvoices extends Component
             'status' => 'nullable',
             'currency' => 'required',
             'notes' => 'nullable',
+            'consultant_name' => 'required',
+            'type' => 'required',
+            'rate' => 'required',
+            'rateType' => 'required',
+            'startDate' => 'required',
+            'endDate' => 'required',
+            'open_balance' => 'required',
+            'hrs' => 'required',
+            'days' => 'required'
         ]);
 
         $companyId = auth()->user()->company_id;
 
         // Create a new bill
         Bill::create([
+            'period' => $this->startDate.' - '. $this->endDate,
+            'emp_id' => $this->consultant_name,
+            'rate' => $this->rate . ' ' . $this->rateType,
+            'type' => $this->type,
             'bill_number' => $this->bill_number,
             'vendor_id' => $this->vendor_name,
             'amount' => $this->amount,
@@ -174,6 +184,9 @@ class BillsOrInvoices extends Component
             'currency' => $this->currency,
             'notes' => $this->notes,
             'company_id' => $companyId,
+            'open_balance' => $this->open_balance,
+            'hrs_or_days' => $this->hrs . ' hours' . ' - ' . $this->days . ' days'
+
         ]);
         $this->bill = false;
 
@@ -192,6 +205,7 @@ class BillsOrInvoices extends Component
         // Add other fields you want to reset here
     }
 
+    public $rate, $rateType, $type, $startDate, $endDate, $hrs_or_days;
     public function resetInvoiceFields()
     {
         $this->customer_name = null;
@@ -204,7 +218,16 @@ class BillsOrInvoices extends Component
         $this->notes = null;
         // Add other fields you want to reset here
     }
+    public function selectedConsultantId()
+    {
+        if ($this->consultant_name === 'addConsultant') {
+            $this->redirect('/emp-register');
+        }
 
+    }
+
+
+    public $consultant_name, $hrs, $days;
     public function addInvoice()
     {
 
@@ -217,10 +240,24 @@ class BillsOrInvoices extends Component
             'status' => 'nullable',
             'currency' => 'required',
             'notes' => 'nullable',
+            'consultant_name' => 'required',
+            'type' => 'required',
+            'rate' => 'required',
+            'rateType' => 'required',
+            'startDate' => 'required',
+            'endDate' => 'required',
+            'open_balance' => 'required',
+            'hrs' => 'required',
+            'days' => 'required'
+
         ]);
         $companyId = auth()->user()->company_id;
 
         Invoice::create([
+            'period' => $this->startDate.' - '. $this->endDate,
+            'rate' => $this->rate . ' ' . $this->rateType,
+            'type' => $this->type,
+            'emp_id' => $this->consultant_name,
             'customer_id' => $this->customer_name,
             'amount' => $this->amount,
             'due_date' => $this->due_date,
@@ -230,6 +267,9 @@ class BillsOrInvoices extends Component
             'currency' => $this->currency,
             'notes' => $this->notes,
             'company_id' => $companyId,
+            'open_balance' => $this->open_balance,
+            'hrs_or_days' => $this->hrs . ' hours' . ' - ' . $this->days . ' days'
+
         ]);
         $this->invoice = false;
         session()->flash('add-invoice', 'Invoice added successfully.');
@@ -243,14 +283,21 @@ class BillsOrInvoices extends Component
     {
         $this->invoice = false;
     }
+    public $employees;
+    public function openInvoice()
+    {
+        $this->invoice = true;
+    }
     public $vendors, $customers;
     public function render()
     {
         $companyId = auth()->user()->company_id;
         $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->vendors = VendorDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
-        $this->bills = Bill::with('vendor', 'company')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
-        $this->invoices = Invoice::with('customer', 'company')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+        $this->bills = Bill::with('emp', 'vendor', 'company')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+        $this->invoices = Invoice::with('emp', 'customer', 'company')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+        $this->employees = EmpDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+
         return view('livewire.bills-or-invoices');
     }
 }
