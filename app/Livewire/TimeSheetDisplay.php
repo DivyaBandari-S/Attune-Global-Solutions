@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TimeSheet;
+use App\Models\HrDetail;
 
 class TimeSheetDisplay extends Component
 {
@@ -19,6 +20,8 @@ class TimeSheetDisplay extends Component
     public $regular = [];
     public $casual = []; // Initialize as an empty array
     public $sick = [];
+
+    public $hr_id;
     public $holiday = [];
     public $vacation = [];
     public $currentWeekStart;
@@ -29,55 +32,37 @@ class TimeSheetDisplay extends Component
     public $empDetails;
     public $emp_id;
     public $getTotalHours;
+    public $empId;
+    public $entryId;
+    public $hrId;
+    public $companyId;
+    public $weekData=[];
     public function mount()
     {
         // Load existing entries from the database
         $emp_id = Auth::user()->emp_id;
-        $existingEntries = TimeSheetEntry::where('emp_id', $emp_id)->get();
-        $this->setWeekDates(Carbon::now());
-        $currentWeekStart = now()->startOfWeek();
-        $currentWeekEnd = now()->endOfWeek();
+        $this->emp_id = $emp_id;
+     $existingEntries = TimeSheetEntry::where('emp_id', $emp_id)->get();
+     $this->entryId = $existingEntries->isNotEmpty() ? $existingEntries->first()->id : null;
 
-        for ($date = $currentWeekStart; $date->lte($currentWeekEnd); $date->addDay()) {
-            $this->currentWeekDates[] = $date->format('Y-m-d');
-        }
+     $this->setWeekDates(Carbon::now());
 
-        // Populate the $hours variable with existing entries
-        foreach ($existingEntries as $entry) {
-            $this->hours[$entry->day]['regular'] = $entry->regular;
-            $this->hours[$entry->day]['casual'] = $entry->casual;
-            $this->hours[$entry->day]['sick'] = $entry->sick;
-            $this->hours[$entry->day]['holiday'] = $entry->holiday;
-            $this->hours[$entry->day]['vacation'] = $entry->vacation;
-            $today = Carbon::now();
-            $this->setWeekDates(now());
-            $this->currentWeekStart = $today->startOfWeek()->format('d-m-Y');
-            $this->currentWeekEnd = $today->endOfWeek()->format('d-m-Y');
-            $this->futureDates = [];
-            $emp_id = Auth::id();
+     $currentWeekStart = now()->startOfWeek();
+     $currentWeekEnd = now()->endOfWeek();
 
-            // Fetch the employee details for the logged-in user
-            try {
-                $this->empDetails = EmpDetails::where('emp_id', $emp_id)->get();
-            } catch (\Exception $e) {
-                // Log the error or handle it accordingly
-                logger()->error('Error fetching employee details: ' . $e->getMessage());
-                $this->empDetails = []; // Assign an empty array to prevent the error
-            }
-            // Get the current date
-            $today = Carbon::now();
+     for ($date = $currentWeekStart; $date->lte($currentWeekEnd); $date->addDay()) {
+         $this->currentWeekDates[] = $date->format('Y-m-d');
+     }
 
-            // Generate future dates for the next 30 days, for example
-            for ($i = 1; $i <= 30; $i++) {
-                $futureDate = $today->copy()->addDays($i);
-                $this->futureDates[] = $futureDate->format('Y-m-d');
-            }
+     $this->timeSheetEntries = $existingEntries;
 
-
-            // Add other fields as needed
-        }
-
-        $this->timeSheetEntries = $existingEntries; // Set the variable
+     // Fetch the employee details for the logged-in user
+     try {
+         $this->empDetails = EmpDetails::where('emp_id', $emp_id)->get();
+     } catch (\Exception $e) {
+         logger()->error('Error fetching employee details: ' . $e->getMessage());
+         $this->empDetails = [];
+     }
     }
     public function getWeeklyTimeSheetEntries()
     {
@@ -108,10 +93,10 @@ class TimeSheetDisplay extends Component
     public function getTotalHours()
     {
         $totalHours = array_sum(array_column($this->hours, 'regular')) +
-            array_sum(array_column($this->hours, 'casual')) +
-            array_sum(array_column($this->hours, 'sick')) +
-            array_sum(array_column($this->hours, 'holiday')) +
-            array_sum(array_column($this->hours, 'vacation'));
+                      array_sum(array_column($this->hours, 'casual')) +
+                      array_sum(array_column($this->hours, 'sick')) +
+                      array_sum(array_column($this->hours, 'holiday')) +
+                      array_sum(array_column($this->hours, 'vacation'));
 
         return $totalHours;
     }
@@ -120,10 +105,41 @@ class TimeSheetDisplay extends Component
     {
         $this->setWeekDates(Carbon::parse($this->currentWeekStart)->addWeek());
     }
-    protected function isValueEntered($day, $type)
-    {
-        return isset($this->hours[$day][$type]) && $this->hours[$day][$type] !== null;
+
+public function updateEntryStatus()
+{
+    // Retrieve the authenticated user's emp_id
+    $empId = Auth::user()->emp_id;
+
+
+    // Retrieve the entries associated with the user
+    $entries = TimeSheetEntry::where('emp_id', $empId)->get();
+
+
+    // Loop through each entry to update the status
+    foreach ($entries as $entry) {
+        // Update the status from "pending" to "submit"
+        $entry->status = 'submit';
+        $entry->save();
     }
+    $employeeDetails = EmpDetails::where('emp_id', $entry->emp_id)->first();
+
+    session()->flash('success', 'Status updated successfully for all entries');
+}
+
+// public function ApproveStatus($id)
+// {
+//     dd('sdfgh');
+//     $this->emp_id = $emp_id;
+
+//     // Your approval logic here
+//     $loggedInUserCompanyId = auth()->user()->company_id;
+
+//     $contractorTimeSheetData = TimeSheetEntryHr::where('status', 'submit')
+//         ->where('emp_id', $this->emp_id)
+//         ->get();
+// }
+
 
 
     public function render()
@@ -133,7 +149,11 @@ class TimeSheetDisplay extends Component
 
     public function store()
     {
-        $emp_id = Auth::user()->emp_id;
+
+        $user = Auth::user();
+        $emp_id = $user->emp_id;
+
+        $empId = auth()->guard('employee')->id();
         $timeSheetEntries = TimeSheetEntry::where('emp_id', $emp_id)
             ->whereIn('day', $this->currentWeekDates)
             ->get();
@@ -171,5 +191,62 @@ class TimeSheetDisplay extends Component
         $this->timeSheetEntries = TimeSheetEntry::where('emp_id', $emp_id)->get();
 
         session()->flash('success', 'Working hours updated successfully');
+    }
+
+
+
+    public function createTimeSheet()
+    {
+
+        $user = Auth::user();
+        $emp_id = $user->emp_id;
+
+        $empId = auth()->guard('employee')->id();
+        $empDetails = EmpDetails::find($empId);
+        $company_id = $empDetails->company_id;
+            // Fetch HR detail for the company
+     $hrDetail = HrDetail::where('company_id', $company_id)->first();
+     $hr_id=$hrDetail->hr_id;
+      $this->validate([
+            'weekData' => 'required|array',
+        ]);
+
+        $formattedWeekData = [];
+
+        foreach ($this->weekData as $day => $leaveTypes) {
+           // $currentDate = now()->startOfWeek()->next($day)->toDateString();
+        //    $currentDate = now()->next(Carbon::MONDAY)->startOfDay()->addDays(['mon' => 0, 'tue' => 1, 'wed' => 2, 'thu' => 3, 'fri' => 4, 'sat' => 5, 'sun' => 6][$day])->toDateString();
+        $currentDate = now()->startOfWeek()->addDays(['mon' => 0, 'tue' => 1, 'wed' => 2, 'thu' => 3, 'fri' => 4, 'sat' => 5, 'sun' => 6][$day])->toDateString();
+            $formattedWeekData[$day] = [
+                'date' => $currentDate,
+                'regular' => $leaveTypes['regular'] ?? 0,
+                'sick' => $leaveTypes['sick'] ?? 0,
+                'holiday' => $leaveTypes['holiday'] ?? 0,
+                'vacation' => $leaveTypes['vacation'] ?? 0,
+                'casual' => $leaveTypes['casual'] ?? 0,
+            ];
+        }
+
+        // Create or update the time sheet entry
+        TimeSheetEntry::updateOrCreate(
+            [
+                'emp_id' => $empId,
+            ],
+            [
+                'hr_id' => $hrDetail->hr_id,
+                'company_id' => $company_id,
+                'day' => $formattedWeekData,
+                'status' => 'pending',
+            ]
+        );
+
+        // Clear form fields after submission
+
+
+        // Emit an event to refresh the Livewire component
+
+
+        session()->put('created_entry', $formattedWeekData);
+        session()->flash('success', 'Entry created successfully');
     }
 }

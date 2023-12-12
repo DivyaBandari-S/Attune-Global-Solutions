@@ -315,7 +315,7 @@ a:hover{
             color: #fff;
             /* Change to your desired color */
         }
- 
+
         /* Custom CSS classes for the "Loading" text */
         .text-loading {
             color: #ff9900;
@@ -524,22 +524,22 @@ a:hover{
                             <div class="reg-form" style="display:flex;padding:0; margin:0;">
                                <div class="col-md-6" >
                                         <div class="emp" >
-                                    <div class=" employee-details" > 
-                                        <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>  
+                                    <div class=" employee-details" >
+                                        <div style="margin:5px 0 20px 0;"><h5>Employee Details</h5></div>
                                     <div class="form-group" >
                                         <label for="first_name">First Name <span class="text-danger">  *</span></label>
                                         <input type="text" class="form-control placeholder-small" wire:model="first_name" placeholder="Enter first name" >
-                                        @error('first_name') 
+                                        @error('first_name')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
- 
+
                                     <div class="form-group" >
                                         <label for="last_name">Last Name <span class="text-danger">  *</span></label>
                                         <input type="text" class="form-control placeholder-small" placeholder="Enter last name" wire:model="last_name" style="margin-bottom:10px;;">
                                         @error('last_name') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
-                            
+
                                     <div class="form-group" >
                                         <label for="mobile_number">Phone Number <span class="text-danger">  *</span></label>
                                         <input type="text" class="form-control placeholder-small" placeholder="Enter phone number" wire:model="mobile_number" style="margin-bottom:10px;;">
@@ -575,7 +575,7 @@ a:hover{
                                                 <input type="text" class="form-control placeholder-small" placeholder="Enter adhar number" wire:model="adhar_no" style="margin-bottom:10px;;">
                                                 @error('adhar_no') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
- 
+
                                 <!-- Password -->
                                 <div class="form-group" >
                                     <label for="password">Password <span class="text-danger">  *</span></label>
@@ -599,10 +599,10 @@ a:hover{
                                 </div>
                                 <div>
                                     @error('gender') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>         
+                                </div>
                                </div>
                                  <div class="employee-details">
-                                   <div style="margin:5px 0 20px 0"><h5>Job Details</h5></div>  
+                                   <div style="margin:5px 0 20px 0"><h5>Job Details</h5></div>
 
                                    <div class="form-group" >
                                         <label for="hire_date">Hire Date <span class="text-danger">  *</span></label>
@@ -712,16 +712,16 @@ a:hover{
                                 </div>
                                 <div>
                                     @error('inter_emp') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div> 
+                                </div>
                                  </div>
-                            
+
                                </div>
-                                   
+
                                 </div>
                                 <div class="col-md-6">
                                     <div class="emp">
                                         <div class="employee-details">
-                                        <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>  
+                                        <div style="margin:5px 0 20px 0"><h5>Employee Address</h5></div>
                                         <div class="form-group" >
                                     <label for="address">Address <span class="text-danger">  *</span></label>
                                     <input type="text"class="form-control placeholder-small" placeholder="Enter employee address" wire:model="address" style="margin-bottom:10px;">
@@ -749,14 +749,14 @@ a:hover{
                                 </div>
                                </div>
                                <div class="employee-details">
-                                         <div style="margin:5px 0 20px 0"><h5>Employee Personal Details</h5></div>  
+                                         <div style="margin:5px 0 20px 0"><h5>Employee Personal Details</h5></div>
 
                                 <div class="form-group" >
                                         <label for="date_of_birth">Date of Birth <span class="text-danger">  *</span></label>
                                         <input type="text" class="form-control placeholder-small" placeholder="Enter date of birth" wire:model="date_of_birth" x-data x-init="initDatepicker($refs.date_of_birth, 'M-d-Y')" x-ref="date_of_birth" style="font-size: 12px;margin-bottom:10px;">
                                         @error('date_of_birth') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
-    
+
                                     <div class="form-group">
                                     <label for="blood_group">Blood Group <span class="text-danger">  *</span></label>
                                     <input type="text" class="form-control placeholder-small" placeholder="Enter blood group type" wire:model="blood_group" style="margin-bottom:10px;">
@@ -819,7 +819,7 @@ a:hover{
 
                                     </div>
                                 <div class="employee-details">
-                                    <div style="margin:5px 0 20px 0"><h5>Other Details</h5></div>  
+                                    <div style="margin:5px 0 20px 0"><h5>Other Details</h5></div>
                                         <div class="form-group" >
                                                 <label for="nick_name">Nick Name :</label>
                                                 <input type="text" class="form-control placeholder-small" placeholder="Enter nick name" wire:model="nick_name"  style="margin-bottom:10px;">
@@ -865,7 +865,7 @@ a:hover{
                                                 <input type="text"class="form-control placeholder-small" placeholder="Enter your twitter URL" wire:model="twitter" style="margin-bottom:10px;">
                                                 @error('twitter') <span class="text-danger">{{ $message }}</span> @enderror
                                             </div>
-                                           
+
                                             <div class="form-group" >
                                                 <label for="skill_set">Skill Set<span class="text-danger">  *</span></label>
                                                 <input type="text" class="form-control placeholder-small" placeholder="Example UI developer" wire:model="skill_set" style="margin-bottom:10px;">
@@ -889,7 +889,7 @@ a:hover{
                                     cursor: not-allowed;
                                     /* Change cursor during loading */
                                 }
- 
+
                                 p {
                                     color: green;
                                     font-weight: bold;
@@ -1353,6 +1353,7 @@ a:hover{
     </div>
     <!-- End of Everyone tab content -->
 </div>
+
 
 
 <script>

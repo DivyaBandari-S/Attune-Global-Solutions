@@ -18,6 +18,7 @@ class AuthCheck
     {
 
         if (auth()->guard('hr')->check()) {
+          //  \Illuminate\Support\Facades\Log::info('User is authenticated with hr guard');
             session(['user_type' => 'hr']);
             return redirect('/');
         } else if (auth()->guard('employee')->check()) {
