@@ -1353,3 +1353,13 @@ a:hover{
     </div>
     <!-- End of Everyone tab content -->
 </div>
+
+
+
+<script>
+    function initDatepicker(el, format) {
+        flatpickr(el, {
+            dateFormat: format,
+        });
+    }
+</script>
