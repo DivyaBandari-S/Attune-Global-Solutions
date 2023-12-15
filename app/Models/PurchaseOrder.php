@@ -13,6 +13,7 @@ class PurchaseOrder extends Model
 
     protected $fillable = [
         'po_number',
+        'so_number',
         'emp_id',
         'job_title',
         'start_date',
@@ -24,7 +25,7 @@ class PurchaseOrder extends Model
         'time_sheet_begins',
         'invoice_type',
         'payment_terms',
-        'company_id',
+        'company_id','rate_type'
     ];
     public function ven()
     {

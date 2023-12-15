@@ -179,7 +179,8 @@
                                         << Add Consultant>>
                                     </option>
                                     @foreach($employees as $employee)
-                                    <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                    <option style="font-size: 12px;text-transform: capitalize" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_type }})</option>
+
                                     @endforeach
 
                                 </select>
@@ -352,7 +353,8 @@
                                         << Add Consultant>>
                                     </option>
                                     @foreach($employees as $employee)
-                                    <option style="font-size: 12px;" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }}</option>
+                                    <option style="font-size: 12px;text-transform: capitalize" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_type }})</option>
+
                                     @endforeach
 
                                 </select>
@@ -649,7 +651,7 @@
                     <td>{{ $bill->invoice_number }}</td>
                     <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
                     <td>{{ $bill->hrs_or_days }}</td>
-                    <td>{{ $bill->rate }}</td>
+                    <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
                     <td>{{ $bill->period}}</td>
                     <td>{{ $bill->amount }}</td>
                     <td>{{ $bill->open_balance }}</td>
@@ -686,7 +688,7 @@
                     <td>{{ $bill->bill_number }}</td>
                     <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
                     <td>{{ $bill->hrs_or_days }}</td>
-                    <td>{{ $bill->rate }}</td>
+                    <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
                     <td>{{ $bill->period}}</td>
                     <td>{{ $bill->amount }}</td>
                     <td>{{ $bill->open_balance }}</td>

@@ -14,15 +14,20 @@ return new class extends Migration
         Schema::create('time_sheet_entries', function (Blueprint $table) {
             $table->id();
             $table->string('emp_id');
-            $table->date('day');
-            $table->integer('regular');
-            $table->integer('casual');
-            $table->integer('sick');
-            $table->integer('holiday');
-            $table->integer('vacation');
-            $table->unique(['emp_id', 'day']);
-            $table->foreign('emp_id')->references('emp_id')->on('emp_details')->onDelete('cascade');
-
+                        $table->json('hr_id')->default(json_encode([]));
+                        $table->string('company_id');
+                        $table->json('day')->default(json_encode([
+                            'mon' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'tue' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'wed' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'thu' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'fri' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'sat' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                            'sun' => ['date' => null, 'regular' => 0, 'sick' => 0, 'holiday' => 0, 'vacation' => 0, 'casual' => 0],
+                        ]));
+                        $table->string('status')->default('pending');
+                        $table->foreign('emp_id')->references('emp_id')->on('emp_details')->onDelete('cascade')->onUpdate('cascade');
+                        $table->foreign('company_id')->references('company_id')->on('company_details')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }

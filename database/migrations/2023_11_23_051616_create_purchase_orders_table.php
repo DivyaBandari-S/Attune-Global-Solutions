@@ -15,11 +15,13 @@ return new class extends Migration
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
             $table->string('po_number')->nullable()->default(null)->unique();
+            $table->string('so_number')->nullable();
             $table->string('emp_id');
             $table->string('job_title');
             $table->string('start_date'); // Assuming a 'vendors' table exists
             $table->string('end_date'); // Assuming a 'vendors' table exists
             $table->string('rate');
+            $table->string('rate_type')->nullable();
             $table->string('vendor_id'); // Assuming a 'vendors' table exists
             $table->string('end_client_timesheet_required')->nullable();
             $table->string('time_sheet_type')->nullable();

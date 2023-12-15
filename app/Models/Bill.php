@@ -19,7 +19,7 @@ class Bill extends Model
         'description',
         'status',
         'currency',
-        'notes',
+        'notes','rate_type',
         'company_id','type','emp_id','rate','period','hrs_or_days','open_balance'
     ];
 

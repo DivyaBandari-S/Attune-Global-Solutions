@@ -172,7 +172,8 @@ class BillsOrInvoices extends Component
         Bill::create([
             'period' => $this->startDate.' - '. $this->endDate,
             'emp_id' => $this->consultant_name,
-            'rate' => $this->rate . ' ' . $this->rateType,
+            'rate' => $this->rate,
+            'rate_type'=>$this->rateType,
             'type' => $this->type,
             'bill_number' => $this->bill_number,
             'vendor_id' => $this->vendor_name,
@@ -255,7 +256,8 @@ class BillsOrInvoices extends Component
 
         Invoice::create([
             'period' => $this->startDate.' - '. $this->endDate,
-            'rate' => $this->rate . ' ' . $this->rateType,
+            'rate' => $this->rate,
+            'rate_type'=>$this->rateType,
             'type' => $this->type,
             'emp_id' => $this->consultant_name,
             'customer_id' => $this->customer_name,

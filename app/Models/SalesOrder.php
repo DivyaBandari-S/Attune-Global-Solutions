@@ -10,15 +10,17 @@ class SalesOrder extends Model
     use HasFactory;
     protected $table = 'sales_orders';
     protected $primaryKey = 'id';
+    
 
     protected $fillable = [
         'so_number',
+        'po_number',
         'emp_id',
         'job_title',
         'start_date',
         'end_date',
         'rate',
-        'customer_id',
+        'customer_id', 'rate_type',
         'end_client_timesheet_required',
         'time_sheet_type',
         'time_sheet_begins',
@@ -26,6 +28,10 @@ class SalesOrder extends Model
         'payment_terms',
         'company_id',
     ];
+    public function ven()
+    {
+        return $this->belongsTo(VendorDetails::class, 'vendor_id', 'vendor_id');
+    }
     public function cus()
     {
         return $this->belongsTo(CustomerDetails::class, 'customer_id', 'customer_id');

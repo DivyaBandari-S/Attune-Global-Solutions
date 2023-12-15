@@ -16,13 +16,13 @@ class SalesOrPurchaseOrders extends Component
     public $po, $so = false;
     public $selectedVendor, $vendor_id, $customers;
     public $show = false;
-     
+
     // employee registration
     public $emp_id;
     public $first_name;
     public $last_name;
     public $date_of_birth;
-    public $gender ='Male';
+    public $gender = 'Male';
     public $company_name;
     public $company_email;
     public $mobile_number;
@@ -36,17 +36,17 @@ class SalesOrPurchaseOrders extends Component
     public $department;
     public $manager_id;
     public $report_to;
-    public $employee_status ='active';
+    public $employee_status = 'active';
     public $emergency_contact;
     public $password;
     public $image;
     public $blood_group;
     public $nationality;
     public $religion;
-    public $marital_status ='unmarried';
+    public $marital_status = 'unmarried';
     public $spouse;
     public $physically_challenge = 'No';
-    public $inter_emp ='no';
+    public $inter_emp = 'no';
     public $job_location;
     public $education;
     public $experience;
@@ -78,7 +78,84 @@ class SalesOrPurchaseOrders extends Component
     {
         $this->showSpouseField = $this->marital_status === 'married';
     }
-    
+
+    public function saveSOPO()
+    {
+        $this->validate([
+            'rate' => 'required',
+            'rateType' => 'required',
+            'job_title' => 'required',
+            'endClientTimesheetRequired' => 'required',
+            'timeSheetType' => 'required',
+            'timeSheetBegins' => 'required',
+            'invoiceType' => 'required',
+            'paymentTerms' => 'required',
+            'consultantName' => 'required',
+            'customerName' => 'required',
+            'startDate' => 'required',
+            'endDate' => 'required',
+
+        ]);
+
+        $companyId = auth()->user()->company_id;
+
+        $salesOrder = SalesOrder::create([
+            'company_id' => $companyId,
+            'po_number' => $this->po_no,
+            'emp_id' => $this->consultantName,
+            'customer_id' => $this->customerName,
+            'job_title' => $this->job_title,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
+            'rate' => $this->rate,
+            'rate_type' => $this->rateType,
+            'end_client_timesheet_required' => $this->endClientTimesheetRequired,
+            'time_sheet_type' => $this->timeSheetType,
+            'time_sheet_begins' => $this->timeSheetBegins,
+            'invoice_type' => $this->invoiceType,
+            'payment_terms' => $this->paymentTerms,
+        ]);
+
+        $salesOrder->refresh();
+
+
+        $this->validate([
+            'ratee' => 'required',
+            'rateTypee' => 'required',
+            'job_title' => 'required',
+            'endClientTimesheetRequired' => 'required',
+            'timeSheetType' => 'required',
+            'timeSheetBegins' => 'required',
+            'invoiceType' => 'required',
+            'paymentTerms' => 'required',
+            'consultantName' => 'required',
+            'vendorName' => 'required',
+            'startDate' => 'required',
+            'endDate' => 'required',
+        ]);
+
+        $companyId = auth()->user()->company_id;
+
+        PurchaseOrder::create([
+            'company_id' => $companyId,
+            'so_number' => $salesOrder->so_number,
+            'emp_id' => $this->consultantName,
+            'vendor_id' => $this->vendorName,
+            'job_title' => $this->job_title,
+            'start_date' => $this->startDate,
+            'end_date' => $this->endDate,
+            'rate' => $this->ratee,
+            'rate_type' => $this->rateTypee,
+            'end_client_timesheet_required' => $this->endClientTimesheetRequired,
+            'time_sheet_type' => $this->timeSheetType,
+            'time_sheet_begins' => $this->timeSheetBegins,
+            'invoice_type' => $this->invoiceType,
+            'payment_terms' => $this->paymentTerms,
+        ]);
+        $this->soo = false;
+        session()->flash('SOPO-order', 'SOPO submitted successfully.');
+    }
+
     public function regOpen()
     {
         $this->so = false;
@@ -89,11 +166,12 @@ class SalesOrPurchaseOrders extends Component
     public function regClose()
     {
         $this->regForm = false;
-        $this->so=true;
+        $this->so = true;
         $this->resetFieldsForPo();
     }
-    
-    public function register(){
+
+    public function register()
+    {
         $this->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -119,10 +197,10 @@ class SalesOrPurchaseOrders extends Component
             'contractor_company_id' => $this->employee_type == 'contract' ? 'required|string|max:255' : '', // Add this line
         ]);
 
-       $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
-     
-       
-         EmpDetails::create([
+        $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
+
+
+        EmpDetails::create([
 
             'emp_id' => $this->emp_id,
             'first_name' => $this->first_name,
@@ -172,7 +250,7 @@ class SalesOrPurchaseOrders extends Component
             'is_starred' => $this->is_starred,
             'skill_set' => $this->skill_set,
             'contractor_company_id' => $contractorCompanyId,
-           ]);
+        ]);
 
         session()->flash('emp_success', 'Employee registered successfully!');
 
@@ -180,9 +258,60 @@ class SalesOrPurchaseOrders extends Component
         $this->reset();
         $this->regForm = false;
         $this->po = true;
-
     }
 
+    public $selectedOptionForSO = true;
+    public $selectedOptionForPO = false;
+
+
+    public $vendorForSO = false;
+    public $customerForPO = false;
+    public function toggleCustomer()
+    {
+        if (!$this->selectedOptionForSO) {
+            // If selectedOptionForSO is false, toggle the values
+            $this->so = !$this->so;
+            $this->selectedOptionForSO = !$this->selectedOptionForSO;
+        } else {
+            // If selectedOptionForSO is true, set both values to false
+            $this->so = false;
+            $this->selectedOptionForSO = false;
+        }
+    }
+
+
+    public function toggleVendor()
+    {
+        if ($this->selectedOptionForPO) {
+            // If selectedOptionForPO is true, toggle the values
+            $this->vendorForSO = !$this->vendorForSO;
+        } else {
+            // If selectedOptionForPO is false, set both values to false
+            $this->selectedOptionForPO = false;
+            $this->vendorForSO = false;
+        }
+    }
+
+
+
+    public function cancelSOVendor()
+    {
+        $this->vendorForSO = false;
+    }
+    public function changeToCustomerPO()
+    {
+        $this->selectedOptionForPO = "customer";
+        $this->customerForPO = true;
+    }
+    public function changeToVendorPO()
+    {
+        $this->selectedOptionForPO = "vendor";
+        $this->customerForPO = false;
+    }
+    public function cancelPOCustomer()
+    {
+        $this->customerForPO = false;
+    }
     public function addPO()
     {
         $this->po = true;
@@ -197,13 +326,13 @@ class SalesOrPurchaseOrders extends Component
     }
     public $showSOLists, $showPOLists;
 
-    public $employees, $vendors, $consultantName, $customerName, $consultant_name, $vendorName, $job_title, $startDate, $endDate, $rate, $rateType, $endClientTimesheetRequired, $timeSheetType, $timeSheetBegins, $invoiceType, $paymentTerms;
+    public $employees, $ratee, $rateTypee, $vendors, $consultantName, $customerName, $consultant_name, $vendorName, $job_title, $startDate, $endDate, $rate, $rateType, $endClientTimesheetRequired, $timeSheetType, $timeSheetBegins, $invoiceType, $paymentTerms;
 
     public function savePurchaseOrder()
     {
         $this->validate([
-            'rate' => 'required',
-            'rateType' => 'required',
+            'ratee' => 'required',
+            'rateTypee' => 'required',
             'job_title' => 'required',
             'endClientTimesheetRequired' => 'required',
             'timeSheetType' => 'required',
@@ -220,12 +349,14 @@ class SalesOrPurchaseOrders extends Component
 
         PurchaseOrder::create([
             'company_id' => $companyId,
+            'so_number' => $this->so_no,
             'emp_id' => $this->consultantName,
             'vendor_id' => $this->vendorName,
             'job_title' => $this->job_title,
             'start_date' => $this->startDate,
             'end_date' => $this->endDate,
-            'rate' => $this->rate . ' ' . $this->rateType,
+            'rate' => $this->ratee,
+            'rate_type' => $this->rateTypee,
             'end_client_timesheet_required' => $this->endClientTimesheetRequired,
             'time_sheet_type' => $this->timeSheetType,
             'time_sheet_begins' => $this->timeSheetBegins,
@@ -234,6 +365,10 @@ class SalesOrPurchaseOrders extends Component
         ]);
         session()->flash('purchase-order', 'Purchase order submitted successfully.');
         $this->po = false;
+        $this->resetFieldsForPo();
+        $this->resetFieldsForSo();
+        $this->vendorForSO = false;
+        $this->soo = false;
     }
 
     public function addSO()
@@ -260,18 +395,21 @@ class SalesOrPurchaseOrders extends Component
             'customerName' => 'required',
             'startDate' => 'required',
             'endDate' => 'required',
+
         ]);
 
         $companyId = auth()->user()->company_id;
 
         SalesOrder::create([
             'company_id' => $companyId,
+            'po_number' => $this->po_no,
             'emp_id' => $this->consultantName,
             'customer_id' => $this->customerName,
             'job_title' => $this->job_title,
             'start_date' => $this->startDate,
             'end_date' => $this->endDate,
-            'rate' => $this->rate . ' ' . $this->rateType,
+            'rate' => $this->rate,
+            'rate_type' => $this->rateType,
             'end_client_timesheet_required' => $this->endClientTimesheetRequired,
             'time_sheet_type' => $this->timeSheetType,
             'time_sheet_begins' => $this->timeSheetBegins,
@@ -279,13 +417,14 @@ class SalesOrPurchaseOrders extends Component
             'payment_terms' => $this->paymentTerms,
         ]);
         session()->flash('sales-order', 'Sales order submitted successfully.');
-        $this->so = false;
+
+        $this->customerForPO = false;
     }
     public $vendor_profile, $vendor_name, $email, $phone, $vendor_company_name, $address;
     public function addVendors()
     {
         $this->validate([
-            
+
             'vendor_name' => 'required',
             'email' => 'required',
             'phone' => 'required',
@@ -303,9 +442,31 @@ class SalesOrPurchaseOrders extends Component
             'address' => $this->address,
         ]);
         session()->flash('vendor', 'Vendor added successfully.');
-        $this->resetFieldsForPo();
         $this->showVendor = false;
-        $this->po = true;
+    }
+
+    public function addVendorss()
+    {
+        $this->validate([
+
+            'vendor_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'vendor_company_name' => 'required'
+        ]);
+        $companyId = auth()->user()->company_id;
+
+        VendorDetails::create([
+            'company_id' => $companyId,
+            'contact_person' => $this->vendor_name,
+            'vendor_name' => $this->vendor_company_name,
+            'email' => $this->email,
+            'phone_number' => $this->phone,
+            'address' => $this->address,
+        ]);
+        session()->flash('vendor', 'Vendor added successfully.');
+        $this->showVendorr = false;
     }
 
     public $customer_name, $customer_company_name, $notes, $customer_profile;
@@ -338,17 +499,15 @@ class SalesOrPurchaseOrders extends Component
             'notes' => $this->notes,
         ]);
         session()->flash('success', 'Customer added successfully.');
-        $this->resetFieldsForSo();
-        $this->resetFieldsForPo();
+
         $this->show = false;
-        $this->so = true;
     }
 
     public function selectedConsultantId()
     {
         if ($this->consultantName === 'addConsultant') {
-            $this->regForm=true;
-            $this->so=false;
+            $this->regForm = true;
+            $this->so = false;
         }
         $selectedConsultantId = $this->employees->firstWhere('emp_id', $this->consultantName);
         $this->job_title = $selectedConsultantId ? $selectedConsultantId->job_title : null;
@@ -356,8 +515,8 @@ class SalesOrPurchaseOrders extends Component
     public function selectedConsultantPoId()
     {
         if ($this->consultantName === 'addConsultant') {
-            $this->regForm=true;
-            $this->po=false;
+            $this->regForm = true;
+            $this->po = false;
         }
         $selectedConsultantId = $this->employees->firstWhere('emp_id', $this->consultantName);
         $this->job_title = $selectedConsultantId ? $selectedConsultantId->job_title : null;
@@ -387,6 +546,11 @@ class SalesOrPurchaseOrders extends Component
     {
         $this->po = true;
         $this->showVendor = false;
+        $this->resetFieldsForPo();
+    }
+    public function closeVendorr()
+    {
+        $this->showVendorr = false;
         $this->resetFieldsForPo();
     }
     public function openVendor()
@@ -438,17 +602,41 @@ class SalesOrPurchaseOrders extends Component
     public function callCustomer()
     {
         if ($this->customerName === 'addCustomer') {
-            $this->so = false;
+
             $this->show = true;
         }
     }
     public function callVendor()
     {
         if ($this->vendorName === 'addVendor') {
-           
+
             $this->showVendor = true;
-            $this->po=false;
+            $this->po = false;
         }
+    }
+    public $showVendorr = false;
+    public function callVendorForSO()
+    {
+        if ($this->vendorName === 'addVendor') {
+
+            $this->showVendorr = true;
+        }
+    }
+    public $so_no, $po_no, $sopo;
+    public $soo = false;
+
+    public function showSOO()
+    {
+        $this->soo = true;
+        $this->so = true;
+    }
+
+    public $toggleState = false;
+    public $poo = false;
+    public function showPOO()
+    {
+        $this->poo = true;
+        $this->po = true;
     }
     public function render()
     {
@@ -458,7 +646,21 @@ class SalesOrPurchaseOrders extends Component
         $this->showPOLists = PurchaseOrder::with('ven', 'com', 'emp')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->vendors = VendorDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
-
+        $this->sopo = SalesOrder::with('ven', 'com', 'emp')
+        ->join('purchase_orders', 'sales_orders.so_number', '=', 'purchase_orders.so_number')
+        ->join('vendor_details', 'vendor_details.vendor_id', '=', 'purchase_orders.vendor_id')
+        ->where('sales_orders.company_id', $companyId)
+        ->orderBy('sales_orders.created_at', 'desc')
+        ->select(
+            'sales_orders.*', // select all columns from sales_orders
+            'purchase_orders.rate as po_rate', // alias rate from purchase_orders as po_rate
+            'purchase_orders.rate_type as po_rate_type',
+            'purchase_orders.po_number as po_no',
+            'vendor_details.vendor_name as vendor_name',
+            'vendor_details.vendor_name as vendor_name',
+        )
+        ->get();
+    
         return view('livewire.sales-or-purchase-orders');
     }
 }

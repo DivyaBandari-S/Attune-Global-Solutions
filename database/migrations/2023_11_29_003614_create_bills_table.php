@@ -22,6 +22,7 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->string('due_date');
             $table->string('rate');
+            $table->string('rate_type')->nullable();
             $table->string('hrs_or_days');
             $table->string('period');
             $table->string('open_balance');

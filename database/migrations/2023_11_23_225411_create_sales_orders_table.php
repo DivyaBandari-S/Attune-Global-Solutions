@@ -16,10 +16,12 @@ return new class extends Migration
             $table->id();
             $table->string('so_number')->nullable()->default(null)->unique();
             $table->string('emp_id');
+            $table->string('po_number')->nullable();
             $table->string('job_title');
             $table->string('start_date'); // Assuming a 'vendors' table exists
             $table->string('end_date'); // Assuming a 'vendors' table exists
             $table->string('rate');
+            $table->string('rate_type')->nullable();
             $table->string('customer_id'); // Assuming a 'vendors' table exists
             $table->string('end_client_timesheet_required')->nullable();
             $table->string('time_sheet_type')->nullable();

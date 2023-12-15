@@ -14,11 +14,18 @@ use App\Models\TimeSheet;
 class TimeSheetDisplay extends Component
 {
     public $hours = [];
+    public $selectedEmployeeId;
+    public $selectedEmployee;
+    public $startDate;
+    public $endDate;
+    public $contractorTimeSheetData;
     public $tab = 'timeSheet';
     public $timeSheetEntries = [];
     public $regular = [];
     public $casual = []; // Initialize as an empty array
     public $sick = [];
+
+    public $hr_id;
     public $holiday = [];
     public $vacation = [];
     public $currentWeekStart;
@@ -29,12 +36,23 @@ class TimeSheetDisplay extends Component
     public $empDetails;
     public $emp_id;
     public $getTotalHours;
+    public $empId;
+    public $entryId;
+    public $hrId;
+    public $companyId;
+    public $weekData = [];
     public function mount()
     {
         // Load existing entries from the database
-        $emp_id = Auth::user()->emp_id;
+        $user = Auth::user();
+        $emp_id = $user->emp_id;
+        $this->emp_id = $emp_id;
         $existingEntries = TimeSheetEntry::where('emp_id', $emp_id)->get();
-        $this->setWeekDates(Carbon::now());
+        $this->entryId = $existingEntries->isNotEmpty() ? $existingEntries->first()->id : null;
+
+        $this->setWeekDates(now());
+        $this->selectedEmployeeIdForTS = TimeSheetEntry::first();
+
         $currentWeekStart = now()->startOfWeek();
         $currentWeekEnd = now()->endOfWeek();
 
@@ -42,43 +60,146 @@ class TimeSheetDisplay extends Component
             $this->currentWeekDates[] = $date->format('Y-m-d');
         }
 
-        // Populate the $hours variable with existing entries
-        foreach ($existingEntries as $entry) {
-            $this->hours[$entry->day]['regular'] = $entry->regular;
-            $this->hours[$entry->day]['casual'] = $entry->casual;
-            $this->hours[$entry->day]['sick'] = $entry->sick;
-            $this->hours[$entry->day]['holiday'] = $entry->holiday;
-            $this->hours[$entry->day]['vacation'] = $entry->vacation;
-            $today = Carbon::now();
-            $this->setWeekDates(now());
-            $this->currentWeekStart = $today->startOfWeek()->format('d-m-Y');
-            $this->currentWeekEnd = $today->endOfWeek()->format('d-m-Y');
-            $this->futureDates = [];
-            $emp_id = Auth::id();
+        $this->timeSheetEntries = $existingEntries;
+        $this->empDetails = EmpDetails::where('emp_id', $emp_id)->first();
+        $this->getContractorTimeSheetData();
+        // Fetch the employee details for the logged-in user
+        try {
+            $this->empDetails = EmpDetails::where('emp_id', $emp_id)->get();
+        } catch (\Exception $e) {
+            logger()->error('Error fetching employee details: ' . $e->getMessage());
+            $this->empDetails = [];
+        }
+    }
+    public function selectedEmployee($empId)
+    {
+        $this->selectedEmployee = EmpDetails::where('emp_id', $empId)->first();
+        // dd($this->selectedEmployeeId);
+    }
+    public $filteredPeoples;
+    public $peopleFound;
 
-            // Fetch the employee details for the logged-in user
-            try {
-                $this->empDetails = EmpDetails::where('emp_id', $emp_id)->get();
-            } catch (\Exception $e) {
-                // Log the error or handle it accordingly
-                logger()->error('Error fetching employee details: ' . $e->getMessage());
-                $this->empDetails = []; // Assign an empty array to prevent the error
-            }
-            // Get the current date
-            $today = Carbon::now();
+    public $searchTerm;
+    public function filter()
+    {
+        // Trim the search term to remove leading and trailing spaces
+        $trimmedSearchTerm = trim($this->searchTerm);
 
-            // Generate future dates for the next 30 days, for example
-            for ($i = 1; $i <= 30; $i++) {
-                $futureDate = $today->copy()->addDays($i);
-                $this->futureDates[] = $futureDate->format('Y-m-d');
-            }
+        // Use Eloquent to filter records based on the search term
+        $this->filteredPeoples = EmpDetails::where(function ($query) use ($trimmedSearchTerm) {
+            $query->where('first_name', 'LIKE', '%' . $trimmedSearchTerm . '%')
+                ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%')
+                ->orWhere('status', 'LIKE', '%' . $trimmedSearchTerm . '%');
+        })
+            ->get();
+
+        // Check if any records were found
+        $this->peopleFound = count($this->filteredPeoples) > 0;
+    }
+
+    public function getContractorTimeSheetData()
+    {
+        $startDate = Carbon::now()->startOfWeek()->toDateString();
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+        $this->contractorTimeSheetData = TimeSheetEntry::where('status', 'submit')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
+    }
+
+    public $selectedEmployeeIdForTS;
+
+    public function selectEmployee($employeeId)
+    {
+        $this->selectedEmployeeIdForTS = TimeSheetEntry::where('emp_id', $employeeId)->first();
+    }
+
+    public function updateEntryStatus()
+    {
+        // Retrieve the authenticated user's emp_id
+        $empId = Auth::user()->emp_id;
 
 
-            // Add other fields as needed
+        // Retrieve the entries associated with the user
+        $entries = TimeSheetEntry::where('emp_id', $empId)->get();
+
+
+        // Loop through each entry to update the status
+        foreach ($entries as $entry) {
+            // Update the status from "pending" to "submit"
+            $entry->status = 'submit';
+            $entry->save();
         }
 
-        $this->timeSheetEntries = $existingEntries; // Set the variable
+        $employeeDetails = EmpDetails::where('emp_id', $entry->emp_id)->first();
+
+        session()->flash('success', 'Status updated successfully for all entries');
     }
+
+    public function approveStatus(Request $request, $id)
+
+    {
+        $startDate = Carbon::now()->startOfWeek()->toDateString(); // Monday
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+
+        $contractorTimeSheetData = TimeSheetEntry::where('status', 'submit')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
+
+        try {
+            foreach ($contractorTimeSheetData as $entry) {
+                $entry->status = 'accept';
+                // Update the status value to 'approve'
+                $entry->save(); // Save the updated status
+            }
+
+            session()->flash('success', 'Status updated successfully from submit to rejected');
+        } catch (\Exception $e) {
+            // Display the error message for debugging
+        }
+    }
+
+    public function rejectStatus(Request $request, $id)
+    {
+
+        $timeSheetEntry = TimeSheetEntry::where('emp_id', $id)
+            ->where('status', 'submit')
+            ->first();
+
+        // Retrieve the emp_id of the authenticated user
+        $empId = auth()->user()->emp_id;
+        $entries = TimeSheetEntry::where('emp_id', $empId)->get();
+
+        $loggedInUserCompanyId = auth()->user()->company_id;
+        // Dump the fetched data
+
+        // Fetch contractor time sheet data for the retrieved emp_id
+        $startDate = Carbon::now()->startOfWeek()->toDateString(); // Monday
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+        // Define $startDate and $endDate variables
+        // Fetch contractor time sheet data for the specified date range
+        $contractorTimeSheetData = TimeSheetEntry::where('status', 'submit')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
+
+        // Loop through the contractor time sheet data to update the status from "submit" to "approved"
+        try {
+            foreach ($contractorTimeSheetData as $entry) {
+                $entry->status = 'reject';
+                // Update the status value to 'approve'
+                $entry->save(); // Save the updated status
+            }
+            session()->flash('success', 'Status updated successfully from submit to rejected');
+        } catch (\Exception $e) {
+            dd($e->getMessage()); // Display the error message for debugging
+        }
+    }
+
     public function getWeeklyTimeSheetEntries()
     {
         $emp_id = Auth::user()->emp_id;
@@ -120,55 +241,129 @@ class TimeSheetDisplay extends Component
     {
         $this->setWeekDates(Carbon::parse($this->currentWeekStart)->addWeek());
     }
-    protected function isValueEntered($day, $type)
-    {
-        return isset($this->hours[$day][$type]) && $this->hours[$day][$type] !== null;
-    }
 
 
+
+    // public function ApproveStatus($id)
+    // {
+    //     dd('sdfgh');
+    //     $this->emp_id = $emp_id;
+
+    //     // Your approval logic here
+    //     $loggedInUserCompanyId = auth()->user()->company_id;
+
+    //     $contractorTimeSheetData = TimeSheetEntryHr::where('status', 'submit')
+    //         ->where('emp_id', $this->emp_id)
+    //         ->get();
+    // }
+
+
+    public $entries, $timeSheetE;
     public function render()
     {
-        return view('livewire.time-sheet-display');
+        $user = Auth::user();
+        $emp_id = $user->emp_id;
+
+        $this->entries = TimeSheetEntry::where('emp_id', $emp_id)->first();
+        $this->timeSheetE = TimeSheetEntry::all();
+
+        // Check if the entries exist and extract day data to populate weekData
+        if ($this->entries) {
+            $this->weekData = $this->entries->day;
+        }
+        // Retrieve data for the logged-in user from TimeSheetEntry
+        $storedData = TimeSheetEntry::where('emp_id', $emp_id)
+            ->where('status', 'pending') // Assuming you want only pending entries
+            ->first();
+
+        $startDate = Carbon::now()->startOfWeek()->toDateString(); // Monday
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+        // Define $startDate and $endDate variables
+
+        $contractorTimeSheetData = TimeSheetEntry::where('time_sheet_entries.status', 'submit')
+            ->join('emp_details', 'time_sheet_entries.emp_id', '=', 'emp_details.emp_id')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
+
+        // $sqlQuery = $contractorTimeSheetData->toSql();
+        // $bindings = $contractorTimeSheetData->getBindings();
+
+        // dd($sqlQuery, $bindings);
+
+
+        return view('livewire.time-sheet-display', [
+            'entryId' => $this->entryId, 'contractorTimeSheetData' => $contractorTimeSheetData,
+        ]);
     }
 
-    public function store()
+
+
+
+    public function createTimeSheet()
     {
-        $emp_id = Auth::user()->emp_id;
-        $timeSheetEntries = TimeSheetEntry::where('emp_id', $emp_id)
-            ->whereIn('day', $this->currentWeekDates)
+
+
+        $user = Auth::user();
+        $empId = $user->emp_id;
+
+        $empId = auth()->guard('employee')->id();
+        $empDetails = EmpDetails::find($empId);
+        $company_id = $empDetails->company_id;
+        // Fetch HR detail for the company
+        $hrDetail = HrDetail::where('company_id', $company_id)->first();
+        // dd($hrDetail);
+        $hr_id = $hrDetail->hr_id;
+
+        $this->validate([
+            'weekData' => 'required|array',
+        ]);
+
+        $formattedWeekData = [];
+        $existingEntries = TimeSheetEntry::where('emp_id', $empId)
+            ->whereIn('day', array_column($formattedWeekData, 'date'))
             ->get();
 
-        // Logic to update or create records for the current week's dates
-        foreach ($this->hours as $day => $hours) {
-            $date = Carbon::parse($day);
-            if (in_array($date->format('Y-m-d'), $this->currentWeekDates)) {
-                $data = [
-                    'emp_id' => $emp_id,
-                    'day' => $date->format('Y-m-d'),
-                    'regular' => $hours['regular'] ?? 0,
-                    'casual' => $hours['casual'] ?? 0,
-                    'sick' => $hours['sick'] ?? 0,
-                    'holiday' => $hours['holiday'] ?? 0,
-                    'vacation' => $hours['vacation'] ?? 0,
-                    // Add other fields as needed
-                ];
 
-                // Ensure to updateOrCreate based on emp_id and day columns
-                TimeSheetEntry::updateOrCreate(
-                    [
-                        'emp_id' => $emp_id,
-                        'day' => $data['day'],
-                    ],
-                    $data
-                );
-            }
+
+        foreach ($this->weekData as $day => $leaveTypes) {
+            // $currentDate = now()->startOfWeek()->next($day)->toDateString();
+            //    $currentDate = now()->next(Carbon::MONDAY)->startOfDay()->addDays(['mon' => 0, 'tue' => 1, 'wed' => 2, 'thu' => 3, 'fri' => 4, 'sat' => 5, 'sun' => 6][$day])->toDateString();
+            $currentDate = now()->startOfWeek()->addDays(['mon' => 0, 'tue' => 1, 'wed' => 2, 'thu' => 3, 'fri' => 4, 'sat' => 5, 'sun' => 6][$day])->toDateString();
+            $formattedWeekData[$day] = [
+                'date' => $currentDate,
+                'regular' => $leaveTypes['regular'] ?? 0,
+                'sick' => $leaveTypes['sick'] ?? 0,
+                'holiday' => $leaveTypes['holiday'] ?? 0,
+                'vacation' => $leaveTypes['vacation'] ?? 0,
+                'casual' => $leaveTypes['casual'] ?? 0,
+            ];
         }
-        $this->timeSheetEntries = TimeSheetEntry::where('emp_id', $emp_id)
-            ->whereIn('day', $this->currentWeekDates)
-            ->get();
 
-        // After storing, retrieve the updated time sheet entries
-        $this->timeSheetEntries = TimeSheetEntry::where('emp_id', $emp_id)->get();
+        // Create or update the time sheet entry
+        $dd = TimeSheetEntry::updateOrCreate(
+            [
+                'emp_id' => $empId,
+            ],
+            [
+                'hr_id' => $hrDetail->hr_id,
+                'company_id' => $company_id,
+                'day' => $formattedWeekData,
+                'status' => 'pending',
+            ],
+            $formattedWeekData[$day]
+        );
+
+        // Fetch updated time sheet entries after modification
+        // Assuming $this->weekData is a multidimensional array
+        $flattenedDays = collect($this->weekData)->flatMap(function ($days) {
+            return array_values($days);
+        })->flatten()->unique()->toArray();
+
+        $this->timeSheetEntries = TimeSheetEntry::where('emp_id', $empId)
+            ->whereIn('day', $flattenedDays)
+            ->get();
 
         session()->flash('success', 'Working hours updated successfully');
     }

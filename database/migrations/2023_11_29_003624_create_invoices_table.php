@@ -27,7 +27,8 @@ return new class extends Migration
             $table->string('company_id');
             $table->string('type'); // Assuming a 'vendors' table exists
             $table->string('emp_id');
-            $table->string('rate');
+            $table->string('rate')->nullable();
+            $table->string('rate_type')->nullable();
             $table->string('period');
             $table->string('hrs_or_days');
             $table->string('open_balance');
