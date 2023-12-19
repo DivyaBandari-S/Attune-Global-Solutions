@@ -15,6 +15,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        .col-md-10{
+            width: 88%;
+        }
         img {
             max-width: 100%;
             height: auto;
@@ -29,15 +32,12 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            margin-right: 15px;
-            margin-left: 15px;
-            padding: 4px;
-
-        }
-
-        .menu-link>i {
             margin-left: 8px;
+           
+
         }
+
+    
 
 
         .menu-link:hover {
@@ -81,6 +81,7 @@
             top: 0;
             left: 0;
             height: 100vh;
+            width:150px
             /* width: 17%; */
         }
 
@@ -173,7 +174,7 @@
         @else
         @if(Auth::guard('hr')->check())
         <div class="col-md-2 displayNone" id="col-md-2">
-            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 70px; margin: 8px auto;" alt="">
+            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 210px; height: 50px; margin: 8px auto;" alt="">
             <div style="margin-top:15px;" class="setHeight">
                 <a class="menu-link {{ Request::is('/') ? 'active' : '' }}" href="/"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
 
@@ -195,8 +196,8 @@
         </div>
         @elseif(Auth::guard('vendor')->check())
         <div class="col-md-2 displayNone" id="col-md-2">
-            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
-            <div style="margin-top:15px;">
+        <img src="{{asset('/images/CMSLogo.png')}}" style="width: 210px; height: 50px; margin: 8px auto;" alt="">
+          
                 <a class="menu-link {{ Request::is('vendor-home') ? 'active' : '' }}" href="/vendor-home"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
 
                 <a class="menu-link {{ Request::is('vendor-pages') ? 'active' : '' }}" href="/vendor-pages"><i class="fas fa-university"></i><span class="icon-text"> Vendors</span></a><br>
@@ -205,7 +206,8 @@
         </div>
         @elseif(Auth::guard('customer')->check())
         <div class="col-md-2 displayNone" id="col-md-2">
-            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
+        <img src="{{asset('/images/CMSLogo.png')}}" style="width: 210px; height: 50px; margin: 8px auto;" alt="">
+
             <div style="margin-top:15px;">
                 <a class="menu-link {{ Request::is('customer-home') ? 'active' : '' }}" href="/customer-home"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
                 <a class="menu-link {{ Request::is('customer-pages') ? 'active' : '' }}" href="/customer-pages"><i class="fas fa-mobile-alt"></i><span class="icon-text"> Customers</span></a><br>
@@ -215,7 +217,8 @@
         </div>
         @elseif(Auth::guard('contractor')->check())
         <div class="col-md-2 displayNone" id="col-md-2">
-            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
+        <img src="{{asset('/images/CMSLogo.png')}}" style="width: 210px; height: 50px; margin: 8px auto;" alt="">
+
             <div style="margin-top:15px;">
                 <a class="menu-link {{ Request::is('contractor-home') ? 'active' : '' }}" href="/contractor-home"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
 
@@ -227,7 +230,8 @@
 
         @elseif(Auth::guard('employee')->check())
         <div class="col-md-2 displayNone" id="col-md-2">
-            <img src="{{asset('/images/CMSLogo.png')}}" style="width: 200px; height: 50px; margin: 8px auto;" alt="">
+        <img src="{{asset('/images/CMSLogo.png')}}" style="width: 210px; height: 50px; margin: 8px auto;" alt="">
+
             <div style="margin-top:15px;">
                 <a class="menu-link {{ Request::is('employee-home') ? 'active' : '' }}" href="/employee-home"><i class="fas fa-home"></i><span class="icon-text"> Home</span></a><br>
                 <a class="menu-link {{ Request::is('employee-pages') ? 'active' : '' }}" href="/employee-pages"><i class="fas fa-user-tie"></i><span class="icon-text"> Employees</span></a><br>

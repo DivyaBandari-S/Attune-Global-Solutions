@@ -11,16 +11,17 @@
  
     <div class="row" style="margin-top:50px">
         @if(Auth::guard('hr')->check())
- 
+        <div style="margin-top:10px">
         @if (session()->has('success'))
-        <div class="alert alert-success" style="margin-left:50px">{{ session('success') }}</div>
+        <div class="alert alert-success" style="height:40px;font-size:12px;margin-top:-50px">{{ session('success') }}</div>
         @elseif (session()->has('error'))
-        <div class="alert alert-danger">{{ session('error') }}</div>
+        <div class="alert alert-danger" style="height:40px;font-size:12px;margin-top:-50px">{{ session('error') }}</div>
         @endif
+                            </div>
         <div style="margin:auto 10px; width:95%;">
    
             @if ( $contractorTimeSheetData )
-            <div class="row" style="margin:10px; padding :10px 15px;margin-left:-10px">
+            <div class="column" style="margin:10px; padding :10px 15px;margin-left:-10px;margin-top:-30px">
                 <div class="col-md-3"  style="background-color: #f2f2f2;margin-right:5px;">
                     <div class="container" style="margin-top: 15px;">
                         <div class="row">
@@ -36,17 +37,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="scroll-container" style="margin-top:10px" >
+                    <div class="scroll-container" style="margin-top:10px;" >
                    
                     @foreach($timeSheetE as $employee)
-                        <div wire:click="selectEmployee({{ $employee->emp_id }})"  class="container" style="width:95%; background-color: {{$selectedEmployee && $selectedEmployee->emp_id == $employee->emp_id ? '#ccc' : 'white' }};border-radius:5px;padding:10px auto; cursor:pointer;margin-top:10px;">
-                 
-            <span style="font-size: 0.795rem; display: block; white-space: nowrap; text-overflow: ellipsis; max-width: 150px; line-height: 1.2; overflow: hidden;">
-            {{ $employee->first_name  }} {{$employee->last_name  }}
-            </span>
-     
-                        <span style="color: #778899; font-size: 0.625rem;">(#{{ $employee->emp_id }})</span>
-                        </div>
+                   
+                    <div wire:click="selectEmployee({{ $employee->emp_id }})" class="container" style="width:95%; background-color: {{$selectedEmployee && $selectedEmployee->emp_id == $employee->emp_id ? '#ccc' : 'white' }};border-radius:5px;padding:10px auto; cursor:pointer;margin-top:10px; display: flex; justify-content: space-between; align-items: center;display:flex">
+    <div style="display: flex;height:20px;margin-top:10px;margin-left:10px">
+        <span style="color: #778899; font-size: 0.625rem;">
+            {{ $employee->first_name }} {{ $employee->last_name }}
+        </span>
+        <span style="color: #778899; font-size: 0.625rem;margin-left:30px">(#{{ $employee->emp_id }})</span>
+    </div>
+</div>
+ 
+ 
                         @endforeach
                          @endif
                      
@@ -111,7 +115,12 @@
                                     <td style="padding-left:10px;border: 1px solid #dddddd;width:30px">  {{ $selectedEmployeeIdForTS->employee->first_name ?? '' }}
                     {{ $selectedEmployeeIdForTS->employee->last_name ?? '' }}</td>
                                     <td style="border: 1px solid #dddddd;padding-left:5px">Weekly</td>
-                                    <td style="border: 1px solid #dddddd;padding-left:10px">{{ \Carbon\Carbon::parse($selectedEmployeeIdForTS->day['mon']['date'])->format('M d') }} <br>{{ \Carbon\Carbon::parse($selectedEmployeeIdForTS->day['sun']['date'])->format('M d') }}</td>
+                                    @if(isset($selectedEmployeeIdForTS->day['mon']['date']) && isset($selectedEmployeeIdForTS->day['sun']['date']))
+    <td style="border: 1px solid #dddddd;padding-left:10px">
+        {{ \Carbon\Carbon::parse($selectedEmployeeIdForTS->day['mon']['date'])->format('M d') }} <br>
+        {{ \Carbon\Carbon::parse($selectedEmployeeIdForTS->day['sun']['date'])->format('M d') }}
+    </td>
+@endif
  
                                     <td style="padding-left:20px;border: 1px solid #dddddd;">{{ $totalRegularHours }}</td>
                                     <td style="padding-left:20px;border: 1px solid #dddddd;">{{ $totalSickHours }} </td>
@@ -119,8 +128,8 @@
                                     <td style="padding-left:20px;border: 1px solid #dddddd;">{{ $totalVacationHours }}</td>
                                     <td style="padding-left:20px;border: 1px solid #dddddd;"> {{ $totalCasualHours }}</td>
                                     <td style="border: 1px solid #dddddd;padding-left:20px">{{$totalHours}}</td>
-                                    <td style="border: 1px solid #dddddd;">{{ $selectedEmployeeIdForTS->company_name }}</td>
-                                    <td style="border: 1px solid #dddddd;">{{ $selectedEmployeeIdForTS->period }}</td>
+                                       <td style="border: 1px solid #dddddd;">{{ $selectedEmployeeIdForTS->customer_name }}</td>
+                <td style="border: 1px solid #dddddd;">{{ $selectedEmployeeIdForTS->vendor_name }}</td>
                                     <td style="border: 1px solid #dddddd;">{{ $selectedEmployeeIdForTS->period }}</td>
                                     <td style="border: 1px solid #dddddd;">
                                         <form wire:submit.prevent="approveStatus($id)">
@@ -344,66 +353,80 @@
         <!-- Your Blade view - time-sheet-display.blade.php -->
  
         <div>
-            <table class="table">
-                <!-- Header -->
-                <thead>
-                    <tr style="font-size: 12px;">
-                        <th>Leave</th>
+        @php
+    $currentWeekDataExists = false;
+    // Check if $weekData contains entries for the current week
+    // Assuming $weekData is an array containing data for each day of the week
+    foreach ($weekData as $day => $leaveTypes) {
+        // Check if the current day is within the current week
+        $dayOfWeek = Carbon\Carbon::parse($day)->dayOfWeek;
+        if ($dayOfWeek >= 0 && $dayOfWeek <= 6) {
+            $currentWeekDataExists = true;
+            break;
+        }
+    }
+@endphp
+ 
+@if ($currentWeekDataExists)
+    <table class="table">
+        <!-- Header -->
+        <thead>
+            <tr style="font-size: 12px;">
+                <th>Leave</th>
+                @php
+                    $today = now()->startOfWeek(); // Get the start of the current week
+                @endphp
+ 
+                @foreach (range(0, 6) as $i)
+                    @php
+                        $day = $today->format('l'); // Get day name (e.g., Monday)
+                        $date = $today->format('d-m-Y'); // Get date (e.g., 01-01-2023)
+                        $today->addDay(); // Move to the next day
+                    @endphp
+                    <th class="day-date">{{ $day }}<br>{{ $date }}</th>
+                @endforeach
+ 
+                <th>Total Hours</th>
+            </tr>
+        </thead>
+   
+        <!-- Body -->
+        <tbody>
+            @foreach(['regular', 'sick', 'holiday', 'vacation', 'casual'] as $leaveType)
+                <tr>
+                    <td>{{ ucfirst($leaveType) }}</td>
+                    @foreach(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as $day)
                         @php
-                        $today = now()->startOfWeek(); // Get the start of the current week
-                        @endphp
-                        @for ($i = 0; $i < 7; $i++) @php $day=$today->format('l');
-                            $date = $today->format('d-m-Y');
-                            $today->addDay(); // Move to the next day
-                            @endphp
-                            <th class="day-date">{{ $day }}<br>{{ $date }}</th>
-                            @endfor
-                            <th>Total Hours</th>
-                    </tr>
-                </thead>
- 
-                <!-- Body -->
-                <tbody>
-                    @foreach(['regular', 'sick', 'holiday', 'vacation', 'casual'] as $leaveType)
- 
-                    <tr>
-                        <td>{{ ucfirst($leaveType) }}</td>
-                        @foreach(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as $day)
-                        @php
-                        // Check if any leave type is entered for the same day
-                        $isEntered = false;
-                        foreach (['regular', 'sick', 'holiday', 'vacation', 'casual'] as $otherLeaveType) {
-                        if (
-                        isset($weekData[$day][$otherLeaveType]) &&
-                        $weekData[$day][$otherLeaveType] !== null &&
-                        $weekData[$day][$otherLeaveType] !== 0 &&
-                        $otherLeaveType !== $leaveType
-                        ) {
-                        $isEntered = true;
- 
-                        }
-                        }
+                            // Check if any leave type is entered for the same day
+                            $isEntered = false;
+                            foreach (['regular', 'sick', 'holiday', 'vacation', 'casual'] as $otherLeaveType) {
+                                if (isset($weekData[$day][$otherLeaveType]) &&
+                                    $weekData[$day][$otherLeaveType] !== null &&
+                                    $weekData[$day][$otherLeaveType] !== 0 &&
+                                    $otherLeaveType !== $leaveType
+                                ) {
+                                    $isEntered = true;
+                                }
+                            }
                         @endphp
                         <td>
-                           
                             <div class="form-group">
                                 <input wire:model="weekData.{{ $day }}.{{ $leaveType }}" wire:change="createTimeSheet('{{ $day }}')" type="number" name="{{ $leaveType }}[{{ $day }}][{{ $leaveType }}]" min="0" max="24" placeholder="0" class="form-control" style="width: 50px; font-size: 10px;" @if($isEntered) readonly @endif>
                             </div>
                         </td>
-                        @endforeach
-                        <td>
-                            <input type="number" value="{{ array_sum(array_column($weekData, $leaveType)) }}" min="0" max="24" class="form-control" disabled style="width:60px; font-size:10px;">
-                        </td>
-                     
-                    </tr>
                     @endforeach
-   
+                    <td>
+                        <input type="number" value="{{ array_sum(array_column($weekData, $leaveType)) }}" min="0" max="24" class="form-control" disabled style="width:60px; font-size:10px;">
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@else
+    <!-- Display a message or handle when there is no data for the current week -->
+    <p>No data available for the current week.</p>
+@endif
  
- 
- 
-                </tbody>
- 
-            </table>
             @php
     // Define $leaveTypes with the necessary leave types
     $leaveTypes = ['regular', 'sick', 'holiday', 'vacation', 'casual']; // Modify this array as needed

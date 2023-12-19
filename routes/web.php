@@ -17,6 +17,7 @@ use App\Livewire\HomePage;
 
 use App\Livewire\VendorPage;
 use App\Livewire\EmployeeListPage;
+use App\Livewire\ImagePreview;
 use App\Livewire\Invoices;
 use App\Livewire\PurchaseOrder;
 use App\Livewire\SalesOrPurchaseOrders;

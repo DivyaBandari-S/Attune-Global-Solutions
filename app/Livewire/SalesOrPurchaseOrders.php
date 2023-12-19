@@ -153,6 +153,7 @@ class SalesOrPurchaseOrders extends Component
             'payment_terms' => $this->paymentTerms,
         ]);
         $this->soo = false;
+        $this->poo = false;
         session()->flash('SOPO-order', 'SOPO submitted successfully.');
     }
 
@@ -168,6 +169,13 @@ class SalesOrPurchaseOrders extends Component
         $this->regForm = false;
         $this->so = true;
         $this->resetFieldsForPo();
+    }
+    public function closeSOO(){
+        $this->soo=false;
+    }
+
+    public function closePOO(){
+        $this->poo=false;
     }
 
     public function register()
@@ -263,21 +271,51 @@ class SalesOrPurchaseOrders extends Component
     public $selectedOptionForSO = true;
     public $selectedOptionForPO = false;
 
+    public $selectedOptionForPOSO = true;
+    public $selectedOptionForSOPO = false;
 
     public $vendorForSO = false;
     public $customerForPO = false;
     public function toggleCustomer()
     {
-        if (!$this->selectedOptionForSO) {
-            // If selectedOptionForSO is false, toggle the values
+        if ($this->selectedOptionForSO) {
+            // If selectedOptionForSO is false, toggle the value of $so
             $this->so = !$this->so;
-            $this->selectedOptionForSO = !$this->selectedOptionForSO;
         } else {
             // If selectedOptionForSO is true, set both values to false
             $this->so = false;
-            $this->selectedOptionForSO = false;
+            $this->selectedOptionForSO = false; // Corrected from true to false
         }
     }
+
+
+
+    public function toggleVendorPO()
+    {
+        if ($this->selectedOptionForPOSO) {
+            // If selectedOptionForSO is false, toggle the value of $so
+            $this->po = !$this->po;
+        } else {
+            // If selectedOptionForSO is true, set both values to false
+            $this->po = false;
+            $this->selectedOptionForPOSO = false; // Corrected from true to false
+        }
+    }
+    public $customerForSo = false;
+
+    public function toggleCustomerPO()
+    {
+        if ($this->selectedOptionForSOPO) {
+            // If selectedOptionForPO is true, toggle the values
+            $this->customerForSo = !$this->customerForSo;
+        } else {
+            // If selectedOptionForPO is false, set both values to false
+            $this->selectedOptionForSOPO = false;
+            $this->customerForSo = false;
+        }
+    }
+
+
 
 
     public function toggleVendor()
@@ -369,6 +407,7 @@ class SalesOrPurchaseOrders extends Component
         $this->resetFieldsForSo();
         $this->vendorForSO = false;
         $this->soo = false;
+        $this->poo = false;
     }
 
     public function addSO()
@@ -419,6 +458,9 @@ class SalesOrPurchaseOrders extends Component
         session()->flash('sales-order', 'Sales order submitted successfully.');
 
         $this->customerForPO = false;
+        $this->soo = false;
+        $this->poo = false;
+      
     }
     public $vendor_profile, $vendor_name, $email, $phone, $vendor_company_name, $address;
     public function addVendors()
@@ -629,15 +671,19 @@ class SalesOrPurchaseOrders extends Component
     {
         $this->soo = true;
         $this->so = true;
+        $this->poo = false;
     }
 
-    public $toggleState = false;
-    public $poo = false;
     public function showPOO()
     {
         $this->poo = true;
         $this->po = true;
+        $this->soo = false;
     }
+
+    public $toggleState = false;
+    public $poo = false;
+
     public function render()
     {
         $companyId = auth()->user()->company_id;
@@ -647,20 +693,20 @@ class SalesOrPurchaseOrders extends Component
         $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->vendors = VendorDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->sopo = SalesOrder::with('ven', 'com', 'emp')
-        ->join('purchase_orders', 'sales_orders.so_number', '=', 'purchase_orders.so_number')
-        ->join('vendor_details', 'vendor_details.vendor_id', '=', 'purchase_orders.vendor_id')
-        ->where('sales_orders.company_id', $companyId)
-        ->orderBy('sales_orders.created_at', 'desc')
-        ->select(
-            'sales_orders.*', // select all columns from sales_orders
-            'purchase_orders.rate as po_rate', // alias rate from purchase_orders as po_rate
-            'purchase_orders.rate_type as po_rate_type',
-            'purchase_orders.po_number as po_no',
-            'vendor_details.vendor_name as vendor_name',
-            'vendor_details.vendor_name as vendor_name',
-        )
-        ->get();
-    
+            ->join('purchase_orders', 'sales_orders.so_number', '=', 'purchase_orders.so_number')
+            ->join('vendor_details', 'vendor_details.vendor_id', '=', 'purchase_orders.vendor_id')
+            ->where('sales_orders.company_id', $companyId)
+            ->orderBy('sales_orders.created_at', 'desc')
+            ->select(
+                'sales_orders.*', // select all columns from sales_orders
+                'purchase_orders.rate as po_rate', // alias rate from purchase_orders as po_rate
+                'purchase_orders.rate_type as po_rate_type',
+                'purchase_orders.po_number as po_no',
+                'vendor_details.vendor_name as vendor_name',
+                'vendor_details.vendor_name as vendor_name',
+            )
+            ->get();
+
         return view('livewire.sales-or-purchase-orders');
     }
 }

@@ -7,7 +7,7 @@
             position: relative;
             display: inline-block;
             width: 60px;
-            height: 34px;
+            height: 40px;
         }
 
         .toggle-switch input {
@@ -115,7 +115,7 @@
         }
 
         .modal-content {
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .modal-backdrop {
@@ -462,7 +462,7 @@
     <body>
         <div style="text-align: start;">
             <button style="margin-right: 10px;" wire:click="showSOO" class="button">ADD SO</button>
-            <button style="margin-right: 10px;" wire:click="addPO" class="button">ADD PO</button>
+            <button style="margin-right: 10px;" wire:click="showPOO" class="button">ADD PO</button>
         </div>
         @if(session()->has('purchase-order'))
         <div id="purchaseOrderAlert" style="text-align: center;" class="alert alert-success">
@@ -485,18 +485,7 @@
             }, 5000);
         </script>
 
-        <p style="text-align: center;">
-            <button wire:click="$set('activeButton', 'SO')" style="{{ $activeButton === 'SO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
-                View SO's
-            </button>
-            <button wire:click="$set('activeButton', 'PO')" style="{{ $activeButton === 'PO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
-                View PO's
-            </button>
-            <button wire:click="$set('activeButton', 'SOPO')" style="{{ $activeButton === 'SOPO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
-                View SOPO's
-            </button>
 
-        </p>
 
         @if($show=="true")
         <div class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
@@ -666,18 +655,54 @@
         @endif
 
 
-        @if($soo=="true")
+        @if($poo=="true")
         <div class="row">
-            <div class="col-md-6">
-                @if($so=="true")
+        <div style="text-align: end;">
+                <button style="background-color: rgb(2, 17, 79);color:white;border:none;border-radius:5px" wire:click="closePOO">Close</button>
+            </div>
+            <div class="row" style="text-align: start;margin-top:15px">
+                <div class="col-md-6">
+                    <div class="row" style="text-align: start;">
+                        <div class="col-md-4" style="width:15px;margin-right:65px">
+                            <div class="toggle-switch">
+                                <input wire:change="toggleCustomerPO" type="checkbox" id="toggleSwitchForPOVendor" wire:model="selectedOptionForSOPO">
+                                <label for="toggleSwitchForPOVendor"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-8" style="margin: 0;padding:0">
+                            <label style="font-size: 12px;margin-top:6px" for="toggleSwitchForPOVendor">I have a customer</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row" style="text-align: start;">
+                        <div class="col-md-4" style="width:15px;margin-right:65px">
+                            <div class="toggle-switch">
+                                <input wire:change="toggleVendorPO" type="checkbox" id="toggleSwitchForPOCustomer" wire:model="selectedOptionForPOSO">
+                                <label for="toggleSwitchForPOCustomer"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-8" style="margin: 0;padding:0">
+                            <label style="font-size: 12px;margin-top:6px" for="toggleSwitchForPOCustomer">I have a vendor</label>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-6" style="margin: 0;padding:0">
+                @if($selectedOptionForSOPO=="true")
                 <div class="1">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                                 <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
-                                <button wire:click="closeSO" type="button" class="close" style="border:none;margin-right:5px" data-dismiss="modal" aria-label="Close">
-                                    <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
-                                </button>
+
                             </div>
                             <div class="modal-body">
                                 <div>
@@ -689,34 +714,399 @@
                                     <form>
                                         @csrf
 
-                                        <div class="row" style="text-align: start;">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="toggle-switch">
-                                                            <input wire:change="toggleCustomer" type="checkbox" id="toggleSwitchForCustomer" wire:model="selectedOptionForSO">
-                                                            <label for="toggleSwitchForCustomer"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <label for="toggleSwitchForCustomer">I have a customer</label>
-                                                    </div>
+
+
+
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
+                                            <select wire:change="selectedConsultantId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
+                                                <option style="font-size: 12px;" value="">Select Consultant</option>
+                                                <option style="font-size: 12px;" value="addConsultant">
+                                                    << Add Consultant>>
+                                                </option>
+                                                @foreach($employees as $employee)
+                                                <option style="font-size: 12px;text-transform: capitalize" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_type }})</option>
+
+                                                @endforeach
+                                            </select>
+                                            @error('consultantName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                        </div>
+
+
+
+                                        <div class="row mb-2">
+                                            <div class="col p-0">
+                                                <label style="font-size: 12px;" for="start_date">Start Date:</label>
+                                                <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                            </div> <br>
+                                            @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                            <div class="col">
+                                                <label style="font-size: 12px;" for="end_date">End Date:</label>
+                                                <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
+
+                                            </div> <br>
+                                            @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="rate">Rate:</label>
+                                            <div class="input-group">
+                                                <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="rate">
+                                                @error('rate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                                <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="rateType">
+                                                    <option style="font-size: 12px;">Select Rate Type</option>
+                                                    <option style="font-size: 12px;" value="Hourly">Per Hour</option>
+                                                    <option style="font-size: 12px;" value="Daily">Per Day</option>
+                                                    <option style="font-size: 12px;" value="Weekly">Per Week</option>
+                                                    <option style="font-size: 12px;" value="Monthly">Per Month</option>
+                                                </select>
+                                                @error('rateType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Customer Name:</label>
+                                            <select wire:change="callCustomer" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="customerName">
+                                                <option style="font-size: 12px;" value="">Select Customer</option>
+                                                <option style="font-size: 12px;" value="addCustomer">
+                                                    << Add Customer>>
+                                                </option>
+                                                @foreach($customers as $customer)
+                                                <option style="font-size: 12px;" value="{{ $customer->customer_id }}">{{ $customer->customer_company_name }}</option>
+                                                @endforeach
+
+                                            </select>
+                                            @error('customerName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                        </div>
+
+
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="endClientTimesheetRequired">End Client Time sheet required:</label>
+                                            <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="endClientTimesheetRequired">
+                                                <option style="font-size: 12px;">Select required or not</option>
+                                                <option style="font-size: 12px;" value="Required">Required</option>
+                                                <option style="font-size: 12px;" value="Not required">Not Required</option>
+                                                <!-- Add more options as needed -->
+                                            </select>
+                                            @error('endClientTimesheetRequired') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col p-0">
+                                                <div class="form-group">
+                                                    <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
+                                                    <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
+                                                        <option style="font-size: 12px;">Select Time Sheet Type</option>
+                                                        <option style="font-size: 12px;" value="Weekly">Weekly</option>
+                                                        <option style="font-size: 12px;" value="Semi-Monthly">Semi Monthly</option>
+                                                        <option style="font-size: 12px;" value="Monthly">Monthly</option>
+                                                        <!-- Add more options as needed -->
+                                                    </select>
+                                                    @error('timeSheetType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="toggle-switch">
-                                                            <input wire:change="toggleVendor" type="checkbox" id="toggleSwitchForVendor" wire:model="selectedOptionForPO">
-                                                            <label for="toggleSwitchForVendor"></label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-8">
-                                                        <label for="toggleSwitchForVendor">I have a vendor</label>
-                                                    </div>
+                                            <div class="col">
+                                                <div class="form-group">
+                                                    <label style="font-size: 12px;" for="timeSheetBegins">Time Sheet Begins:</label>
+                                                    <select style="font-size: 12px;" class="form-control" id="timeSheetBegins" wire:model="timeSheetBegins">
+                                                        <option style="font-size: 12px;">Select Time Sheet Begins</option>
+                                                        <option style="font-size: 12px;" value="Mon-Sun">Monday to Sunday</option>
+                                                        <option style="font-size: 12px;" value="Sun-Sat">Sunday to Saturday</option>
+                                                        <option style="font-size: 12px;" value="Sat-Fri">Saturday to Friday</option>
+                                                        <!-- Add more options as needed -->
+                                                    </select>
+                                                    @error('timeSheetBegins') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="invoiceType">Invoice Type:</label>
+                                            <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="invoiceType">
+                                                <option style="font-size: 12px;">Select Invoice Type</option>
+                                                <option style="font-size: 12px;" value="Hourly">Hourly</option>
+                                                <option style="font-size: 12px;" value="Daily">Daily</option>
+                                                <option style="font-size: 12px;" value="Weekly">Weekly</option>
+                                                <option style="font-size: 12px;" value="Monthly">Monthly</option>
+                                                <option style="font-size: 12px;" value="Project">Project-Based</option>
+                                                <option style="font-size: 12px;" value="Custom">Custom</option>
+                                                <!-- Add more options as needed -->
+                                            </select>
+                                            @error('invoiceType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                        </div>
+
+
+                                        <div class="form-group">
+                                            <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                            <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                                <option style="font-size: 12px;">Select payment net terms</option>
+                                                <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                                <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                                <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                                <!-- Add more options as needed -->
+                                            </select>
+                                            @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div style="text-align: center;">
+                                            @if($selectedOptionForPOSO=="true" && $selectedOptionForSOPO=="true")
+                                            @else
+                                            <button style="margin-top: 15px;font-size:12px" type="button" wire:click="saveSalesOrder" class="btn btn-success">Submit Sales Order</button>
+                                            @endif
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+                @endif
+
+            </div>
+            <div class="col-md-6" style="margin: 0;padding:0">
+                @if($selectedOptionForPOSO=="true")
+                <div class="2">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                                <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Purchase Order</b></h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div>
+
+                                    <form>
+                                        @csrf
+
+                                        <div class="row">
+                                            <div class="col">
+
+
+
+                                                <div class="form-group">
+                                                    <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
+                                                    <select wire:change="selectedConsultantPoId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
+                                                        <option style="font-size: 12px;" value="">Select Consultant</option>
+                                                        <option style="font-size: 12px;" value="addConsultant">
+                                                            << Add Consultant>>
+                                                        </option>
+                                                        @foreach($employees as $employee)
+                                                        <option style="font-size: 12px;text-transform: capitalize" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_type }})</option>
+
+                                                        @endforeach
+                                                    </select>
+                                                    @error('consultantName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row mb-2">
+                                                <div class="col p-0">
+                                                    <label style="font-size: 12px;" for="start_date">Start Date:</label>
+                                                    <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
+                                                </div> <br>
+                                                @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                                <div class="col">
+                                                    <label style="font-size: 12px;" for="end_date">End Date:</label>
+                                                    <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
+
+                                                </div> <br>
+                                                @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                            </div>
+
+
+
+                                            <div class="form-group">
+                                                <label style="font-size: 12px;" for="rate">Rate:</label>
+                                                <div class="input-group">
+                                                    <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="ratee">
+                                                    @error('ratee') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+
+                                                    <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="rateTypee">
+                                                        <option style="font-size: 12px;">Select Rate Type</option>
+                                                        <option style="font-size: 12px;" value="Hourly">Per Hour</option>
+                                                        <option style="font-size: 12px;" value="Daily">Per Day</option>
+                                                        <option style="font-size: 12px;" value="Weekly">Per Week</option>
+                                                        <option style="font-size: 12px;" value="Monthly">Per Month</option>
+                                                    </select>
+                                                    @error('rateTypee') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Vendor Name:</label>
+                                                <select wire:change="callVendorForSO" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
+                                                    <option style="font-size: 12px;" value="">Select Vendor</option>
+                                                    <option style="font-size: 12px;" value="addVendor">
+                                                        << Add Vendor>>
+                                                    </option>
+                                                    @foreach($vendors as $vendor)
+                                                    <option style="font-size: 12px;" value="{{ $vendor->vendor_id }}">{{ $vendor->vendor_name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('vendorName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="font-size: 12px;" for="endClientTimesheetRequired">End Client Time sheet required:</label>
+                                                <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="endClientTimesheetRequired">
+                                                    <option style="font-size: 12px;">Select required or not</option>
+                                                    <option style="font-size: 12px;" value="Required">Required</option>
+                                                    <option style="font-size: 12px;" value="Not required">Not Required</option>
+                                                    <!-- Add more options as needed -->
+                                                </select>
+                                                @error('endClientTimesheetRequired') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col p-0">
+                                                    <div class="form-group">
+                                                        <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
+                                                        <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
+                                                            <option style="font-size: 12px;">Select Time Sheet Type</option>
+                                                            <option style="font-size: 12px;" value="Weekly">Weekly</option>
+                                                            <option style="font-size: 12px;" value="Semi-Monthly">Semi Monthly</option>
+                                                            <option style="font-size: 12px;" value="Monthly">Monthly</option>
+                                                            <!-- Add more options as needed -->
+                                                        </select>
+                                                        @error('timeSheetType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group">
+                                                        <label style="font-size: 12px;" for="timeSheetBegins">Time Sheet Begins:</label>
+                                                        <select style="font-size: 12px;" class="form-control" id="timeSheetBegins" wire:model="timeSheetBegins">
+                                                            <option style="font-size: 12px;">Select Time Sheet Begins</option>
+                                                            <option style="font-size: 12px;" value="Mon-Sun">Monday to Sunday</option>
+                                                            <option style="font-size: 12px;" value="Sun-Sat">Sunday to Saturday</option>
+                                                            <option style="font-size: 12px;" value="Sat-Fri">Saturday to Friday</option>
+                                                            <!-- Add more options as needed -->
+                                                        </select>
+                                                        @error('timeSheetBegins') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label style="font-size: 12px;" for="invoiceType">Invoice Type:</label>
+                                                <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="invoiceType">
+                                                    <option style="font-size: 12px;">Select Invoice Type</option>
+                                                    <option style="font-size: 12px;" value="Hourly">Hourly</option>
+                                                    <option style="font-size: 12px;" value="Daily">Daily</option>
+                                                    <option style="font-size: 12px;" value="Weekly">Weekly</option>
+                                                    <option style="font-size: 12px;" value="Monthly">Monthly</option>
+                                                    <option style="font-size: 12px;" value="Project">Project-Based</option>
+                                                    <option style="font-size: 12px;" value="Custom">Custom</option>
+                                                    <!-- Add more options as needed -->
+                                                </select>
+                                                @error('invoiceType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
+                                                <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
+                                                    <option style="font-size: 12px;">Select payment net terms</option>
+                                                    <option style="font-size: 12px;" value="Net 0">Net 0</option>
+                                                    <option style="font-size: 12px;" value="Net 15">Net 15</option>
+                                                    <option style="font-size: 12px;" value="Net 0">Net 30</option>
+                                                    <!-- Add more options as needed -->
+                                                </select>
+                                                @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                            </div>
+                                            <div style="text-align: center;">
+                                                @if($selectedOptionForPOSO=="true" && $selectedOptionForSOPO=="true")
+                                                @else
+                                                <button style="margin-top: 15px;font-size:12px" type="button" wire:click="savePurchaseOrder" class="btn btn-success">Submit Purchase Order</button>
+                                                @endif
+                                            </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="modalBackdrop" class="modal-backdrop fade show"></div>
+                @endif
+            </div>
+
+        </div>
+        <div class="3" style="text-align:center">
+            @if($selectedOptionForPOSO=="true" && $selectedOptionForSOPO=="true")
+            <button style="font-size:12px;margin-bottom:15px" type="button" wire:click="saveSOPO" class="btn btn-success">Submit SOPO</button>
+            @endif
+        </div>
+
+        @endif
+
+        @if($soo=="true")
+        <div class="row">
+            <div style="text-align: end;">
+                <button style="background-color: rgb(2, 17, 79);color:white;border:none;border-radius:5px" wire:click="closeSOO">Close</button>
+            </div>
+            <div class="row" style="text-align: start;margin-top:15px">
+                <div class="col-md-6">
+                    <div class="row" style="text-align: start;">
+                        <div class="col-md-4" style="width:15px;margin-right:50px">
+                            <div class="toggle-switch">
+                                <input wire:change="toggleCustomer" type="checkbox" id="toggleSwitchForCustomer" wire:model="selectedOptionForSO">
+                                <label for="toggleSwitchForCustomer"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label style="font-size: 12px;margin-top:6px" for="toggleSwitchForCustomer">I have a customer</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row" style="text-align: start;">
+                        <div class="col-md-4" style="width:15px;margin-right:50px">
+                            <div class="toggle-switch">
+                                <input wire:change="toggleVendor" type="checkbox" id="toggleSwitchForVendor" wire:model="selectedOptionForPO">
+                                <label for="toggleSwitchForVendor"></label>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <label style="font-size: 12px;margin-top:6px" for="toggleSwitchForVendor">I have a vendor</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6" style="margin: 0;padding:0">
+                @if($so=="true")
+                <div class="1">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
+                                <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Sales Order</b></h5>
+
+                            </div>
+                            <div class="modal-body">
+                                <div>
+                                    <style>
+                                        .form-group {
+                                            margin-bottom: 10px;
+                                        }
+                                    </style>
+                                    <form>
+                                        @csrf
+
+
 
 
 
@@ -875,16 +1265,14 @@
                 @endif
 
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" style="margin: 0;padding:0">
                 @if($vendorForSO=="true")
                 <div class="2">
                     <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content" style="height: 650px;">
+                        <div class="modal-content">
                             <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
                                 <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Purchase Order</b></h5>
-                                <button wire:click="cancelSOVendor" type="button" class="close" style="border:none;margin-right:5px" data-dismiss="modal" aria-label="Close">
-                                    <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
-                                </button>
+
                             </div>
                             <div class="modal-body">
                                 <div>
@@ -1048,9 +1436,9 @@
             </div>
 
         </div>
-        <div class="3" style="text-align:center;margin:0%">
+        <div class="3" style="text-align:center">
             @if($so=="true" && $vendorForSO=="true")
-            <button style="font-size:12px" type="button" wire:click="saveSOPO" class="btn btn-success">Submit SOPO</button>
+            <button style="font-size:12px;margin-bottom:15px" type="button" wire:click="saveSOPO" class="btn btn-success">Submit SOPO</button>
             @endif
         </div>
         @endif
@@ -1060,7 +1448,18 @@
 
 
 
+        <p style="text-align: center;">
+            <button wire:click="$set('activeButton', 'SO')" style="{{ $activeButton === 'SO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
+                View SO's
+            </button>
+            <button wire:click="$set('activeButton', 'PO')" style="{{ $activeButton === 'PO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
+                View PO's
+            </button>
+            <button wire:click="$set('activeButton', 'SOPO')" style="{{ $activeButton === 'SOPO' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 10px; border-radius: 5px; border: none;">
+                View SOPO's
+            </button>
 
+        </p>
         @if($activeButton=="PO")
 
         <!-- resources/views/livewire/purchase-order-table.blade.php -->
@@ -1714,175 +2113,7 @@
         </div>
         @endif
 
-        @if($po=="true")
-        <div id="purchaseOrderModal" class="modal" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;">
 
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;">
-                        <h5 style="padding: 5px; color: white; font-size: 12px;" class="modal-title"><b>ADD Purchase Order</b></h5>
-                        <button wire:click="closePO" type="button" class="close" style="border:none" data-dismiss="modal" aria-label="Close">
-                            <span style="color:rgb(2, 17, 79)" aria-hidden="true" style="color: white;">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div>
-                            <style>
-                                .form-group {
-                                    margin-bottom: 10px;
-                                }
-                            </style>
-                            <form wire:submit.prevent="savePurchaseOrder">
-                                @csrf
-
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="form-group">
-                                            <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Consultant Name:</label>
-                                            <select wire:change="selectedConsultantPoId" style="font-size: 12px;" class="form-control" wire:model="consultantName">
-                                                <option style="font-size: 12px;" value="">Select Consultant</option>
-                                                <option style="font-size: 12px;" value="addConsultant">
-                                                    << Add Consultant>>
-                                                </option>
-                                                @foreach($employees as $employee)
-                                                <option style="font-size: 12px;text-transform: capitalize" value="{{ $employee->emp_id }}">{{ $employee->first_name }} {{ $employee->last_name }} ({{ $employee->employee_type }})</option>
-
-                                                @endforeach
-                                            </select>
-                                            @error('consultantName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row mb-2">
-                                        <div class="col p-0">
-                                            <label style="font-size: 12px;" for="start_date">Start Date:</label>
-                                            <input style="font-size: 12px;" id="startDate" type="text" wire:model="startDate" x-data x-init="initDatepicker($refs.startDate, 'M-d-Y')" x-ref="startDate" class="form-control">
-                                        </div> <br>
-                                        @error('startDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
-                                        <div class="col">
-                                            <label style="font-size: 12px;" for="end_date">End Date:</label>
-                                            <input id="endDate" style="font-size: 12px;" type="text" wire:model="endDate" x-data x-init="initDatepicker($refs.endDate, 'M-d-Y')" x-ref="endDate" class="form-control">
-
-                                        </div> <br>
-                                        @error('endDate') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
-                                    </div>
-
-
-
-                                    <div class="form-group">
-                                        <label style="font-size: 12px;" for="rate">Rate:</label>
-                                        <div class="input-group">
-                                            <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="ratee">
-                                            @error('ratee') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
-                                            <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="rateTypee">
-                                                <option style="font-size: 12px;">Select Rate Type</option>
-                                                <option style="font-size: 12px;" value="Hourly">Per Hour</option>
-                                                <option style="font-size: 12px;" value="Daily">Per Day</option>
-                                                <option style="font-size: 12px;" value="Weekly">Per Week</option>
-                                                <option style="font-size: 12px;" value="Monthly">Per Month</option>
-                                            </select>
-                                            @error('rateTypee') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="font-size: 12px;" for="vendorName" style="font-size: 12px;">Vendor Name:</label>
-                                        <select wire:change="callVendor" style="font-size: 12px;" class="form-control" id="vendorName" wire:model="vendorName">
-                                            <option style="font-size: 12px;" value="">Select Vendor</option>
-                                            <option style="font-size: 12px;" value="addVendor">
-                                                << Add Vendor>>
-                                            </option>
-                                            @foreach($vendors as $vendor)
-                                            <option style="font-size: 12px;" value="{{ $vendor->vendor_id }}">{{ $vendor->vendor_name }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('vendorName') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="font-size: 12px;" for="endClientTimesheetRequired">End Client Time sheet required:</label>
-                                        <select style="font-size: 12px;" class="form-control" id="endClientTimesheetRequired" wire:model="endClientTimesheetRequired">
-                                            <option style="font-size: 12px;">Select required or not</option>
-                                            <option style="font-size: 12px;" value="Required">Required</option>
-                                            <option style="font-size: 12px;" value="Not required">Not Required</option>
-                                            <!-- Add more options as needed -->
-                                        </select>
-                                        @error('endClientTimesheetRequired') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col p-0">
-                                            <div class="form-group">
-                                                <label style="font-size: 12px;" for="timeSheetType">Time Sheet Type:</label>
-                                                <select style="font-size: 12px;" class="form-control" id="timeSheetType" wire:model="timeSheetType">
-                                                    <option style="font-size: 12px;">Select Time Sheet Type</option>
-                                                    <option style="font-size: 12px;" value="Weekly">Weekly</option>
-                                                    <option style="font-size: 12px;" value="Semi-Monthly">Semi Monthly</option>
-                                                    <option style="font-size: 12px;" value="Monthly">Monthly</option>
-                                                    <!-- Add more options as needed -->
-                                                </select>
-                                                @error('timeSheetType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="form-group">
-                                                <label style="font-size: 12px;" for="timeSheetBegins">Time Sheet Begins:</label>
-                                                <select style="font-size: 12px;" class="form-control" id="timeSheetBegins" wire:model="timeSheetBegins">
-                                                    <option style="font-size: 12px;">Select Time Sheet Begins</option>
-                                                    <option style="font-size: 12px;" value="Mon-Sun">Monday to Sunday</option>
-                                                    <option style="font-size: 12px;" value="Sun-Sat">Sunday to Saturday</option>
-                                                    <option style="font-size: 12px;" value="Sat-Fri">Saturday to Friday</option>
-                                                    <!-- Add more options as needed -->
-                                                </select>
-                                                @error('timeSheetBegins') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label style="font-size: 12px;" for="invoiceType">Invoice Type:</label>
-                                        <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="invoiceType">
-                                            <option style="font-size: 12px;">Select Invoice Type</option>
-                                            <option style="font-size: 12px;" value="Hourly">Hourly</option>
-                                            <option style="font-size: 12px;" value="Daily">Daily</option>
-                                            <option style="font-size: 12px;" value="Weekly">Weekly</option>
-                                            <option style="font-size: 12px;" value="Monthly">Monthly</option>
-                                            <option style="font-size: 12px;" value="Project">Project-Based</option>
-                                            <option style="font-size: 12px;" value="Custom">Custom</option>
-                                            <!-- Add more options as needed -->
-                                        </select>
-                                        @error('invoiceType') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label style="font-size: 12px;" for="invoiceType">Payment Net Terms:</label>
-                                        <select style="font-size: 12px;" class="form-control" id="invoiceType" wire:model="paymentTerms">
-                                            <option style="font-size: 12px;">Select payment net terms</option>
-                                            <option style="font-size: 12px;" value="Net 0">Net 0</option>
-                                            <option style="font-size: 12px;" value="Net 15">Net 15</option>
-                                            <option style="font-size: 12px;" value="Net 0">Net 30</option>
-                                            <!-- Add more options as needed -->
-                                        </select>
-                                        @error('paymentTerms') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-                                    </div>
-                                    <div style="text-align: center;">
-                                        <button style="margin-top: 15px;font-size:12px" type="submit" class="btn btn-success">Submit Purchase Order</button>
-                                    </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="modalBackdrop" class="modal-backdrop fade show"></div>
-
-        @endif
 
 
     </body>

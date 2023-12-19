@@ -41,6 +41,12 @@ class TimeSheetDisplay extends Component
     public $hrId;
     public $companyId;
     public $weekData = [];
+    public $filteredPeoples;
+
+
+    public $peopleFound;
+    public $searchTerm;
+
     public function mount()
     {
         // Load existing entries from the database
@@ -59,6 +65,20 @@ class TimeSheetDisplay extends Component
         for ($date = $currentWeekStart; $date->lte($currentWeekEnd); $date->addDay()) {
             $this->currentWeekDates[] = $date->format('Y-m-d');
         }
+        $startDate = Carbon::now()->startOfWeek()->toDateString();
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+        $this->contractorTimeSheetData = TimeSheetEntry::where('time_sheet_entries.status', 'submit')
+            ->join('emp_details', 'time_sheet_entries.emp_id', '=', 'emp_details.emp_id')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
+        $this->contractorTimeSheetData = TimeSheetEntry::where('time_sheet_entries.status', '')
+            ->join('emp_details', 'time_sheet_entries.emp_id', '=', 'emp_details.emp_id')
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])->get();
 
         $this->timeSheetEntries = $existingEntries;
         $this->empDetails = EmpDetails::where('emp_id', $emp_id)->first();
@@ -76,25 +96,16 @@ class TimeSheetDisplay extends Component
         $this->selectedEmployee = EmpDetails::where('emp_id', $empId)->first();
         // dd($this->selectedEmployeeId);
     }
-    public $filteredPeoples;
-    public $peopleFound;
 
-    public $searchTerm;
     public function filter()
     {
-        // Trim the search term to remove leading and trailing spaces
         $trimmedSearchTerm = trim($this->searchTerm);
 
-        // Use Eloquent to filter records based on the search term
         $this->filteredPeoples = EmpDetails::where(function ($query) use ($trimmedSearchTerm) {
-            $query->where('first_name', 'LIKE', '%' . $trimmedSearchTerm . '%')
-                ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%')
-                ->orWhere('status', 'LIKE', '%' . $trimmedSearchTerm . '%');
-        })
-            ->get();
+            $query->where('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
+        })->get();
 
-        // Check if any records were found
-        $this->peopleFound = count($this->filteredPeoples) > 0;
+        $this->timeSheetE = $this->filteredPeoples ?: $this->selectedEmployeeIdForTS;
     }
 
     public function getContractorTimeSheetData()
@@ -151,12 +162,12 @@ class TimeSheetDisplay extends Component
 
         try {
             foreach ($contractorTimeSheetData as $entry) {
-                $entry->status = 'accept';
+                $entry->status = 'approve';
                 // Update the status value to 'approve'
                 $entry->save(); // Save the updated status
             }
 
-            session()->flash('success', 'Status updated successfully from submit to rejected');
+            session()->flash('success', 'Status updated successfully from submit to approved');
         } catch (\Exception $e) {
             // Display the error message for debugging
         }
@@ -265,7 +276,17 @@ class TimeSheetDisplay extends Component
         $emp_id = $user->emp_id;
 
         $this->entries = TimeSheetEntry::where('emp_id', $emp_id)->first();
-        $this->timeSheetE = TimeSheetEntry::all();
+        $startDate = Carbon::now()->startOfWeek()->toDateString(); // Monday
+        $endDate = Carbon::now()->endOfWeek()->toDateString();
+        $this->timeSheetE = TimeSheetEntry::join('emp_details', 'time_sheet_entries.emp_id', '=', 'emp_details.emp_id')
+            ->whereIn('time_sheet_entries.status', ['submit', 'accept'])
+            ->whereRaw("json_unquote(json_extract(day, '$.\"mon\".\"date\"')) BETWEEN ? AND ?", [
+                $startDate,
+                $endDate,
+            ])
+            ->select('time_sheet_entries.emp_id', 'emp_details.first_name', 'emp_details.last_name')
+            ->get();
+
 
         // Check if the entries exist and extract day data to populate weekData
         if ($this->entries) {
@@ -286,6 +307,7 @@ class TimeSheetDisplay extends Component
                 $startDate,
                 $endDate,
             ])->get();
+
 
         // $sqlQuery = $contractorTimeSheetData->toSql();
         // $bindings = $contractorTimeSheetData->getBindings();
@@ -364,7 +386,7 @@ class TimeSheetDisplay extends Component
         $this->timeSheetEntries = TimeSheetEntry::where('emp_id', $empId)
             ->whereIn('day', $flattenedDays)
             ->get();
-
+        $this->timeSheetE = $this->filteredPeoples ?: $this->timeSheetEntries;
         session()->flash('success', 'Working hours updated successfully');
     }
 }
