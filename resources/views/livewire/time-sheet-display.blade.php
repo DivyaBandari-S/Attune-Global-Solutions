@@ -1,16 +1,16 @@
 <div>
-
+ 
     <a class="menu-link {{ Request::is('time-sheet-display') ? 'active' : '' }}" href=/time-sheet-display>
-
+ 
     </a>
     <title>Save Icon Button</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"> <!-- Font Awesome CDN link -->
     <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
-
-
-
+ 
+ 
+ 
     <div class="row" style="margin-top:50px;">
-
+ 
         @if(Auth::guard('hr')->check())
         <div style="margin-top:-10px;text-align:center">
             @if (session()->has('success'))
@@ -27,13 +27,13 @@
             <div class="alert alert-success" style="height:40px;font-size:12px;margin-top:-50px">{{ session('error-h') }}</div>
             @endif
         </div>
-
-
+ 
+ 
         @if ( $contractorTimeSheetData )
-
+ 
         <div class="row" style="width:100%;height:300px;margin-top:-20px">
-
-
+ 
+ 
             <div class="col" style="margin-top: -10px; padding: 0px">
                 <div class="input-group" style="width:23%;margin-left:30px;margin-top:10px">
                     <input wire:model="searchTermm" style="font-size: 11px; width:80%;cursor: pointer; border-radius: 5px 0 0 5px;" type="text" class="form-control" placeholder="Search for" aria-label="Search" aria-describedby="basic-addon1">
@@ -44,7 +44,7 @@
                     </div>
                 </div>
             </div>
-
+ 
             <div class="table-head" style="width:100%;margin-top:5px;text-align:center">
                 <table style="width:100%;margin-left:10px;text-align:center">
                     <thead style="background:rgb(2, 17, 79);width:100%;text-align:center">
@@ -63,11 +63,11 @@
                             <th style="width: 12%;text-align:center">Vendor</th>
                             <th style="width: 6%;text-align:center">Attachment</th>
                             <th style="width: 8%;text-align:center">Status</th>
-
+ 
                         </tr>
                     </thead>
                     <tbody style="justify-content:center">
-
+ 
                         @if($selectedEmployeeIdForTS!=null)
                         @foreach ($searchForStatus as $selectedEmployeeIdForTS)
                         @php
@@ -78,7 +78,7 @@
                         $totalCasualHours = 0;
                         $totalHours = 0;
                         @endphp
-
+ 
                         @php
                         // Calculate total hours for each category and add to the overall total
                         $daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -90,38 +90,38 @@
                         $totalCasualHours += (int)($selectedEmployeeIdForTS->day[$day]['casual'] ?? 0);
                         }
                         $totalHours += $totalRegularHours +$totalSickHours+ $totalHolidayHours+$totalCasualHours+ $totalVacationHours;
-
-
-
+ 
+ 
+ 
                         @endphp
-
+ 
                         <tr style="margin-left:50px;border: 1px solid #dddddd;text-align: center">
                             <td>{{ $selectedEmployeeIdForTS->updated_at->format('M d-Y') }}</td>
                             <td style="padding-left:10px;border: 1px solid #dddddd;width:30px"> {{ $selectedEmployeeIdForTS->employee->first_name ?? '' }}
                                 {{ $selectedEmployeeIdForTS->employee->last_name ?? '' }}
                             </td>
                             <td style="border: 1px solid #dddddd;padding-left:5px">Weekly</td>
-
+ 
                             <td style="border: 1px solid #dddddd;padding-left:10px">
                                 @if(isset($selectedEmployeeIdForTS->day['mon']['date']))
                                 {{ date('M d', strtotime($selectedEmployeeIdForTS->day['mon']['date'])) }}
                                 @endif
-
+ 
                                 @if(isset($selectedEmployeeIdForTS->day['sun']['date']))
                                 to {{ date('M d-Y', strtotime($selectedEmployeeIdForTS->day['sun']['date'])) }}
                                 @endif
                             </td>
-
-
-
-
+ 
+ 
+ 
+ 
                             <td style="border: 1px solid #dddddd;">{{ $totalRegularHours }}</td>
                             <td style="border: 1px solid #dddddd;">{{ $totalSickHours }} </td>
                             <td style="border: 1px solid #dddddd;">{{ $totalHolidayHours }}</td>
                             <td style="border: 1px solid #dddddd;">{{ $totalVacationHours }}</td>
                             <td style="border: 1px solid #dddddd;"> {{ $totalCasualHours }}</td>
                             <td style="border: 1px solid #dddddd;">{{$totalHours}}</td>
-
+ 
                             <td style="border: 1px solid #dddddd;">
                                 @if ($selectedEmployeeIdForTS && $selectedEmployeeIdForTS->sal && $selectedEmployeeIdForTS->sal->cus)
                                 {{ $selectedEmployeeIdForTS->sal->cus->customer_company_name }}
@@ -129,7 +129,7 @@
                                 N/A
                                 @endif
                             </td>
-
+ 
                             <td style="border: 1px solid #dddddd;">
                                 @if ($selectedEmployeeIdForTS && $selectedEmployeeIdForTS->pur && $selectedEmployeeIdForTS->pur->ven)
                                 {{ $selectedEmployeeIdForTS->pur->ven->vendor_name }}
@@ -147,9 +147,9 @@
                                         Approve
                                     </button>
                                 </form>
-
+ 
                                 <!-- Reject button -->
-
+ 
                                 @elseif($selectedEmployeeIdForTS->status == "pending")
                                 <!-- Approve button -->
                                 <form wire:submit.prevent="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
@@ -158,7 +158,7 @@
                                         Approve
                                     </button>
                                 </form>
-
+ 
                                 <!-- Reject button -->
                                 <form wire:submit.prevent="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
                                     @csrf
@@ -166,7 +166,7 @@
                                         Reject
                                     </button>
                                 </form>
-
+ 
                                 <!-- Pending button -->
                                 <form wire:submit.prevent="pendingStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
                                     @csrf
@@ -176,8 +176,8 @@
                                 </form>
                                 @elseif($selectedEmployeeIdForTS->status == "reject")
                                 <!-- Approve button -->
-
-
+ 
+ 
                                 <!-- Reject button -->
                                 <form>
                                     @csrf
@@ -185,8 +185,8 @@
                                         Reject
                                     </button>
                                 </form>
-
-
+ 
+ 
                                 @elseif($selectedEmployeeIdForTS->status == "submit")
                                 <!-- Approve button -->
                                 <form wire:submit.prevent="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
@@ -195,7 +195,7 @@
                                         Approve
                                     </button>
                                 </form>
-
+ 
                                 <!-- Reject button -->
                                 <form wire:submit.prevent="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
                                     @csrf
@@ -203,7 +203,7 @@
                                         Reject
                                     </button>
                                 </form>
-
+ 
                                 <!-- Pending button -->
                                 <form wire:submit.prevent="pendingStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
                                     @csrf
@@ -213,30 +213,30 @@
                                 </form>
                                 @endif
                             </td>
-
-
-
+ 
+ 
+ 
                             </td>
-
+ 
                         </tr>
                         @endforeach
                         @endif
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
                         @endif
             </div>
-
+ 
             </tbody>
             </table>
-
+ 
         </div>
-
-
+ 
+ 
         @else
         <div class="col" style="text-align: center;">
             <button wire:click="$set('tab', 'empInfo')" style="background-color:  rgb(2, 17, 79);color:white;border-radius:5px;border:5px">Employee Info</button>
@@ -244,7 +244,7 @@
         <div class="col">
             <button wire:click="$set('tab', 'timesheet')" style="background-color:  rgb(2, 17, 79);color:white;border-radius:5px;border:5px"> Employee TimeSheet</button>
         </div>
-
+ 
         <div style="margin-top:10px">
             @if (session()->has('success'))
             <div class="alert alert-success" style="margin-left:20px;height:30px;text-align:center;padding:3px;font-size:12px">{{ session('success') }}</div>
@@ -257,18 +257,18 @@
             <div class="alert alert-danger" style="margin-left:20px;height:30px;text-align:center;padding:3px;font-size:12px">{{ session('duplicate') }}</div>
             @endif
         </div>
-
-
+ 
+ 
         @if($tab=="empInfo")
         <div>
             <!DOCTYPE html>
             <html lang="en">
-
+ 
             <head>
                 <meta charset="UTF-8">
                 <title>Employee Information</title>
             </head>
-
+ 
             <body>
                 <div class="container" style="margin-top:40px;">
                     <div class="form-row">
@@ -289,7 +289,7 @@
                                     <option value="11">November</option>
                                     <option value="12">December</option>
                                     <!-- Add options for all months -->
-
+ 
                                 </select>
                             </div>
                             <div class="col">
@@ -303,7 +303,7 @@
                             </div>
                         </div>
                     </div>
-
+ 
                     <h6 style="margin-top: 10px;"><strong>Employee Time Sheet</strong></h6>
                     <table class="table">
                         <thead>
@@ -313,7 +313,7 @@
                                 <th>Company</th>
                                 <th>Week</th>
                                 <th>Month</th>
-
+ 
                                 <th>Time Sheet by Employee</th>
                                 <th>Time Sheet Approved by Manager</th>
                                 <th>Invoice raised (Y/N)</th>
@@ -329,7 +329,7 @@
                                 <td>ABC Company</td>
                                 <td>Week 1</td>
                                 <td>January</td>
-
+ 
                                 <td>Submitted</td>
                                 <td>Approved</td>
                                 <td>Yes</td>
@@ -342,7 +342,7 @@
                                 <td>XYZ Corporation</td>
                                 <td>Week 2</td>
                                 <td>January</td>
-
+ 
                                 <td>Pending</td>
                                 <td>Not Approved</td>
                                 <td>No</td>
@@ -352,24 +352,24 @@
                         </tbody>
                     </table>
                 </div>
-
+ 
             </body>
-
+ 
             </html>
-
+ 
         </div>
         @endif
-
+ 
         @if($tab=="timeSheet")
-
+ 
         <div style="display: flex; align-items: center; margin-left: 40px;margin-top:20px">
-
+ 
             <h6 style="margin-right: 20px;"><strong>Employee Information</strong></h6>
-
+ 
         </div>
-
+ 
         @if ($empDetails && count($empDetails) > 0)
-
+ 
         @foreach ($empDetails as $employee)
         <div class="form-row mb-3" style="margin-left:40px;font-size:12px">
             <div class="col-md-4">
@@ -389,31 +389,31 @@
         @else
         <p>No employee details found</p>
         @endif
-
-
+ 
+ 
         <div style="display: flex; align-items: center; justify-content: space-between;margin-left:690px">
             <div>
                 <!-- Icon for Previous Week -->
                 <button wire:click="previousWeek" style="background: rgb(2, 17, 79)">
                     <i class="fas fa-chevron-left"></i>
                 </button>
-
+ 
                 <!-- Current Week -->
                 <span>{{ $currentWeekStart }} to {{ $currentWeekEnd }}</span>
-
+ 
                 <!-- Icon for Next Week -->
                 <button wire:click="nextWeek" style="background: rgb(2, 17, 79)">
                     <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
-
+ 
             <!-- Dropdown for Selecting Future Dates -->
-
+ 
         </div>
-
-
+ 
+ 
         <div style="display:flex;margin-left:20px;margin-top:10px">
-
+ 
             <?php
             function getCurrentWeekDates()
             {
@@ -425,13 +425,13 @@
             }
             list($startDate, $endDate) = getCurrentWeekDates();
             ?>
-
+ 
         </div>
-
+ 
         <h6 style="margin-left:20px"><strong>Time Sheet Entry</strong></h6>
-
+ 
         <!-- Your Blade view - time-sheet-display.blade.php -->
-
+ 
         <div>
             @php
             $currentWeekDataExists = true;
@@ -445,27 +445,27 @@
                 <thead style="justify-content:center">
                     <tr style="font-size: 12px;justify-content:center">
                         <th style="width: 0px;">Leave</th>
-
-
+ 
+ 
                         @php
                         $startOfWeek = \Carbon\Carbon::parse($currentWeekStart)->startOfWeek(); // Parse and set the start of the current week
                         @endphp
-
+ 
                         @foreach (range(0, 6) as $i)
                         <th style="width: 0px;" class="day-date">{{ $startOfWeek->format('l') }}<br>{{ $startOfWeek->format('d-M-y') }}</th>
                         @php
                         $startOfWeek->addDay();
                         @endphp
                         @endforeach
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
                         <th style="width: 0px;">Total Hours</th>
                     </tr>
                 </thead>
-
+ 
                 <!-- Body -->
                 <tbody>
                     @foreach(['regular', 'sick', 'holiday', 'vacation', 'casual'] as $leaveType)
@@ -476,7 +476,7 @@
                         // Check if any leave type is entered for the same day
                         $isEntered = false;
                         foreach (['regular', 'sick', 'holiday', 'vacation', 'casual'] as $otherLeaveType) {
-
+ 
                         if (isset($weekData[$day][$otherLeaveType]) &&
                         $weekData[$day][$otherLeaveType] !== null &&
                         $weekData[$day][$otherLeaveType] !== 0 &&
@@ -501,11 +501,11 @@
                 <!-- Display a message or handle when there is no data for the current week -->
                 <p>No data available for the current week.</p>
                 @endif
-
+ 
                 @php
                 // Define $leaveTypes with the necessary leave types
                 $leaveTypes = ['regular', 'sick', 'holiday', 'vacation', 'casual']; // Modify this array as needed
-
+ 
                 // Rest of your Blade or PHP code...
                 @endphp
                 <td>
@@ -516,26 +516,26 @@
 }, $weekData)) }}" min="0" max="24" class="form-control" disabled style="width:60px;height:30px; font-size:10px;">
                     </div>
                 </td>
-
+ 
                 <!-- Submit Button -->
-
+ 
                 <form>
                     @csrf
                     <button type="button" wire:click="createTimeSheet" style="background:green;margin-left:40px">Submit</button>
                 </form>
-
+ 
         </div>
-
+ 
         @endif
-
+ 
         <hr style="margin-top: 10px;">
         <h6 style="text-align: start;margin-left:10px"><strong>TimeSheets Info</strong></h6>
-
+ 
         @if ($inEntryTSForC)
         <div class="table-head" style="width:100%;text-align:center">
-
+ 
             <table style="width:100%;margin-left:10px;text-align:center">
-
+ 
                 <thead style="background:rgb(2, 17, 79);width:100%;text-align:center">
                     <tr style="background:rgb(2, 17, 79);color:white;height:30px;text-align:center">
                         <th style=" width: 10%;text-align:center">Date</th>
@@ -552,14 +552,14 @@
                         <th style="width: 12%;text-align:center">Vendor</th>
                         <th style="width: 6%;text-align:center">Attachment</th>
                         <th style="width: 8%;text-align:center">Status</th>
-
+ 
                     </tr>
                 </thead>
-
+ 
                 <tbody style="justify-content:center">
-
-
-
+ 
+ 
+ 
                     @foreach($inEntryTSForC as $entries)
                     @php
                     $totalRegularHours = 0;
@@ -569,7 +569,7 @@
                     $totalCasualHours = 0;
                     $totalHours = 0;
                     @endphp
-
+ 
                     @php
                     // Calculate total hours for each category and add to the overall total
                     $daysOfWeek = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
@@ -587,7 +587,7 @@
                             {{ $entries->updated_at->format('M d-Y') }}
                             @else
                             {{ $entries->created_at->format('M d-Y') }}
-
+ 
                             @endif
                         </td>
                         <td style="padding-left:10px;border: 1px solid #dddddd;width:30px"> {{ $entries->employee->first_name ?? '' }}
@@ -607,16 +607,16 @@
                             Date range not available
                         </td>
                         @endif
-
-
-
+ 
+ 
+ 
                         <td style="border: 1px solid #dddddd;">{{ $totalRegularHours }}</td>
                         <td style="border: 1px solid #dddddd;">{{ $totalSickHours }} </td>
                         <td style="border: 1px solid #dddddd;">{{ $totalHolidayHours }}</td>
                         <td style="border: 1px solid #dddddd;">{{ $totalVacationHours }}</td>
                         <td style="border: 1px solid #dddddd;"> {{ $totalCasualHours }}</td>
                         <td style="border: 1px solid #dddddd;">{{$totalHours}}</td>
-
+ 
                         <td style="border: 1px solid #dddddd;">
                             @if ($entries && $entries->sal && $entries->sal->cus)
                             {{ $entries->sal->cus->customer_company_name }}
@@ -624,7 +624,7 @@
                             N/A
                             @endif
                         </td>
-
+ 
                         <td style="border: 1px solid #dddddd;">
                             @if ($entries && $entries->pur && $entries->pur->ven)
                             {{ $entries->pur->ven->vendor_name }}
@@ -636,29 +636,29 @@
                         <td style="border: 1px solid #dddddd;text-align:center;text-transform:capitalize">
                             {{$entries->status}}
                         </td>
-
-
+ 
+ 
                         </td>
-
+ 
                     </tr>
                     @endforeach
-
-
-
+ 
+ 
+ 
         </div>
         @else
         <div style="text-align: center;margin-top:15px">Not Found</div>
         @endif
-
+ 
         </tbody>
     </div>
     @endif
-
-
-
+ 
+ 
+ 
     <style>
         /* Basic button styles */
-
+ 
         table {
             width: 100%;
             border-collapse: collapse;
@@ -672,53 +672,53 @@
             margin-left: 20px;
             /* Bottom margin */
         }
-
+ 
         th,
         td,tr {
             border: 1px solid #dddddd;
             text-align: center;
-
+ 
             padding: 10px;
             height: 40px;
             width: 50px;
             justify-content: center;
         }
-
+ 
         th {
             border: 1px solid #dddddd;
             text-align: center;
-
+ 
             padding: 10px;
             height: 40px;
             font-weight: bold;
         }
-
+ 
         tr:nth-child(even) {
             border: 1px solid #dddddd;
             height: 40px;
-
+ 
             background-color: #f9f9f9;
         }
-
-
+ 
+ 
         button {
-
+ 
             border: none;
             border-radius: 4px;
             background-color: grey;
             color: white;
             height: 30px;
-
+ 
             font-size: 16px;
             cursor: pointer;
             transition: background-color 0.3s ease;
             position: relative;
         }
-
+ 
         /* Styles for the icon */
         .icon {
             position: absolute;
-
+ 
             top: 50%;
             transform: translateY(-50%);
             width: 16px;
@@ -727,9 +727,9 @@
             /* Replace with your icon image */
             background-size: cover;
             display: inline-block;
-
+ 
         }
-
+ 
         .day-date {
             padding-left: 9px;
             /* Adjust this value to reduce the gap */
@@ -738,10 +738,10 @@
             justify-content: center;
             /* Adjust the font size if needed */
         }
-
-
-
+ 
+ 
+ 
         /* Hover effect */
     </style>
-
+ 
 </div>
