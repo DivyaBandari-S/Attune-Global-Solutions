@@ -6,6 +6,7 @@ use App\Models\CustomerDetails;
 use App\Models\EmpDetails;
 use App\Models\PurchaseOrder;
 use App\Models\SalesOrder;
+use App\Models\SOPO;
 use App\Models\VendorDetails;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -136,7 +137,7 @@ class SalesOrPurchaseOrders extends Component
 
         $companyId = auth()->user()->company_id;
 
-        PurchaseOrder::create([
+        $purchaseOrder = PurchaseOrder::create([
             'company_id' => $companyId,
             'so_number' => $salesOrder->so_number,
             'emp_id' => $this->consultantName,
@@ -151,6 +152,11 @@ class SalesOrPurchaseOrders extends Component
             'time_sheet_begins' => $this->timeSheetBegins,
             'invoice_type' => $this->invoiceType,
             'payment_terms' => $this->paymentTerms,
+        ]);
+        $purchaseOrder->refresh();
+        SOPO::create([
+            'so_number' => $purchaseOrder->so_number,
+            'po_number' => $purchaseOrder->po_number,
         ]);
         $this->soo = false;
         $this->poo = false;
@@ -170,12 +176,14 @@ class SalesOrPurchaseOrders extends Component
         $this->so = true;
         $this->resetFieldsForPo();
     }
-    public function closeSOO(){
-        $this->soo=false;
+    public function closeSOO()
+    {
+        $this->soo = false;
     }
 
-    public function closePOO(){
-        $this->poo=false;
+    public function closePOO()
+    {
+        $this->poo = false;
     }
 
     public function register()
@@ -368,6 +376,7 @@ class SalesOrPurchaseOrders extends Component
 
     public function savePurchaseOrder()
     {
+
         $this->validate([
             'ratee' => 'required',
             'rateTypee' => 'required',
@@ -383,9 +392,10 @@ class SalesOrPurchaseOrders extends Component
             'endDate' => 'required',
         ]);
 
+
         $companyId = auth()->user()->company_id;
 
-        PurchaseOrder::create([
+        $purchaseOrder= PurchaseOrder::create([
             'company_id' => $companyId,
             'so_number' => $this->so_no,
             'emp_id' => $this->consultantName,
@@ -400,6 +410,11 @@ class SalesOrPurchaseOrders extends Component
             'time_sheet_begins' => $this->timeSheetBegins,
             'invoice_type' => $this->invoiceType,
             'payment_terms' => $this->paymentTerms,
+        ]);
+        $purchaseOrder->refresh();
+
+        SOPO::create([
+            'po_number'=>$purchaseOrder->po_number,
         ]);
         session()->flash('purchase-order', 'Purchase order submitted successfully.');
         $this->po = false;
@@ -439,7 +454,7 @@ class SalesOrPurchaseOrders extends Component
 
         $companyId = auth()->user()->company_id;
 
-        SalesOrder::create([
+        $salesOrder=SalesOrder::create([
             'company_id' => $companyId,
             'po_number' => $this->po_no,
             'emp_id' => $this->consultantName,
@@ -455,12 +470,15 @@ class SalesOrPurchaseOrders extends Component
             'invoice_type' => $this->invoiceType,
             'payment_terms' => $this->paymentTerms,
         ]);
+        $salesOrder->refresh();
+        SOPO::create([
+            'so_number'=>$salesOrder->so_number,
+        ]);
         session()->flash('sales-order', 'Sales order submitted successfully.');
 
         $this->customerForPO = false;
         $this->soo = false;
         $this->poo = false;
-      
     }
     public $vendor_profile, $vendor_name, $email, $phone, $vendor_company_name, $address;
     public function addVendors()
@@ -692,20 +710,17 @@ class SalesOrPurchaseOrders extends Component
         $this->showPOLists = PurchaseOrder::with('ven', 'com', 'emp')->where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->vendors = VendorDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
-        $this->sopo = SalesOrder::with('ven', 'com', 'emp')
-            ->join('purchase_orders', 'sales_orders.so_number', '=', 'purchase_orders.so_number')
-            ->join('vendor_details', 'vendor_details.vendor_id', '=', 'purchase_orders.vendor_id')
-            ->where('sales_orders.company_id', $companyId)
-            ->orderBy('sales_orders.created_at', 'desc')
-            ->select(
-                'sales_orders.*', // select all columns from sales_orders
-                'purchase_orders.rate as po_rate', // alias rate from purchase_orders as po_rate
-                'purchase_orders.rate_type as po_rate_type',
-                'purchase_orders.po_number as po_no',
-                'vendor_details.vendor_name as vendor_name',
-                'vendor_details.vendor_name as vendor_name',
-            )
+        $this->sopo = SOPO::with('salesOrder', 'purchaseOrder')
+            ->orWhereHas('salesOrder', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
+            ->orWhereHas('purchaseOrder', function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })
+            ->orderBy('created_at', 'desc')
             ->get();
+
+
 
         return view('livewire.sales-or-purchase-orders');
     }

@@ -25,6 +25,7 @@ use App\Livewire\TimeSheetDisplay;
 use App\Livewire\VendorRegister;
 use App\Livewire\Vendors;
 use App\Livewire\PageTitle;
+use App\Livewire\ProgressBar;
 use App\Models\BillsorInvoices;
 use Illuminate\Support\Facades\Route;
 
@@ -93,9 +94,11 @@ Route::middleware(['checkAuth'])->group(function () {
 //         }
 //     });
 // });
+
  
 Route::middleware(['auth:hr'])->group(function () {
     Route::get('/', HomePage::class)->name('home-page');
+    Route::get('/progress-bar-inside', ProgressBar::class);
     Route::get('/emp-register', EmpRegister::class)->name('emp-register');
     Route::get('/emp-account-details', EmpAccountDetails::class)->name('emp-account-details');
     Route::get('/emp-family-details', EmpFamilyDetails::class)->name('emp-family-details');
@@ -103,8 +106,8 @@ Route::middleware(['auth:hr'])->group(function () {
     Route::get('/contractor-page', ContractorPage::class)->name('contractor-page');
     Route::get('/vendor-page', Vendors::class)->name('vendor-page');
     Route::get('/customers', Customers::class)->name('customer-page');
-    Route::get('/salesOrPurchase', SalesOrPurchaseOrders::class)->name('salesOrPurchase');
-    Route::get('/billsOrInvoices', \App\Livewire\BillsOrInvoices::class)->name('billsOrInvoices');
+    Route::get('/salesOrPurchase', SalesOrPurchaseOrders::class)->name('sales-purchase-orders');
+    Route::get('/billsOrInvoices', \App\Livewire\BillsOrInvoices::class)->name('bills');
     Route::get('/time-sheet-display', TimeSheetDisplay::class)->name('time-sheet-display');
     Route::get('/purchase-order', PurchaseOrder::class)->name('purchase-order');
     Route::get('/employee-list-page', EmployeeListPage::class)->name('employee-list-page');

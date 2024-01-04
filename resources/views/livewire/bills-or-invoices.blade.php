@@ -204,20 +204,20 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-2">
-                                <div class="col p-0">
-                                    <label style="font-size: 12px;" for="start_date">Hours:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
-                                </div> <br>
-                                @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
-                                <div class="col">
-                                    <label style="font-size: 12px;" for="end_date">Days:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="rate">Hours/Days:</label>
+                                <div class="input-group">
+                                    <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="hrs">
+                                    @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
-                                </div> <br>
-                                @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
+                                    <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="days">
+                                        <option style="font-size: 12px;">Select Type</option>
+                                        <option style="font-size: 12px;" value="hours">hours</option>
+                                        <option style="font-size: 12px;" value="days">days</option>
+                                    </select>
+                                    @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                </div>
                             </div>
 
                             <div class="row mb-2">
@@ -378,20 +378,19 @@
                                 </div>
                             </div>
 
-                            <div class="row mb-2">
-                                <div class="col p-0">
-                                    <label style="font-size: 12px;" for="start_date">Hours:</label>
-                                    <input style="font-size: 12px;" id="startDate" type="number" wire:model="hrs" class="form-control">
-                                </div> <br>
-                                @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                            <div class="form-group">
+                                <label style="font-size: 12px;" for="rate">Hours/Days:</label>
+                                <div class="input-group">
+                                    <input style="font-size: 12px;" type="number" class="form-control" id="rate" wire:model="hrs">
+                                    @error('hrs') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
 
-                                <div class="col">
-                                    <label style="font-size: 12px;" for="end_date">Days:</label>
-                                    <input id="endDate" style="font-size: 12px;" type="number" wire:model="days" class="form-control">
-
-                                </div> <br>
-                                @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
-
+                                    <select style="font-size: 12px;" class="form-control" id="rateType" wire:model="days">
+                                        <option style="font-size: 12px;">Select Type</option>
+                                        <option style="font-size: 12px;" value="hours">hours</option>
+                                        <option style="font-size: 12px;" value="days">days</option>
+                                    </select>
+                                    @error('days') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
+                                </div>
                             </div>
 
                             <div class="row mb-2">
@@ -636,6 +635,7 @@
                     <th>Type</th>
                     <th>No</th>
                     <th>Consultant Name</th>
+                    <th>Customer Name</th>
                     <th>Hrs/Days</th>
                     <th>Rate</th>
                     <th>Period</th>
@@ -650,11 +650,12 @@
                     <td>{{ $bill->type }}</td>
                     <td>{{ $bill->invoice_number }}</td>
                     <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                    <td>{{ $bill->customer->customer_company_name }}</td>
                     <td>{{ $bill->hrs_or_days }}</td>
-                    <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
+                    <td>$ {{ number_format($bill->rate, 2) }} / {{ $bill->rate_type }}</td>
                     <td>{{ $bill->period}}</td>
-                    <td>{{ $bill->amount }}</td>
-                    <td>{{ $bill->open_balance }}</td>
+                    <td>$ {{ number_format($bill->amount, 2) }}</td>
+                    <td>$ {{ number_format($bill->open_balance, 2) }}</td>
                 </tr>
                 @empty
                 <tr>
@@ -673,6 +674,7 @@
                     <th>Type</th>
                     <th>No</th>
                     <th>Consultant Name</th>
+                    <th>Vendor Name</th>
                     <th>Hrs/Days</th>
                     <th>Rate</th>
                     <th>Period</th>
@@ -687,11 +689,12 @@
                     <td>{{ $bill->type }}</td>
                     <td>{{ $bill->bill_number }}</td>
                     <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                    <td>{{ $bill->vendor->vendor_name }}</td>
                     <td>{{ $bill->hrs_or_days }}</td>
-                    <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
+                    <td>$ {{ number_format($bill->rate, 2) }} / {{ $bill->rate_type }}</td>
                     <td>{{ $bill->period}}</td>
-                    <td>{{ $bill->amount }}</td>
-                    <td>{{ $bill->open_balance }}</td>
+                    <td>$ {{ number_format($bill->amount, 2) }}</td>
+                    <td>$ {{ number_format($bill->open_balance, 2) }}</td>
                 </tr>
                 @empty
                 <tr>

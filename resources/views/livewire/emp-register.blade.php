@@ -152,6 +152,7 @@ a:hover{
                    <div class="card-header" style="background-color: #00234f;padding:7px;width:35%;margin-left:30%; border-radius:20px;">
                         <h5 class="mb-0" style="text-align: center;color:white;font-size:0.955rem;">Employee Registration Form</h5>
                     </div>
+                  
                     <form wire:submit.prevent="register" enctype="multipart/form-data">
                             <div class="row">
                                <div class="col-md-6" >

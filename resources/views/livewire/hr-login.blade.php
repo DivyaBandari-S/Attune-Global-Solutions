@@ -80,6 +80,8 @@
                     </div>
                     @endif
                     <form wire:submit.prevent="empLogin" class="login-form-with-shadow">
+                    @csrf
+
                         <div class="logo text-center mb-1" style="padding-top: 20px;">
                             <img src="{{asset('/images/CMSLogo.png')}}" alt="Company Logo" width="200" height="100">
                         </div>

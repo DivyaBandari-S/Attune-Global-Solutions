@@ -186,7 +186,7 @@ class BillsOrInvoices extends Component
             'notes' => $this->notes,
             'company_id' => $companyId,
             'open_balance' => $this->open_balance,
-            'hrs_or_days' => $this->hrs . ' hours' . ' - ' . $this->days . ' days'
+            'hrs_or_days' => $this->hrs.' ' . $this->days
 
         ]);
         $this->bill = false;
@@ -270,7 +270,7 @@ class BillsOrInvoices extends Component
             'notes' => $this->notes,
             'company_id' => $companyId,
             'open_balance' => $this->open_balance,
-            'hrs_or_days' => $this->hrs . ' hours' . ' - ' . $this->days . ' days'
+            'hrs_or_days' => $this->hrs. ' ' . $this->days
 
         ]);
         $this->invoice = false;

@@ -1157,7 +1157,7 @@
                                 @error('consultant_name') <span class="error" style="font-size: 12px;">{{ $message }}</span> @enderror
                             </div>
 
-                         
+
 
 
                             <div class="row mb-2">
@@ -1313,7 +1313,7 @@
                 <div wire:click="selectVendor('{{ $vendor->vendor_id }}')" class="container-1" style="margin-bottom:8px; cursor: pointer; background-color: {{ $selectedVendor && $selectedVendor->vendor_id == $vendor->vendor_id ? '#ccc' : 'white' }}; width: 500px; border-radius: 5px;padding:5px">
                     <div class="row align-items-center">
                         <div class="col-md-4">
-                            <h6 class="username" style="font-size: 10px; color: black;">{{ $vendor->vendor_name }}</h6>
+                            <h6 class="username" style="font-size: 10px; color: black;text-transform:capitalize ">{{ $vendor->vendor_name }}</h6>
                         </div>
                         <div class="col-md-4 pe-0">
                             <h6 class="username" style="font-size: 8px; color: black; word-break: break-all;">{{ $vendor->phone_number }}</h6>
@@ -1358,6 +1358,7 @@
             <!-- resources/views/livewire/purchase-order-table.blade.php -->
 
             <div class="table-responsive">
+                @if($showPOLists)
                 <table class="table">
                     <thead>
                         <tr>
@@ -1382,7 +1383,7 @@
                             <td>{{ $salesOrder->po_number }}</td>
                             <td>{{ $salesOrder->ven->vendor_name }}</td>
                             <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                            <td>{{ $salesOrder->rate }} / {{ $salesOrder->rate_type }}</td>
+                            <td>$ {{ number_format($salesOrder->rate, 2) }} / {{ $salesOrder->rate_type }}</td>
                             <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
                             <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                             <td>{{ $salesOrder->time_sheet_type }}</td>
@@ -1397,10 +1398,52 @@
 
                     </tbody>
                 </table>
+                @else
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>PO Number</th>
+                            <th>Vendor Name</th>
+                            <th>Consultant Name</th>
+                            <th>Rate</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Time Sheet Type</th>
+                            <th>Invoice Type</th>
+                            <th>Payment Terms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($showPOListFirst)
+                        <tr>
+                            <td>{{ $showPOListFirst->created_at->format('M-d-Y') }}</td>
+                            <td>PO</td>
+                            <td>{{ $showPOListFirst->po_number }}</td>
+                            <td>{{ $showPOListFirst->ven->vendor_name }}</td>
+                            <td>{{ $showPOListFirst->emp->first_name }} {{ $showPOListFirst->emp->last_name }}</td>
+                            <td>$ {{ number_format($showPOListFirst->rate, 2) }} / {{ $showPOListFirst->rate_type }}</td>
+                            <td>{{ \Carbon\Carbon::parse($showPOListFirst->start_date)->format('M-d-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($showPOListFirst->end_date)->format('M-d-Y') }}</td>
+                            <td>{{ $showPOListFirst->time_sheet_type }}</td>
+                            <td>{{ $showPOListFirst->invoice_type }}</td>
+                            <td>{{ $showPOListFirst->payment_terms }}</td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="11" style="text-align: center;">PurchaseOrders Not Found</td>
+                        </tr>
+                        @endif
+
+                    </tbody>
+                </table>
+                @endif
             </div>
             @endif
 
             @if($activeButton=="Bills")
+            @if($bills)
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -1409,6 +1452,7 @@
                             <th>Type</th>
                             <th>No</th>
                             <th>Consultant Name</th>
+                            <th>Vendor Name</th>
                             <th>Hrs/Days</th>
                             <th>Rate</th>
                             <th>Period</th>
@@ -1423,21 +1467,61 @@
                             <td>{{ $bill->type }}</td>
                             <td>{{ $bill->bill_number }}</td>
                             <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                            <td>{{ $bill->vendor->vendor_name }}</td>
                             <td>{{ $bill->hrs_or_days }}</td>
-                            <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
+                            <td>$ {{ number_format($bill->rate, 2) }} / {{ $bill->rate_type }}</td>
                             <td>{{ $bill->period}}</td>
-                            <td>{{ $bill->amount }}</td>
-                            <td>{{ $bill->open_balance }}</td>
+                            <td>$ {{ number_format($bill->amount, 2) }}</td>
+                            <td>$ {{ number_format($bill->open_balance, 2) }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="9" style="text-align: center;">Bills Not Found</td>
+                            <td colspan="10" style="text-align: center;">Bills Not Found</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
+            @else
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Vendor Name</th>
+                            <th>Hrs/Days</th>
+                            <th>Rate</th>
+                            <th>Period</th>
+                            <th>Amount</th>
+                            <th>Open Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($billss)
+                        <tr>
+                            <td>{{ $billss->created_at->format('M-d-Y') }}</td>
+                            <td>{{ $billss->type }}</td>
+                            <td>{{ $billss->bill_number }}</td>
+                            <td>{{ $billss->emp->first_name }} {{ $billss->emp->last_name }}</td>
+                            <td>{{ $billss->vendor->vendor_name }}</td>
+                            <td>{{ $billss->hrs_or_days }}</td>
+                            <td>$ {{ number_format($billss->rate, 2) }} / {{ $billss->rate_type }}</td>
+                            <td>{{ $billss->period}}</td>
+                            <td>$ {{ number_format($billss->amount, 2) }}</td>
+                            <td>$ {{ number_format($billss->open_balance, 2) }}</td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="10" style="text-align: center;">Bills Not Found</td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            @endif
             @endif
 
 

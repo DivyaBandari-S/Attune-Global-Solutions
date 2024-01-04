@@ -657,7 +657,7 @@
 
         @if($poo=="true")
         <div class="row">
-        <div style="text-align: end;">
+            <div style="text-align: end;">
                 <button style="background-color: rgb(2, 17, 79);color:white;border:none;border-radius:5px" wire:click="closePOO">Close</button>
             </div>
             <div class="row" style="text-align: start;margin-top:15px">
@@ -1520,7 +1520,7 @@
                         <td>{{ $salesOrder->po_number }}</td>
                         <td>{{ $salesOrder->ven->vendor_name }}</td>
                         <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                        <td>{{ $salesOrder->rate }} / {{ $salesOrder->rate_type }}</td>
+                        <td>$ {{ number_format($salesOrder->rate, 2) }} / {{ $salesOrder->rate_type }}</td>
                         <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                         <td>{{ $salesOrder->time_sheet_type }}</td>
@@ -2006,9 +2006,9 @@
                         <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
                         <td>SO</td>
                         <td>{{ $salesOrder->so_number }}</td>
-                        <td>{{ $salesOrder->cus->customer_company_name }}</td>
+                        <td style="text-transform: capitalize;">{{ $salesOrder->cus->customer_company_name }}</td>
                         <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                        <td>{{ $salesOrder->rate }} / {{ $salesOrder->rate_type }}</td>
+                        <td>$ {{ number_format($salesOrder->rate, 2) }} / {{ $salesOrder->rate_type }}</td>
                         <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
                         <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                         <td>{{ $salesOrder->time_sheet_type }}</td>
@@ -2069,6 +2069,7 @@
                     <tr>
                         <th>Date</th>
                         <th>Type</th>
+                        <th>SOPO Number</th>
                         <th>SO Number</th>
                         <th>Customer Name</th>
                         <th>Consultant Name</th>
@@ -2088,23 +2089,83 @@
                     <tr>
                         <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
                         <td>SOPO</td>
-                        <td>{{ $salesOrder->so_number }}</td>
-                        <td>{{ $salesOrder->cus->customer_company_name }}</td>
-                        <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                        <td>{{ $salesOrder->rate }} / {{ $salesOrder->rate_type }}</td>
-                        <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
-                        <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
-                        <td>{{ $salesOrder->time_sheet_type }}</td>
-                        <td>{{ $salesOrder->invoice_type }}</td>
-                        <td>{{ $salesOrder->payment_terms }}</td>
-                        <td>{{ $salesOrder->po_no }}</td>
-                        <td>{{$salesOrder->vendor_name}}
+                        <td>{{ $salesOrder->sopo_number }}</td>
+                        <td>@if($salesOrder->so_number)
+                            {{ $salesOrder->so_number }}
+                            @else
+                            --
+                            @endif
                         </td>
-                        <td>{{ $salesOrder->po_rate }} / {{$salesOrder->po_rate_type}}</td>
+                        <td style="text-transform: capitalize;">@if($salesOrder->salesOrder)
+                            {{ $salesOrder->salesOrder->cus->customer_company_name }}
+                            @else
+                            --
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ $salesOrder->salesOrder->emp->first_name }} {{ $salesOrder->salesOrder->emp->last_name }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ $salesOrder->purchaseOrder->emp->first_name }} {{ $salesOrder->purchaseOrder->emp->last_name }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            $ {{ number_format($salesOrder->salesOrder->rate, 2) }} / {{ $salesOrder->salesOrder->rate_type }}
+                            @else
+                            --
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ \Carbon\Carbon::parse($salesOrder->salesOrder->start_date)->format('M-d-Y') }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ \Carbon\Carbon::parse($salesOrder->purchaseOrder->start_date)->format('M-d-Y') }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ \Carbon\Carbon::parse($salesOrder->salesOrder->end_date)->format('M-d-Y') }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ \Carbon\Carbon::parse($salesOrder->purchaseOrder->end_date)->format('M-d-Y') }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ $salesOrder->salesOrder->time_sheet_type }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ $salesOrder->purchaseOrder->time_sheet_type }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ $salesOrder->salesOrder->invoice_type }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ $salesOrder->purchaseOrder->invoice_type }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->salesOrder)
+                            {{ $salesOrder->salesOrder->payment_terms }}
+                            @elseif($salesOrder->purchaseOrder)
+                            {{ $salesOrder->purchaseOrder->payment_terms }}
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->po_number)
+                            {{ $salesOrder->po_number }}
+                            @else
+                            --
+                            @endif
+                        </td>
+                        <td>
+                            @if($salesOrder->purchaseOrder)
+                            {{ $salesOrder->purchaseOrder->ven->vendor_name }}
+                            @else
+                            --
+                            @endif
+                        </td>
+                        <td>@if($salesOrder->purchaseOrder)
+                            $ {{ number_format($salesOrder->purchaseOrder->rate, 2) }} / {{ $salesOrder->purchaseOrder->rate_type }}
+                            @else
+                            --
+                            @endif</td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="11" style="text-align: center;">SalesOrders Not Found</td>
+                        <td colspan="11" style="text-align: center;">SOPO's Not Found</td>
                     </tr>
                     @endforelse
 

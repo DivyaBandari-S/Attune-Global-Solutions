@@ -1173,7 +1173,7 @@
                             </div>
 
 
-                           
+
 
                             <div class="row mb-2">
                                 <div class="col p-0">
@@ -1339,7 +1339,7 @@
                 <div wire:click="selectCustomer('{{ $customer->customer_id }}')" class="container-11" style="margin-bottom:8px;cursor: pointer; background-color: {{ $selectedCustomer && $selectedCustomer->customer_id == $customer->customer_id ? '#ccc' : 'white' }}; width: 500px; border-radius: 5px;padding:5px;">
                     <div class="row align-items-center">
                         <div class="col-md-4">
-                            <h6 class="username" style="font-size: 10px; color: black;">{{ $customer->customer_company_name }}</h6>
+                            <h6 class="username" style="font-size: 10px; color: black;text-transform:capitalize">{{ $customer->customer_company_name }}</h6>
                         </div>
                         <div class="col-md-4 pe-0">
                             <h6 class="username" style="font-size: 8px; color: black;">{{ $customer->phone }}</h6>
@@ -1361,7 +1361,7 @@
             $selectedPerson = $selectedCustomer ?? $customers->first();
             $isActive = $selectedPerson->status == 'active';
             @endphp
-            <div style="text-align: start;" class="p-2">
+            <div style="text-align: start;margin-bottom:0%" class="p-2">
                 <button class="p-2 mb-2" wire:click="showInvoices('{{$selectedPerson->customer_id}}')" style="{{ $activeButton === 'Invoices' ? 'background-color: rgb(2, 17, 79); color: white;' : 'background-color: grey; color: white;' }} margin-right: 5px; border-radius: 5px; border: none;">
                     Invoices & Payments
                 </button>
@@ -1384,7 +1384,7 @@
             @if($activeButton=="SO")
 
             <!-- resources/views/livewire/purchase-order-table.blade.php -->
-
+            @if($showSOLists)
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -1408,9 +1408,9 @@
                             <td>{{ $salesOrder->created_at->format('M-d-Y') }}</td>
                             <td>SO</td>
                             <td>{{ $salesOrder->so_number }}</td>
-                            <td>{{ $salesOrder->cus->customer_company_name }}</td>
+                            <td style="text-transform: capitalize;">{{ $salesOrder->cus->customer_company_name }}</td>
                             <td>{{ $salesOrder->emp->first_name }} {{ $salesOrder->emp->last_name }}</td>
-                            <td>{{ $salesOrder->rate }} / {{ $salesOrder->rate_type }}</td>
+                            <td>$ {{ number_format($salesOrder->rate, 2) }} / {{ $salesOrder->rate_type }}</td>
                             <td>{{ \Carbon\Carbon::parse($salesOrder->start_date)->format('M-d-Y') }}</td>
                             <td>{{ \Carbon\Carbon::parse($salesOrder->end_date)->format('M-d-Y') }}</td>
                             <td>{{ $salesOrder->time_sheet_type }}</td>
@@ -1426,8 +1426,53 @@
                     </tbody>
                 </table>
             </div>
+            @else
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>SO Number</th>
+                            <th>Customer Name</th>
+                            <th>Consultant Name</th>
+                            <th>Bill Rate</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Time Sheet Type</th>
+                            <th>Invoice Type</th>
+                            <th>Payment Terms</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($showSOListFirst)
+                        <tr>
+                            <td>{{ $showSOListFirst->created_at->format('M-d-Y') }}</td>
+                            <td>SO</td>
+                            <td>{{ $showSOListFirst->so_number }}</td>
+                            <td>{{ $showSOListFirst->cus->customer_company_name }}</td>
+                            <td>{{ $showSOListFirst->emp->first_name }} {{ $showSOListFirst->emp->last_name }}</td>
+                            <td>$ {{ number_format($showSOListFirst->rate, 2) }} / {{ $showSOListFirst->rate_type }}</td>
+                            <td>{{ \Carbon\Carbon::parse($showSOListFirst->start_date)->format('M-d-Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($showSOListFirst->end_date)->format('M-d-Y') }}</td>
+                            <td>{{ $showSOListFirst->time_sheet_type }}</td>
+                            <td>{{ $showSOListFirst->invoice_type }}</td>
+                            <td>{{ $showSOListFirst->payment_terms }}</td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="11" style="text-align: center;">SalesOrders Not Found</td>
+                        </tr>
+                        @endif
+
+                    </tbody>
+                </table>
+            </div>
+
+            @endif
             @endif
             @if($activeButton=="Invoices")
+            @if($invoices)
             <div class="table-responsive">
                 <table class="table">
                     <thead>
@@ -1436,6 +1481,7 @@
                             <th>Type</th>
                             <th>No</th>
                             <th>Consultant Name</th>
+                            <th>Customer Name</th>
                             <th>Hrs/Days</th>
                             <th>Rate</th>
                             <th>Period</th>
@@ -1450,20 +1496,61 @@
                             <td>{{ $bill->type }}</td>
                             <td>{{ $bill->invoice_number }}</td>
                             <td>{{ $bill->emp->first_name }} {{ $bill->emp->last_name }}</td>
+                            <td>{{ $bill->customer->customer_company_name }}</td>
                             <td>{{ $bill->hrs_or_days }}</td>
-                            <td>{{ $bill->rate }} / {{ $bill->rate_type }}</td>
+                            <td>$ {{ number_format($bill->rate, 2) }} / {{ $bill->rate_type }}</td>
                             <td>{{ $bill->period}}</td>
-                            <td>{{ $bill->amount }}</td>
-                            <td>{{ $bill->open_balance }}</td>
+                            <td>$ {{ number_format($bill->amount, 2) }}</td>
+                            <td>$ {{ number_format($bill->open_balance, 2) }}</td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="9" style="text-align: center;">Invoices Not Found</td>
+                            <td colspan="10" style="text-align: center;">Invoices Not Found</td>
                         </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+            @else
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>No</th>
+                            <th>Consultant Name</th>
+                            <th>Customer Name</th>
+                            <th>Hrs/Days</th>
+                            <th>Rate</th>
+                            <th>Period</th>
+                            <th>Amount</th>
+                            <th>Open Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if($invoicess)
+                        <tr>
+                            <td>{{ $invoicess->created_at->format('M-d-Y') }}</td>
+                            <td>{{ $invoicess->type }}</td>
+                            <td>{{ $invoicess->invoice_number }}</td>
+                            <td>{{ $invoicess->emp->first_name }} {{ $invoicess->emp->last_name }}</td>
+                            <td>{{ $invoicess->customer->customer_company_name }}</td>
+                            <td>{{ $invoicess->hrs_or_days }}</td>
+                            <td>$ {{ number_format($invoicess->rate, 2) }} / {{ $invoicess->rate_type }}</td>
+                            <td>{{ $invoicess->period}}</td>
+                            <td>$ {{ number_format($invoicess->amount, 2) }}</td>
+                            <td>$ {{ number_format($invoicess->open_balance, 2) }}</td>
+                        </tr>
+                        @else
+                        <tr>
+                            <td colspan="10" style="text-align: center;">Invoices Not Found</td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            @endif
             @endif
 
         </div>

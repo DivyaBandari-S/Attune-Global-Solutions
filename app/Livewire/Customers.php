@@ -45,7 +45,7 @@ class Customers extends Component
         $this->selectedDate = date('m-d-Y', strtotime($this->selectedDate));
     }
 
-       public $selectedCustomer;
+    public $selectedCustomer;
     public $customerId;
     public $soList = false;
     public $showSOLists;
@@ -55,7 +55,7 @@ class Customers extends Component
     public $first_name;
     public $last_name;
     public $date_of_birth;
-    public $gender ='Male';
+    public $gender = 'Male';
     public $company_email;
     public $mobile_number;
     public $alternate_mobile_number;
@@ -68,17 +68,17 @@ class Customers extends Component
     public $department;
     public $manager_id;
     public $report_to;
-    public $employee_status ='active';
+    public $employee_status = 'active';
     public $emergency_contact;
     public $password;
     public $image;
     public $blood_group;
     public $nationality;
     public $religion;
-    public $marital_status ='unmarried';
+    public $marital_status = 'unmarried';
     public $spouse;
     public $physically_challenge = 'No';
-    public $inter_emp ='no';
+    public $inter_emp = 'no';
     public $job_location;
     public $education;
     public $experience;
@@ -108,7 +108,7 @@ class Customers extends Component
     {
         $this->showSpouseField = $this->marital_status === 'married';
     }
-    
+
     public function regOpen()
     {
         $this->so = false;
@@ -118,11 +118,12 @@ class Customers extends Component
     public function regClose()
     {
         $this->regForm = false;
-        $this->so=true;
+        $this->so = true;
         $this->resetFieldsForSo();
     }
-    
-    public function register(){
+
+    public function register()
+    {
         $this->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -148,10 +149,10 @@ class Customers extends Component
             'contractor_company_id' => $this->employee_type == 'contract' ? 'required|string|max:255' : '', // Add this line
         ]);
 
-       $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
-     
-       
-         EmpDetails::create([
+        $contractorCompanyId = $this->employee_type == 'contract' ? $this->contractor_company_id : null;
+
+
+        EmpDetails::create([
 
             'emp_id' => $this->emp_id,
             'first_name' => $this->first_name,
@@ -200,7 +201,7 @@ class Customers extends Component
             'is_starred' => $this->is_starred,
             'skill_set' => $this->skill_set,
             'contractor_company_id' => $contractorCompanyId,
-           ]);
+        ]);
 
         session()->flash('emp_success', 'Employee registered successfully!');
 
@@ -208,7 +209,6 @@ class Customers extends Component
         $this->reset();
         $this->regForm = false;
         $this->so = true;
-
     }
 
     public function updateAndShowSoList($customerId)
@@ -220,8 +220,8 @@ class Customers extends Component
     public function showInvoices($customerId)
     {
         $companyId = auth()->user()->company_id;
+        $this->activeButton="Invoices";
 
-        $this->activeButton = 'Invoices';
         $this->invoices = Invoice::with('customer', 'company')->where('company_id', $companyId)->where('customer_id', $customerId)->orderBy('created_at', 'desc')->get();
     }
     public function showSoList($customerId)
@@ -278,7 +278,7 @@ class Customers extends Component
             'start_date' => $this->startDate,
             'end_date' => $this->endDate,
             'rate' => $this->rate,
-            'rate_type'=>$this->rateType,
+            'rate_type' => $this->rateType,
             'end_client_timesheet_required' => $this->endClientTimesheetRequired,
             'time_sheet_type' => $this->timeSheetType,
             'time_sheet_begins' => $this->timeSheetBegins,
@@ -291,7 +291,11 @@ class Customers extends Component
     }
     public function selectCustomer($customerId)
     {
+        $companyId = auth()->user()->company_id;
         $this->selectedCustomer = CustomerDetails::where('customer_id', $customerId)->first();
+        $this->invoices = Invoice::with('customer', 'company')->where('company_id', $companyId)->where('customer_id', $customerId)->orderBy('created_at', 'desc')->get();
+        $this->showSOLists = SalesOrder::with('cus', 'com', 'emp')->where('company_id', $companyId)->where('customer_id', $customerId)->orderBy('created_at', 'desc')->get();
+
     }
 
     public $filteredPeoples;
@@ -394,7 +398,7 @@ class Customers extends Component
     }
 
     public $edit = false;
-    public $activeButton = 'EmailActivities';
+    public $activeButton = 'Invoices';
 
 
     public $selectedCustomerId;
@@ -478,8 +482,8 @@ class Customers extends Component
     public function selectedConsultantId()
     {
         if ($this->consultant_name === 'addConsultant') {
-            $this->regForm=true;
-            $this->so=false;
+            $this->regForm = true;
+            $this->so = false;
         }
 
         $selectedConsultantId = $this->employees->firstWhere('emp_id', $this->consultant_name);
@@ -489,9 +493,9 @@ class Customers extends Component
     public function callCustomer()
     {
         if ($this->customerName === 'AddCustomer') {
-          
+
             $this->customer = true;
-            $this->so=false;
+            $this->so = false;
         }
     }
     public $customer = false;
@@ -505,13 +509,18 @@ class Customers extends Component
     {
         $this->customer = true;
     }
+    public $invoicess, $customerFirst,$showSOListFirst;
     public function render()
     {
         $companyId = auth()->user()->company_id;
+        $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+        $this->customerFirst = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->first();
+        $this->invoicess = Invoice::with('customer', 'company')->where('company_id', $companyId)->where('customer_id', $this->customerFirst->customer_id)->first();
+        $this->showSOListFirst = SalesOrder::with('cus', 'com', 'emp')->where('company_id', $companyId)->where('customer_id', $this->customerFirst->customer_id)->first();
 
         $this->vendors = VendorDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
         $this->employees = EmpDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
-        $this->customers = CustomerDetails::where('company_id', $companyId)->orderBy('created_at', 'desc')->get();
+
         $this->allCustomers = $this->filteredPeoples ?: $this->customers;
         return view('livewire.customers');
     }
