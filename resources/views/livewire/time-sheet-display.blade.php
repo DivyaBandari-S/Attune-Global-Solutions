@@ -29,7 +29,7 @@
         </div>
  
  
-        @if ( $contractorTimeSheetData )
+        @if ($contractorTimeSheetData)
  
         <div class="row" style="width:100%;height:300px;margin-top:-20px">
  
@@ -140,74 +140,72 @@
                             <td style="border: 1px solid #dddddd;">--</td>
                             <td style="border: 1px solid #dddddd;">
                                 @if($selectedEmployeeIdForTS->status == "approve")
-                                <!-- Approve button -->
-                                <form wire:submit.prevent="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
+                                <form>
                                     @csrf
-                                    <button type="submit" disabled style="background: lightslategray; width: 60px; height: 20px; font-size: 12px;margin-top:5px">
+                                    <button type="button" disabled style="background: lightgrey; width: 60px; height: 20px; font-size: 12px;margin-top:5px">
                                         Approve
                                     </button>
                                 </form>
  
-                                <!-- Reject button -->
  
                                 @elseif($selectedEmployeeIdForTS->status == "pending")
-                                <!-- Approve button -->
-                                <form wire:submit.prevent="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
+                               
+                                <form>
                                     @csrf
-                                    <button type="submit" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:5px">
+                                    <button type="button" wire:click="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}','{{$selectedEmployeeIdForTS->created_at}}')" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:5px">
                                         Approve
                                     </button>
                                 </form>
- 
-                                <!-- Reject button -->
-                                <form wire:submit.prevent="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
-                                    @csrf
-                                    <button type="submit" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:10px">
-                                        Reject
-                                    </button>
-                                </form>
- 
-                                <!-- Pending button -->
-                                <form wire:submit.prevent="pendingStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
-                                    @csrf
-                                    <button type="submit" disabled style="background: lightslategray; width: 60px; height: 20px; font-size: 12px;margin-top:10px">
-                                        Pending
-                                    </button>
-                                </form>
-                                @elseif($selectedEmployeeIdForTS->status == "reject")
-                                <!-- Approve button -->
- 
  
                                 <!-- Reject button -->
                                 <form>
                                     @csrf
-                                    <button type="submit" disabled style="background: lightslategray; width: 60px; height: 20px; font-size: 12px;margin-top:10px">
-                                        Reject
-                                    </button>
-                                </form>
- 
- 
-                                @elseif($selectedEmployeeIdForTS->status == "submit")
-                                <!-- Approve button -->
-                                <form wire:submit.prevent="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
-                                    @csrf
-                                    <button type="submit" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:5px">
-                                        Approve
-                                    </button>
-                                </form>
- 
-                                <!-- Reject button -->
-                                <form wire:submit.prevent="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
-                                    @csrf
-                                    <button type="submit" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:10px">
+                                    <button type="button" wire:click="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:10px">
                                         Reject
                                     </button>
                                 </form>
  
                                 <!-- Pending button -->
-                                <form wire:submit.prevent="pendingStatus('{{$selectedEmployeeIdForTS->emp_id}}')" wire:loading.attr="disabled" :disabled="$isButtonDisabled">
+                                <form>
                                     @csrf
-                                    <button type="submit" style="background: lightslategray; width: 60px; height: 20px; font-size: 12px;margin-top:10px">
+                                    <button type="button" disabled  style="background: lightgrey; width: 60px; height: 20px; font-size: 12px;margin-top:10px">
+                                        Pending
+                                    </button>
+                                </form>
+                                @elseif($selectedEmployeeIdForTS->status == "reject")
+                           
+ 
+                                <!-- Reject button -->
+                                <form>
+                                    @csrf
+                                    <button disabled type="button" style="background:lightgrey; width: 60px; height: 20px; font-size: 12px;margin-top:10px">
+                                        Reject
+                                    </button>
+                                </form>
+ 
+                                <!-- Pending button -->
+                               
+                                @elseif($selectedEmployeeIdForTS->status == "Submit")
+                                <!-- Approve button -->
+                                <form>
+                                    @csrf
+                                    <button type="button" wire:click="approveStatus('{{$selectedEmployeeIdForTS->emp_id}}')" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:5px">
+                                        Approve
+                                    </button>
+                                </form>
+ 
+                                <!-- Reject button -->
+                                <form>
+                                    @csrf
+                                    <button type="button" wire:click="rejectStatus('{{$selectedEmployeeIdForTS->emp_id}}')" style="background: rgb(2, 17, 79); width: 60px; height: 20px; font-size: 12px;margin-top:10px">
+                                        Reject
+                                    </button>
+                                </form>
+ 
+                                <!-- Pending button -->
+                                <form>
+                                    @csrf
+                                    <button type="button" wire:click="pendingStatus('{{$selectedEmployeeIdForTS->emp_id}}')" style="background: rgb(2,17,79); width: 60px; height: 20px; font-size: 12px;margin-top:10px">
                                         Pending
                                     </button>
                                 </form>
@@ -304,7 +302,7 @@
                         </div>
                     </div>
  
-                    <h6 style="margin-top: 10px;"><strong>Employee Time Sheet</strong></h6>
+                    <h2>Employee Time Sheet</h2>
                     <table class="table">
                         <thead>
                             <tr>
@@ -364,7 +362,7 @@
  
         <div style="display: flex; align-items: center; margin-left: 40px;margin-top:20px">
  
-            <h6 style="margin-right: 20px;"><strong>Employee Information</strong></h6>
+            <h4 style="margin-right: 20px;">Employee Information</h4>
  
         </div>
  
@@ -467,16 +465,15 @@
                 </thead>
  
                 <!-- Body -->
-                <tbody>
+                <tbody style="justify-content:center">
                     @foreach(['regular', 'sick', 'holiday', 'vacation', 'casual'] as $leaveType)
-                    <tr>
-                        <td style="margin-left:15px"><strong>{{ ucfirst($leaveType) }}</strong></td>
+                    <tr style="justify-content:center">
+                        <td style="margin-left:15px;justify-content:center"><strong>{{ ucfirst($leaveType) }}</strong></td>
                         @foreach(['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'] as $day)
                         @php
                         // Check if any leave type is entered for the same day
                         $isEntered = false;
                         foreach (['regular', 'sick', 'holiday', 'vacation', 'casual'] as $otherLeaveType) {
- 
                         if (isset($weekData[$day][$otherLeaveType]) &&
                         $weekData[$day][$otherLeaveType] !== null &&
                         $weekData[$day][$otherLeaveType] !== 0 &&
@@ -486,16 +483,18 @@
                         }
                         }
                         @endphp
-                        <td >
-                            <input wire:model="weekData.{{ $day }}.{{ $leaveType }}" wire:change="totalHours" type="number" name="{{ $leaveType }}_{{ $day }}_{{ $leaveType }}" min="0" max="24" placeholder="0" class="form-control" style="width: 50px; font-size: 10px;" @if($isEntered) readonly @endif>
+                        <td style="text-align:center;">
+                            <input wire:model="weekData.{{ $day }}.{{ $leaveType }}" wire:change="totalHours" type="number" name="{{ $leaveType }}_{{ $day }}_{{ $leaveType }}" min="0" max="24" placeholder="0" class="form-control" style="width: 50px; font-size: 10px; text-align:center;" @if($isEntered) readonly @endif>
                         </td>
                         @endforeach
-                        <td>
-                            <input type="number" value="{{ array_sum(array_column($weekData, $leaveType)) }}" min="0" max="24" class="form-control" disabled style="width:60px; font-size:10px;">
+                        <td style="text-align:center;">
+                            <input type="number" value="{{ array_sum(array_column($weekData, $leaveType)) }}" min="0" max="24" class="form-control" disabled style="width:60px; font-size:10px; text-align:center;">
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
+ 
+ 
                 </table>
                 @else
                 <!-- Display a message or handle when there is no data for the current week -->
@@ -528,9 +527,6 @@
  
         @endif
  
-        <hr style="margin-top: 10px;">
-        <h6 style="text-align: start;margin-left:10px"><strong>TimeSheets Info</strong></h6>
- 
         @if ($inEntryTSForC)
         <div class="table-head" style="width:100%;text-align:center">
  
@@ -555,7 +551,6 @@
  
                     </tr>
                 </thead>
- 
                 <tbody style="justify-content:center">
  
  
@@ -642,20 +637,16 @@
  
                     </tr>
                     @endforeach
- 
+                    @else
+                    <div style="text-align: center;margin-top:15px">Not Found</div>
+                    @endif
  
  
         </div>
-        @else
-        <div style="text-align: center;margin-top:15px">Not Found</div>
-        @endif
+        </table>
  
-        </tbody>
     </div>
     @endif
- 
- 
- 
     <style>
         /* Basic button styles */
  
@@ -674,7 +665,8 @@
         }
  
         th,
-        td,tr {
+        td,
+        tr {
             border: 1px solid #dddddd;
             text-align: center;
  
